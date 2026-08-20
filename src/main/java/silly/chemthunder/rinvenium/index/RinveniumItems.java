@@ -25,6 +25,7 @@ public interface RinveniumItems {
     Item DEBUGGER = create("debugger", new DebuggerItem(new Item.Settings().maxCount(1).fireproof()));
     Item ENVINIUM_SPEAR = create("envinium_spear", new EnviniumSpearItem(EnviniumToolMaterial.ENVINIUM, 3, -2.4f, new Item.Settings().maxCount(1)));
     Item HAIL_OF_THE_GODS = create("hail_of_the_gods", new HotGItem(new FabricItemSettings().maxCount(1)));
+    Item DAEDALUS_STORMSHOT = create("daedalus_stormshot", new DaedalusStormshotItem(new FabricItemSettings().maxCount(1)));
 
     Item AURIO_INGOT = create("aurio_ingot", new DescriptionItem(new FabricItemSettings(), "aurio_ingot", 2));
     Item ENVINIA_INGOT = create("envinia_ingot", new DescriptionItem(new FabricItemSettings().fireproof(), "envinia_ingot", 2));

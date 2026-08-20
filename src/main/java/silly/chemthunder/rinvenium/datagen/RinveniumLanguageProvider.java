@@ -19,6 +19,7 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
 
         translationBuilder.add(RinveniumItems.ENVINIUM_SPEAR, "Envinium Spear");
         translationBuilder.add(RinveniumItems.HAIL_OF_THE_GODS, "Hail of the Gods");
+        translationBuilder.add(RinveniumItems.DAEDALUS_STORMSHOT, "Daedalus Stormshot");
 
         translationBuilder.add(RinveniumItems.AURIO_INGOT, "Aurio Ingot");
         translationBuilder.add("item.rinvenium.aurio_ingot.desc1", "Obtained by [R-Click] a Superheated Aurio Ingot");
