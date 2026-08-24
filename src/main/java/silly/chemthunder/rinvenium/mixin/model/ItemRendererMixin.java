@@ -82,7 +82,7 @@ public abstract class ItemRendererMixin {
             case CREATURE -> "creature";
             case INVIS -> "invis";
             case HEARTLESS -> "heartless";
-            case PBGS -> "pbgs";
+            case PLACEHOLDER -> "placeholder";
             case SCARLET -> "scarlet";
             case HEARTTECH -> "hearttech";
             case DEFAULT -> "default";

@@ -6,12 +6,10 @@ import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.sound.SoundCategory;
@@ -23,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import silly.chemthunder.rinvenium.cca.RinveniumComponents;
 import silly.chemthunder.rinvenium.cca.entity.SpearDashingComponent;
 import silly.chemthunder.rinvenium.cca.entity.SpearParryComponent;
-import silly.chemthunder.rinvenium.cca.entity.riva.SpearHealComponent;
 import silly.chemthunder.rinvenium.cca.item.EnviniumSpearItemComponent;
 import silly.chemthunder.rinvenium.cca.item.SpearTextureItemComponent;
 import silly.chemthunder.rinvenium.index.RinveniumEnchantments;
@@ -240,8 +237,8 @@ public class EnviniumSpearItem extends SwordItem {
         String textureName = this.getTexture(stack).name.substring(0, 1).toUpperCase() + this.getTexture(stack).name.substring(1);
         if (this.getTexture(stack) == Texture.HEARTTECH) {
             textureName = "Heart Tech";
-        } else if (this.getTexture(stack) == Texture.PBGS) {
-            textureName = "PBGS";
+        } else if (this.getTexture(stack) == Texture.PLACEHOLDER) {
+            textureName = "PLACEHOLDER";
         }
         tooltip.add(Text.literal("Texture: " + textureName).formatted(Formatting.DARK_GRAY));
         if (EnchantmentHelper.getLevel(RinveniumEnchantments.RUSH, stack) > 0) tooltip.add(Text.empty());
@@ -269,7 +266,7 @@ public class EnviniumSpearItem extends SwordItem {
         CREATURE("creature"),
         INVIS("invis"),
         HEARTLESS("heartless"),
-        PBGS("pbgs"),
+        PLACEHOLDER("placeholder"),
         SCARLET("scarlet"),
         HEARTTECH("hearttech");
 

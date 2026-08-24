@@ -24,7 +24,6 @@
     "client.DrawContextMixin",
     "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
-    "client.HeldItemRendererMixin",
     "client.InGameHudMixin",
     "client.KeyboardMixin",
     "client.LivingEntityRendererMixin",
@@ -33,7 +32,6 @@
     "client.TridentFeatureRendererMixin",
     "client.WorldRendererMixin",
     "model.ItemRendererAccessor",
-    "model.ItemRendererMixin",
     "model.ModelLoaderMixin"
   ]
 }

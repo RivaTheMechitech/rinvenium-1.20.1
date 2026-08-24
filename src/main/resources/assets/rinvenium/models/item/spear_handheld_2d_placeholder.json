@@ -3,27 +3,27 @@
 	"credit": "Made with Blockbench",
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "rinvenium:item/spear_handheld_2d_pbgs"
+		"layer0": "rinvenium:item/spear_handheld_2d_placeholder"
 	},
 	"display": {
 		"thirdperson_righthand": {
-			"rotation": [0, 0, 120],
-			"translation": [-8, -1, -0.25],
-			"scale": [2.1, 2.1, 1]
+			"rotation": [0, -90, 55],
+			"translation": [0, 9.25, 0],
+			"scale": [2.54, 2.54, 1]
 		},
 		"thirdperson_lefthand": {
-			"rotation": [-180, 0, 60],
-			"translation": [-8, -1, -0.25],
+			"rotation": [0, 90, -55],
+			"translation": [0, 10.5, -0.75],
 			"scale": [2.1, 2.1, 1]
 		},
 		"firstperson_righthand": {
-			"rotation": [0, 0, 120],
-			"translation": [-7.5, 4, 1],
+			"rotation": [0, -90, 25],
+			"translation": [1.13, 3.2, 1.13],
 			"scale": [1.18, 1.18, 0.66]
 		},
 		"firstperson_lefthand": {
-			"rotation": [-180, 0, 60],
-			"translation": [-7.5, 4, 1],
+			"rotation": [0, 90, -25],
+			"translation": [1.13, 3.2, 1.13],
 			"scale": [1.18, 1.18, 0.66]
 		}
 	}
