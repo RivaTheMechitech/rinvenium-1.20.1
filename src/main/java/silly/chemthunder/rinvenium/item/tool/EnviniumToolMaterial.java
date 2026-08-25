@@ -1,15 +1,15 @@
 package silly.chemthunder.rinvenium.item.tool;
 
 import net.fabricmc.yarn.constants.MiningLevels;
-import net.minecraft.item.Items;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.util.Lazy;
+import silly.chemthunder.rinvenium.index.RinveniumItems;
 
 import java.util.function.Supplier;
 
 public enum  EnviniumToolMaterial implements ToolMaterial {
-    ENVINIUM(MiningLevels.NETHERITE, 2031, 9.0f, 4.0f, 15, () -> Ingredient.ofItems(Items.DIAMOND));
+    ENVINIUM(MiningLevels.NETHERITE, 2031, 9.0f, 4.0f, 15, () -> Ingredient.ofItems(RinveniumItems.AURIO_INGOT));
 
     private final int miningLevel;
     private final int itemDurability;

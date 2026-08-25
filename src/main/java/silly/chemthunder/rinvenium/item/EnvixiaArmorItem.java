@@ -76,9 +76,4 @@ public class EnvixiaArmorItem extends ArmorItem {
         tooltip.add(Text.literal("Full suit effect: ").formatted(this.isFullSuit ? Formatting.GRAY : Formatting.DARK_GRAY).append(Text.literal("+30% Speed").formatted(this.isFullSuit ? Formatting.BLUE : Formatting.GRAY)));
         super.appendTooltip(stack, world, tooltip, context);
     }
-
-    @Override
-    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        return ingredient.getItem().equals(RinveniumItems.AURIO_INGOT);
-    }
 }

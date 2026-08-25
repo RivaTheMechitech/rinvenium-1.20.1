@@ -286,9 +286,4 @@ public class EnviniumSpearItem extends SwordItem {
             return this.name;
         }
     }
-
-    @Override
-    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        return ingredient.getItem().equals(RinveniumItems.AURIO_INGOT);
-    }
 }
