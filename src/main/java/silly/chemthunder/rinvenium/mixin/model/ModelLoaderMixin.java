@@ -31,7 +31,7 @@ public abstract class ModelLoaderMixin {
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear_creature", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear_invis", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear_heartless", "inventory"));
-        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear_pbgs", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear_placeholder", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear_scarlet", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear_hearttech", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_default", "inventory"));
@@ -41,7 +41,7 @@ public abstract class ModelLoaderMixin {
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_creature", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_invis", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_heartless", "inventory"));
-        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_pbgs", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_placeholder", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_scarlet", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_hearttech", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_default", "inventory"));
@@ -51,7 +51,7 @@ public abstract class ModelLoaderMixin {
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_creature", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_invis", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_heartless", "inventory"));
-        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_pbgs", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_placeholder", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_scarlet", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_hearttech", "inventory"));
     }

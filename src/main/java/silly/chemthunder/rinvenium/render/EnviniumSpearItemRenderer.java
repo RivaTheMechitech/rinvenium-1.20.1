@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 import org.jetbrains.annotations.NotNull;
 import silly.chemthunder.rinvenium.Rinvenium;
 import silly.chemthunder.rinvenium.cca.entity.SpearParryComponent;
@@ -56,11 +57,29 @@ public class EnviniumSpearItemRenderer implements BuiltinItemRendererRegistry.Dy
         }
         BakedModel spearModel = MinecraftClient.getInstance().getBakedModelManager().getModel(modelId);
         matrices.push();
+
         if (mode == ModelTransformationMode.GUI) {
             matrices.translate(0.5, 0.5, 0);
+        } else if (mode == ModelTransformationMode.THIRD_PERSON_LEFT_HAND) {
+            matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(90));
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+            matrices.translate(-0.5, -1.35, -0.8);
+        } else if (mode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND) {
+            matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(45));
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+            matrices.translate(-0.5, 0, -0.9);
         } else {
             matrices.translate(0.5, 0.5, 0.5);
         }
+
+        if (texture.equals(EnviniumSpearItem.Texture.CREATURE) && (mode == ModelTransformationMode.THIRD_PERSON_LEFT_HAND || mode == ModelTransformationMode.THIRD_PERSON_RIGHT_HAND)) {
+            matrices.scale(1.5f, 1.5f, 1.5f);
+            matrices.translate(0, -0.25, 0.1);
+        } else if (texture.equals(EnviniumSpearItem.Texture.INVIS) && (mode == ModelTransformationMode.THIRD_PERSON_LEFT_HAND || mode == ModelTransformationMode.THIRD_PERSON_RIGHT_HAND)) {
+            matrices.scale(1.5f, 1.5f, 1.5f);
+            matrices.translate(0, -0.25, 0);
+        }
+
         itemRenderer.renderItem(stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, spearModel);
         matrices.pop();
     }
