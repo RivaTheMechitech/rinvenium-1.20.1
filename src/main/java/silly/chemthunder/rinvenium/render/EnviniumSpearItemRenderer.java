@@ -72,12 +72,22 @@ public class EnviniumSpearItemRenderer implements BuiltinItemRendererRegistry.Dy
             matrices.translate(0.5, 0.5, 0.5);
         }
 
-        if (texture.equals(EnviniumSpearItem.Texture.CREATURE) && (mode == ModelTransformationMode.THIRD_PERSON_LEFT_HAND || mode == ModelTransformationMode.THIRD_PERSON_RIGHT_HAND)) {
-            matrices.scale(1.5f, 1.5f, 1.5f);
-            matrices.translate(0, -0.25, 0.1);
-        } else if (texture.equals(EnviniumSpearItem.Texture.INVIS) && (mode == ModelTransformationMode.THIRD_PERSON_LEFT_HAND || mode == ModelTransformationMode.THIRD_PERSON_RIGHT_HAND)) {
-            matrices.scale(1.5f, 1.5f, 1.5f);
-            matrices.translate(0, -0.25, 0);
+        if (texture.equals(EnviniumSpearItem.Texture.CREATURE)) {
+            if (mode == ModelTransformationMode.THIRD_PERSON_RIGHT_HAND) {
+                matrices.scale(1.25f, 1.25f, 1.25f);
+                matrices.translate(0, 0, 0);
+            } else if (mode == ModelTransformationMode.THIRD_PERSON_LEFT_HAND) {
+                matrices.scale(1.25f, 1.25f, 1.25f);
+                matrices.translate(0, -0.1875, -0.25);
+            }
+        } else if (texture.equals(EnviniumSpearItem.Texture.INVIS)) {
+            if (mode == ModelTransformationMode.THIRD_PERSON_RIGHT_HAND) {
+                matrices.scale(1.25f, 1.25f, 1.25f);
+                matrices.translate(0, -0.325, 0);
+            } else if (mode == ModelTransformationMode.THIRD_PERSON_LEFT_HAND) {
+                matrices.scale(1.25f, 1.25f, 1.25f);
+                matrices.translate(0, -0.125, 0.125);
+            }
         }
 
         itemRenderer.renderItem(stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, spearModel);
