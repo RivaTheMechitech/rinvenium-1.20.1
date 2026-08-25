@@ -4,7 +4,6 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -63,14 +62,12 @@ public class EnvixiaCoreItem extends Item {
 
     public boolean isComplete(ItemStack stack) {
         if (!stack.isOf(this)) return false;
-            NbtCompound nbtCompound = stack.getNbt();
+        NbtCompound nbtCompound = stack.getNbt();
         if (nbtCompound != null) {
             NbtList nbtList = nbtCompound.getList(INGREDIENTS_KEY, NbtElement.COMPOUND_TYPE);
             List<ItemStack> ingredients = nbtList.stream().map(NbtCompound.class::cast).map(ItemStack::fromNbt).toList();
             Map<Item, Integer> ingredientMap = new java.util.HashMap<>(Map.of());
-            ingredients.forEach(stack1 -> {
-                ingredientMap.put(stack1.getItem(), stack1.getCount());
-            });
+            ingredients.forEach(stack1 -> ingredientMap.put(stack1.getItem(), stack1.getCount()));
             return ingredientMap.equals(INGREDIENT_GOAL);
         }
         return false;
@@ -119,11 +116,15 @@ public class EnvixiaCoreItem extends Item {
             if (stackInSlot.isEmpty()) {
                 return false;
             } else if (stackInSlot.getItem().canBeNested()) {
-                int countToAdd = INGREDIENT_GOAL.get(stackInSlot.getItem()) - getStoredStackCount(stack, stackInSlot);
-                int amountAdded = addToCore(stack, slot.takeStackRange(stackInSlot.getCount(), countToAdd, player));
+                if (INGREDIENT_GOAL.containsKey(stackInSlot.getItem())) {
+                    int countToAdd = INGREDIENT_GOAL.get(stackInSlot.getItem()) - getStoredStackCount(stack, stackInSlot);
+                    int amountAdded = addToCore(stack, slot.takeStackRange(stackInSlot.getCount(), countToAdd, player));
 
-                if (amountAdded > 0) {
-                    this.playInsertSound(player);
+                    if (amountAdded > 0) {
+                        this.playInsertSound(player);
+                    }
+                } else {
+                    return false;
                 }
             }
             return true;
@@ -164,7 +165,7 @@ public class EnvixiaCoreItem extends Item {
                 Optional<NbtCompound> optional = canMergeStack(stack, ingredientList);
 
                 if (optional.isPresent()) {
-                    NbtCompound optionalCompound = (NbtCompound) optional.get();
+                    NbtCompound optionalCompound = optional.get();
                     ItemStack optionalStack = ItemStack.fromNbt(optionalCompound);
 
                     optionalStack.increment(countToAdd);
