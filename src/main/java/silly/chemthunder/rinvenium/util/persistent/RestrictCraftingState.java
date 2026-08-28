@@ -32,7 +32,7 @@ public class RestrictCraftingState extends PersistentState {
         ServerWorld serverWorld = server.getWorld(ServerWorld.OVERWORLD);
         assert serverWorld != null;
 
-        RestrictCraftingState state = serverWorld.getPersistentStateManager().getOrCreate(RestrictCraftingState::createFromNbt, RestrictCraftingState::createNew, "restrictRenviniumCraftingRecipes");
+        RestrictCraftingState state = serverWorld.getPersistentStateManager().getOrCreate(RestrictCraftingState::createFromNbt, RestrictCraftingState::createNew, "restrictRinveniumCraftingRecipes");
         state.markDirty();
         return state;
     }
