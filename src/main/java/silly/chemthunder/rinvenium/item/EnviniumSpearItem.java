@@ -212,7 +212,7 @@ public class EnviniumSpearItem extends SwordItem {
                     new EntityAttributeModifier(
                             UUID.fromString("a67e3cc0-45d5-4e8e-9d64-7421e1b5fe3e"),
                             "Additional range",
-                            1.5,
+                            0.5,
                             EntityAttributeModifier.Operation.ADDITION
                     )
             );
