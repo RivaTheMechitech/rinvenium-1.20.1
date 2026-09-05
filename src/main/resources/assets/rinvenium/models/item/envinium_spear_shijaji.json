@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "rinvenium:item/spear_gui_placeholder"
+    "layer0": "rinvenium:item/spear_gui_shijaji"
   }
 }

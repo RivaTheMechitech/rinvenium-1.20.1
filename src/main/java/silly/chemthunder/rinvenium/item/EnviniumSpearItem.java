@@ -212,7 +212,7 @@ public class EnviniumSpearItem extends SwordItem {
                     new EntityAttributeModifier(
                             UUID.fromString("a67e3cc0-45d5-4e8e-9d64-7421e1b5fe3e"),
                             "Additional range",
-                            0.5,
+                            0.85,
                             EntityAttributeModifier.Operation.ADDITION
                     )
             );
@@ -237,8 +237,8 @@ public class EnviniumSpearItem extends SwordItem {
         String textureName = this.getTexture(stack).name.substring(0, 1).toUpperCase() + this.getTexture(stack).name.substring(1);
         if (this.getTexture(stack) == Texture.HEARTTECH) {
             textureName = "Heart Tech";
-        } else if (this.getTexture(stack) == Texture.PLACEHOLDER) {
-            textureName = "PLACEHOLDER";
+        } else if (this.getTexture(stack) == Texture.SHIJAJI) {
+            textureName = "Shijaji";
         }
         tooltip.add(Text.literal("Texture: " + textureName).formatted(Formatting.DARK_GRAY));
         if (EnchantmentHelper.getLevel(RinveniumEnchantments.RUSH, stack) > 0) tooltip.add(Text.empty());
@@ -266,7 +266,7 @@ public class EnviniumSpearItem extends SwordItem {
         CREATURE("creature"),
         INVIS("invis"),
         HEARTLESS("heartless"),
-        PLACEHOLDER("placeholder"),
+        SHIJAJI("shijaji"),
         SCARLET("scarlet"),
         HEARTTECH("hearttech");
 

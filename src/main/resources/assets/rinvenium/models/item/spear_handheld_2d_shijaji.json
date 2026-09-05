@@ -3,7 +3,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "rinvenium:item/spear_handheld_2d_placeholder"
+		"layer0": "rinvenium:item/spear_handheld_2d_shijaji"
 	},
 	"display": {
 		"thirdperson_righthand": {
