@@ -1,27 +1,19 @@
 package silly.chemthunder.rinvenium.mixin.model;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import silly.chemthunder.rinvenium.Rinvenium;
-import silly.chemthunder.rinvenium.cca.entity.SpearParryComponent;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
-import silly.chemthunder.rinvenium.item.EnviniumSpearItem;
+import silly.chemthunder.rinvenium.render.EnviniumSpearItemRenderer;
 
 
 @Mixin(ItemRenderer.class)
@@ -35,16 +27,16 @@ public abstract class ItemRendererMixin {
     )
     private void rinvenium$storeEntity(LivingEntity entity, ItemStack item, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, World world, int light, int overlay, int seed, CallbackInfo ci) {
         if (item.isOf(RinveniumItems.ENVINIUM_SPEAR) && entity instanceof PlayerEntity player) {
-            ItemRendererMixin.entity = player;
+            EnviniumSpearItemRenderer.holder = player;
         }
     }
 
-    private static PlayerEntity entity;
+    /*
+      This class was created by Vowxky.
+      All rights reserved to the developer.
 
-    /**
-     * This class was created by Vowxky.
-     * All rights reserved to the developer.
      */
+    /*
     @ModifyVariable(method = "renderItem", at = @At(value = "HEAD"), argsOnly = true)
     public BakedModel useModel(BakedModel value, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         PlayerEntity player = MinecraftClient.getInstance().player;
@@ -67,12 +59,12 @@ public abstract class ItemRendererMixin {
                 }/* else {
                     String append = getSpearTexture(texture);
                     return ((ItemRendererAccessor) this).renderer$getModels().getModelManager().getModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear" + append, "inventory"));
-                }*/
+                }
             }
         }
         return value;
-    }
-
+    }*/
+/*
     @Unique
     private static @NotNull String getSpearTexture(EnviniumSpearItem.Texture texture) {
         String append = switch (texture) {
@@ -89,5 +81,5 @@ public abstract class ItemRendererMixin {
         };
         append = "_" + append;
         return append;
-    }
+    }*/
 }
