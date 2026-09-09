@@ -32,6 +32,7 @@
     "client.TridentFeatureRendererMixin",
     "client.WorldRendererMixin",
     "model.ItemRendererAccessor",
+    "model.ItemRendererMixin",
     "model.ModelLoaderMixin"
   ]
 }
