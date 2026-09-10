@@ -32,6 +32,9 @@ public class EnviniumSpearItemRenderer implements BuiltinItemRendererRegistry.Dy
         MinecraftClient client = MinecraftClient.getInstance();
         ItemRenderer itemRenderer = client.getItemRenderer();
         ModelIdentifier modelId;
+        if (holder == null) {
+            holder = client.player;
+        }
         if (itemRenderer == null || holder == null) {
             return;
         }
