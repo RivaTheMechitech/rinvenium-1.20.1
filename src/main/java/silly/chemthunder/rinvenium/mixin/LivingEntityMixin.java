@@ -217,6 +217,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
 
     @WrapWithCondition(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;onDeath(Lnet/minecraft/entity/damage/DamageSource;)V"))
     private boolean rinvenium$envixiaDeath(LivingEntity instance, DamageSource damageSource) {
+        /*
         if (instance instanceof PlayerEntity player && !damageSource.isOf(RinveniumDamageSources.ORCHID)) {
             if (player.getServer() != null) {
                 DeathSequenceState deathSequenceState = DeathSequenceState.getServerState(player.getServer());
@@ -236,6 +237,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
                 }
             }
         }
+        */
         return true;
     }
 }

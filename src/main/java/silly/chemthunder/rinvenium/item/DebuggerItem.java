@@ -44,28 +44,34 @@ public class DebuggerItem extends Item {
                 MinecraftClient client = MinecraftClient.getInstance();
 
             } else { // Server Side Standing
+                /** Spawns Raycast particle beam */
+                /*
                 if (world instanceof ServerWorld serverWorld) {
                     HitResult hitResult = player.raycast(50.0, 0.0f, false);
                     RinveniumUtil.spawnRaycastSmokeParticles(serverWorld, player.getCameraPosVec(0.0f), player.getRotationVector(), hitResult, 256.0, 0.5, 1.1, 40);
                     RinveniumUtil.spawnRaycastRailgunParticles(serverWorld, player.getCameraPosVec(0.0f), player.getRotationVector(), hitResult, 256.0, 0.5, 2.3, 30);
                 }
+                */
+
+                /** A bunch of random rendering test code */
+                /*
                 Vec3d origin = player.getPos().add(0, (player.getBoundingBox().maxY - player.getBoundingBox().minY) / 2, 0);
 
                 if (livingEntity != null) {
                     origin = livingEntity.getPos().add(0, (livingEntity.getBoundingBox().maxY - livingEntity.getBoundingBox().minY) / 2, 0);
                 }
 
-                /*float randomX = world.random.nextFloat();
+                float randomX = world.random.nextFloat();
                 randomX = randomX < 0.5 ? -randomX : randomX - 0.5f;
                 float randomY = world.random.nextFloat();
                 randomY = randomY < 0.5 ? -randomY : randomY - 0.5f;
                 float randomZ = world.random.nextFloat();
                 randomZ = randomZ < 0.5 ? -randomZ : randomZ - 0.5f;
                 Vec3d originDelta = new Vec3d(randomX, randomY, randomZ);
-                origin = origin.add(originDelta);*//*
+                origin = origin.add(originDelta);
                 float pitch = world.random.nextFloat() * 360.0F;
                 float yaw = world.random.nextFloat() * 360.0F;
-                float roll = world.random.nextFloat() * 360.0F;*/
+                float roll = world.random.nextFloat() * 360.0F;
                 SlashRender slashRender = new SlashRender(
                         origin,
                         80,
@@ -75,17 +81,19 @@ public class DebuggerItem extends Item {
                         new VertexColorSet(1.0f, 0.9f, 0.9f, 1.0f)
                 );
                 slashRender.addTransformation(RotationAxis.POSITIVE_Y.rotationDegrees(90));
-                slashRender.addTransformation(RotationAxis.NEGATIVE_X.rotationDegrees(90));/*
+                slashRender.addTransformation(RotationAxis.NEGATIVE_X.rotationDegrees(90));
                 slashRender.addTransformation(RotationAxis.POSITIVE_X.rotationDegrees(pitch));
                 slashRender.addTransformation(RotationAxis.POSITIVE_Z.rotationDegrees(roll));
-                slashRender.addTransformation(RotationAxis.POSITIVE_Y.rotationDegrees(yaw));*/
+                slashRender.addTransformation(RotationAxis.POSITIVE_Y.rotationDegrees(yaw));
                 slashRender.setSize(20.0f);
-                //SlashRendererManager.add(slashRender);
-                //player.sendMessage(Text.of("Number of slashes: " + SlashRendererManager.get().size()));
-                //CustomFogManager.add(new CustomFog(0.2f, 0.0f, 0.0f, -1));
-                //FakePlayerRendererManager.add(new FakePlayerRender(new GameProfile(UUID.randomUUID(), "orchidpuppy"), player.getPos(), player.getPitch(), player.getYaw(), 100, "orchidpuppy"));
+                SlashRendererManager.add(slashRender);
+                player.sendMessage(Text.of("Number of slashes: " + SlashRendererManager.get().size()));
+                CustomFogManager.add(new CustomFog(0.2f, 0.0f, 0.0f, -1));
+                FakePlayerRendererManager.add(new FakePlayerRender(new GameProfile(UUID.randomUUID(), "orchidpuppy"), player.getPos(), player.getPitch(), player.getYaw(), 100, "orchidpuppy"));
+                */
 
-                if (player.getServer() != null) {
+                /** Triggers Death Sequence */
+                /*if (player.getServer() != null) {
                     DeathSequenceState deathSequenceState = DeathSequenceState.getServerState(player.getServer());
                     ServerPlayerEntity storedPlayer = player.getServer().getPlayerManager().getPlayer(deathSequenceState.playerUuid);
                     if (deathSequenceState.canSequence) {
@@ -100,7 +108,10 @@ public class DebuggerItem extends Item {
 
                         }
                     }
-                }
+                }*/
+
+                /** Sends packet for screen flash*/
+                /*
                 if (player instanceof ServerPlayerEntity serverPlayerEntity) {
                     PacketByteBuf buf = PacketByteBufs.create();
                     buf.writeInt(20);
@@ -109,6 +120,7 @@ public class DebuggerItem extends Item {
                     buf.writeFloat(0.8f);
                     //ServerPlayNetworking.send(serverPlayerEntity, RinveniumPackets.ADD_SCREEN_FLASH, buf);
                 }
+                */
             }
         } else {
             if (world.isClient) { // Client Side Sneak
@@ -117,6 +129,8 @@ public class DebuggerItem extends Item {
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 20, 10));
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.SATURATION, 20, 20));
 
+                /** Sends packets for slash rendering */
+                /*
                 if (player instanceof ServerPlayerEntity serverPlayerEntity) {
                     if (livingEntity != null) {
                         PacketByteBuf buf = PacketByteBufs.create();
@@ -141,10 +155,14 @@ public class DebuggerItem extends Item {
 
                     }
                 }
+                */
+                //CustomFogManager.clear();
 
-                CustomFogManager.clear();
+                /** Cancels Death Squence */
+                /*
                 DeathSequenceComponent deathSequenceComponent = DeathSequenceComponent.get(player);
                 deathSequenceComponent.setBool(false);
+                */
             }
 
         }

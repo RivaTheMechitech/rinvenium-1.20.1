@@ -343,6 +343,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "onDeath", at = @At("HEAD"), cancellable = true)
     private void rinvenium$startDeathSequence(DamageSource source, CallbackInfo ci) {
+        /*
         if (this.getServer() != null && !source.isOf(RinveniumDamageSources.ORCHID)) {
             DeathSequenceState deathSequenceState = DeathSequenceState.getServerState(this.getServer());
             ServerPlayerEntity storedPlayer = this.getServer().getPlayerManager().getPlayer(deathSequenceState.playerUuid);
@@ -360,5 +361,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                 }
             }
         }
+        */
     }
 }
