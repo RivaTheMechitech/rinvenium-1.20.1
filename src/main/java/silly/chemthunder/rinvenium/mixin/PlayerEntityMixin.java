@@ -36,14 +36,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import silly.chemthunder.rinvenium.cca.entity.DeathSequenceComponent;
 import silly.chemthunder.rinvenium.cca.entity.EnvixiaFormComponent;
 import silly.chemthunder.rinvenium.cca.entity.SpearParryComponent;
 import silly.chemthunder.rinvenium.cca.entity.riva.SpearHealComponent;
 import silly.chemthunder.rinvenium.datagen.RinveniumItemTagProvider;
 import silly.chemthunder.rinvenium.index.*;
+import silly.chemthunder.rinvenium.item.EnviniumSpearItem;
 import silly.chemthunder.rinvenium.util.inject.HungerDecrement;
-import silly.chemthunder.rinvenium.util.persistent.DeathSequenceState;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
@@ -218,6 +217,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                             return base;
                         }
                         if (angle < -0.35) {
+                            EnviniumSpearItem.parried = true;
                             var13 = this.getEntityWorld();
                             if (var13 instanceof ServerWorld) {
                                 serverWorld = (ServerWorld) var13;

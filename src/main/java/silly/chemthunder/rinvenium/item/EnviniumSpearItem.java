@@ -10,6 +10,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.sound.SoundCategory;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class EnviniumSpearItem extends SwordItem {
+    public static boolean parried = false;
 
     public EnviniumSpearItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings) {
         super(toolMaterial, attackDamage, attackSpeed, settings);
@@ -176,7 +178,11 @@ public class EnviniumSpearItem extends SwordItem {
                     }
                     if (spearParryComponent.getDoubleIntValue1() <= 0) {
                         player.stopUsingItem();
-                        player.getItemCooldownManager().set(this, 10);
+                        if (parried) {
+                            player.getItemCooldownManager().set(this, 20);
+                        } else {
+                            player.getItemCooldownManager().set(this, 60);
+                        }
                     }
                 }
             }
@@ -285,5 +291,18 @@ public class EnviniumSpearItem extends SwordItem {
         public String toString() {
             return this.name;
         }
+    }
+
+    @Override
+    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        if (parried) {
+            float initialDamage = 3;
+            float halvedDamage = 1.5f;
+            float modifiedDamage = (float) (target.getArmor() - (1.5 * (2 + target.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS) / 4)));
+            float finalDamage = modifiedDamage + halvedDamage;
+            target.damage(target.getWorld().getDamageSources().genericKill(), finalDamage);
+            parried = false;
+        }
+        return super.postHit(stack, target, attacker);
     }
 }
