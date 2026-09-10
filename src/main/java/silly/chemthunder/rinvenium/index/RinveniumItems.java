@@ -26,6 +26,7 @@ public interface RinveniumItems {
     Item HAIL_OF_THE_GODS = create("hail_of_the_gods", new HotGItem(new FabricItemSettings().maxCount(1)));
     Item DAEDALUS_STORMSHOT = create("daedalus_stormshot", new DaedalusStormshotItem(new FabricItemSettings().maxCount(1)));
     Item CORE_CHARGE_GRENADE = create("core_charge_grenade", new CoreChargeGrenadeItem(new FabricItemSettings().maxCount(16)));
+    Item APMDSC = create("apmdsc", new APMDSCItem(new FabricItemSettings().maxCount(1)));
 
     Item AURIO_INGOT = create("aurio_ingot", new DescriptionItem(new FabricItemSettings(), "aurio_ingot", 2));
     Item ENVINIA_INGOT = create("envinia_ingot", new DescriptionItem(new FabricItemSettings().fireproof(), "envinia_ingot", 2));
@@ -59,7 +60,9 @@ public interface RinveniumItems {
                 ENVIXIA_HELMET,
                 ENVIXIA_CHESTPLATE,
                 ENVIXIA_LEGGINGS,
-                ENVIXIA_BOOTS
+                ENVIXIA_BOOTS,
+                CORE_CHARGE_GRENADE,
+                APMDSC
         );
     }
 
