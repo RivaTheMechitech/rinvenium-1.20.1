@@ -6,6 +6,8 @@ import net.minecraft.util.math.MathHelper;
 
 public class APMDSCItemComponent extends ItemComponent {
     private static final String ION_CELL_COUNT = "ion_cell_count";
+    private static final String IS_CHARGING = "is_charging";
+
     public static final int MAX_ION_CELL_COUNT = 10;
 
     public APMDSCItemComponent(ItemStack stack) {
@@ -26,4 +28,10 @@ public class APMDSCItemComponent extends ItemComponent {
         setIonCellCount(count);
     }
 
+    public boolean isCharging() {
+        return this.getBoolean(IS_CHARGING);
+    }
+    public void setIsCharging(boolean isCharging) {
+        this.putBoolean(IS_CHARGING, isCharging);
+    }
 }

@@ -1,5 +1,6 @@
 package silly.chemthunder.rinvenium.item;
 
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,20 +36,31 @@ public class APMDSCItem extends Item {
         APMDSCItemComponent itemComponent = RinveniumComponents.APMDSC_ITEM.get(stack);
 
         // Recharging
-        if (user.getOffHandStack().isOf(RinveniumItems.ION_CELL) && user.isSneaking()) {
+        if (user.getOffHandStack().isOf(RinveniumItems.ION_CELL) && user.isSneaking() && itemComponent.isCharging()) {
             itemComponent.addIonCellCount(1);
+            if (itemComponent.getIonCellCount() >= 10) {
+                itemComponent.setIsCharging(false);
+            }
             user.getOffHandStack().decrement(1);
-            user.getItemCooldownManager().set(this, 5); // ICD on the recharge so it doesn't suffer from bad ping and possibly bug out due to ping issues
+            user.getItemCooldownManager().set(this, 5); // ICD on the recharge so it doesn't suffer from bad ping and possibly bug out due to ping issues and cuz it just feels cooler to slowly load charges
             return TypedActionResult.success(stack);
         }
 
         if (!world.isClient) {
-            entityComponent.incrementInt();
+            if (!itemComponent.isCharging()) {
+                entityComponent.incrementInt();
+                if (entityComponent.getInt() > 50) {
+
+                }
+            }
         }
 
         return TypedActionResult.consume(stack);
     }
 
+    public int calculateShootTimeForEnchant(Enchantment enchantment, ItemStack stack) {
+        return 0;
+    }
 
     @Override
     public int getMaxUseTime(ItemStack stack) {
