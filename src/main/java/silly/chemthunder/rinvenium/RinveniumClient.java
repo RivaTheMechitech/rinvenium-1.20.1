@@ -13,6 +13,7 @@ import silly.chemthunder.rinvenium.index.RinveniumItems;
 import silly.chemthunder.rinvenium.index.RinveniumPackets;
 import silly.chemthunder.rinvenium.index.RinveniumParticles;
 import silly.chemthunder.rinvenium.index.client.RinveniumModelPredicateProvider;
+import silly.chemthunder.rinvenium.render.CoreChargeGrenadeRadiusRenderer;
 import silly.chemthunder.rinvenium.render.EnviniumSpearItemRenderer;
 
 public class RinveniumClient implements ClientModInitializer {
@@ -29,5 +30,7 @@ public class RinveniumClient implements ClientModInitializer {
         EnviniumSpearItemRenderer enviniumSpearItemRenderer = new EnviniumSpearItemRenderer(new Identifier(Rinvenium.MOD_ID, "envinium_spear"));
         BuiltinItemRendererRegistry.INSTANCE.register(RinveniumItems.ENVINIUM_SPEAR, enviniumSpearItemRenderer);
         Rinvenium.LOGGER.info("Spear renderer registered");
+
+        CoreChargeGrenadeRadiusRenderer.init();
     }
 }
