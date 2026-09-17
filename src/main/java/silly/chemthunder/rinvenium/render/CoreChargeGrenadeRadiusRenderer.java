@@ -12,20 +12,25 @@ import java.util.List;
 
 public class CoreChargeGrenadeRadiusRenderer {
     public static void init() {
-        WorldRenderEvents.END.register(context -> {
-            drawCircle(context, new Vec3d(0, 90, 0), 30);
-        });
+        WorldRenderEvents.END.register(context -> drawCircle(context, new Vec3d(0, 150, 0), 30));
     }
 
     private static void drawCircle(WorldRenderContext context, Vec3d centre, int radius) {
-        Vec3d normalisedCentre = new Vec3d(centre.x - context.camera().getPos().x, centre.y - context.camera().getPos().y, centre.z - context.camera().getPos().z);
+        Vec3d relativeCentre = centre.subtract(context.camera().getPos());
+        Vec3d direction = relativeCentre.normalize();
         List<Vec3d> vertices = new ArrayList<>();
+
+        Vec3d worldUp = new Vec3d(0, 1, 0);
+        Vec3d right = worldUp.crossProduct(direction).normalize();
+        Vec3d up = right.crossProduct(direction).normalize();
+
         for (int i = 0; i <= 360; i++) {
             double x = Math.cos(Math.toRadians(i));
             double y = Math.sin(Math.toRadians(i));
-            Vec3d vertex = new Vec3d(x, y, 0);
-            vertex = new Vec3d(vertex.x * radius, vertex.y * radius, vertex.z * radius);
-            vertex = normalisedCentre.add(vertex);
+            Vec3d vertex = right.multiply(x).add(up.multiply(y));
+            vertex = vertex.normalize();
+            vertex = vertex.multiply(radius);
+            vertex = relativeCentre.add(vertex);
             vertices.add(vertex);
         }
         for (int i = 0; i < (vertices.size() / 2); i++) {
