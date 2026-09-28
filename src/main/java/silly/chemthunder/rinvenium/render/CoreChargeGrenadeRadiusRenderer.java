@@ -6,13 +6,14 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.render.*;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
+import silly.chemthunder.rinvenium.entity.CoreChargeGrenadeEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CoreChargeGrenadeRadiusRenderer {
     public static void init() {
-        WorldRenderEvents.END.register(context -> drawCircle(context, new Vec3d(0, 150, 0), 30));
+        WorldRenderEvents.END.register(context ->context.world().getEntities().forEach(entity -> {if (entity instanceof CoreChargeGrenadeEntity && entity.isOnGround()) {drawCircle(context, entity.getPos(), 5);}}));
     }
 
     private static void drawCircle(WorldRenderContext context, Vec3d centre, int radius) {
@@ -55,19 +56,19 @@ public class CoreChargeGrenadeRadiusRenderer {
             Matrix4f matrix = context.matrixStack().peek().getPositionMatrix();
 
             buffer.vertex(matrix, (float) c1.x, (float) c1.y, (float) c1.z)
-                .color(255, 0, 0, 255)
+                .color(255, 0, 0, 128)
                 .next();
 
             buffer.vertex(matrix, (float) c2.x, (float) c2.y, (float) c2.z)
-                .color(255, 0, 0, 255)
+                .color(255, 0, 0, 128)
                 .next();
 
             buffer.vertex(matrix, (float) c3.x, (float) c3.y, (float) c3.z)
-                .color(255, 0, 0, 255)
+                .color(255, 0, 0, 128)
                 .next();
 
             buffer.vertex(matrix, (float) c4.x, (float) c4.y, (float) c4.z)
-                .color(255, 0, 0, 255)
+                .color(255, 0, 0, 128)
                 .next();
 
             BufferRenderer.drawWithGlobalProgram(buffer.end());
@@ -75,19 +76,19 @@ public class CoreChargeGrenadeRadiusRenderer {
             buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 
             buffer.vertex(matrix, (float) c4.x, (float) c4.y, (float) c4.z)
-                .color(255, 0, 0, 255)
+                .color(255, 0, 0, 128)
                 .next();
 
             buffer.vertex(matrix, (float) c3.x, (float) c3.y, (float) c3.z)
-                .color(255, 0, 0, 255)
+                .color(255, 0, 0, 128)
                 .next();
 
             buffer.vertex(matrix, (float) c2.x, (float) c2.y, (float) c2.z)
-                .color(255, 0, 0, 255)
+                .color(255, 0, 0, 128)
                 .next();
 
             buffer.vertex(matrix, (float) c1.x, (float) c1.y, (float) c1.z)
-                .color(255, 0, 0, 255)
+                .color(255, 0, 0, 128)
                 .next();
 
             BufferRenderer.drawWithGlobalProgram(buffer.end());
