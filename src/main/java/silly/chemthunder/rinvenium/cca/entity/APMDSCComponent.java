@@ -77,11 +77,8 @@ public class APMDSCComponent implements IntComponent, BoolComponent, AutoSyncedC
 
     @Override
     public void tick() {
-        if (!this.isUsing) {
-            this.decrementInt();
-            if (this.useTime < 0) {
-                this.setInt(0);
-            }
+        if (!this.getBool()) {
+            this.setInt(0);
         }
     }
 

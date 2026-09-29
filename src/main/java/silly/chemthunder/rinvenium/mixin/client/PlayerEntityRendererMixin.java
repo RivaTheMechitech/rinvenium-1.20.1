@@ -34,8 +34,11 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         if (player.getStackInHand(hand).isOf(RinveniumItems.ENVINIUM_SPEAR) && !(EnchantmentHelper.getLevel(RinveniumEnchantments.RUSH, player.getStackInHand(hand)) > 0) && player.isUsingItem()) {
             cir.setReturnValue(BipedEntityModel.ArmPose.BOW_AND_ARROW);
         }
-        if (player.getStackInHand(hand).isOf(RinveniumItems.HAIL_OF_THE_GODS) || player.getStackInHand(hand).isOf(RinveniumItems.APMDSC)) {
+        if (player.getStackInHand(hand).isOf(RinveniumItems.HAIL_OF_THE_GODS)) {
             cir.setReturnValue(BipedEntityModel.ArmPose.BOW_AND_ARROW);
+        }
+        if (player.getStackInHand(hand).isOf(RinveniumItems.APMDSC)) {
+            cir.setReturnValue(BipedEntityModel.ArmPose.CROSSBOW_HOLD);
         }
     }
 

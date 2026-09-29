@@ -4,12 +4,26 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.data.client.Models;
 import net.minecraft.item.Items;
-import silly.chemthunder.rinvenium.index.RinveniumItems;
 
-import static net.minecraft.data.client.Models.*;
-import static silly.chemthunder.rinvenium.index.RinveniumItems.*;
+import static net.minecraft.data.client.Models.GENERATED;
+import static net.minecraft.data.client.Models.HANDHELD;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.APMDSC;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.AURIO_INGOT;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.BATTERY;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.DEBUGGER;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.ENVINIA_INGOT;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.ENVIXIA_BOOTS;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.ENVIXIA_CHESTPLATE;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.ENVIXIA_HELMET;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.ENVIXIA_LEGGINGS;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.ENVIXIUS_INGOT;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.ENVIXIUS_PLATE;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.ION_CELL;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.SUPERHEATED_AURIO_INGOT;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.SUPERHEATED_ENVINIA_INGOT;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.SUPERHEATED_ENVIXIUS_INGOT;
+import static silly.chemthunder.rinvenium.index.RinveniumItems.SUPERHEATED_ENVIXIUS_PLATE;
 
 public class RinveniumModelProvider extends FabricModelProvider {
     public RinveniumModelProvider(FabricDataOutput output) {
@@ -20,6 +34,8 @@ public class RinveniumModelProvider extends FabricModelProvider {
 
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
         itemModelGenerator.register(DEBUGGER, Items.STICK, HANDHELD);
+
+        itemModelGenerator.register(APMDSC, Items.PRISMARINE_SHARD, GENERATED);
 
         itemModelGenerator.register(AURIO_INGOT, GENERATED);
         itemModelGenerator.register(ENVINIA_INGOT, GENERATED);

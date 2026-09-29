@@ -42,7 +42,9 @@
       "rinvenium:hail_of_the_gods",
       "rinvenium:envixia_form",
       "rinvenium:spear_heal",
-      "rinvenium:death_sequence"
+      "rinvenium:death_sequence",
+      "rinvenium:apmdsc_entity",
+      "rinvenium:apmdsc_item"
     ]
   },
   "accessWidener": "rinvenium.accesswidener",

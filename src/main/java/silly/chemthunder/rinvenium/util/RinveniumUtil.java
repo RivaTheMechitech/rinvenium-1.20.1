@@ -2,11 +2,13 @@ package silly.chemthunder.rinvenium.util;
 
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
@@ -21,6 +23,22 @@ import java.util.UUID;
 
 public class RinveniumUtil {
     public static final UUID EMPTY_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+
+    public static void sendDebugMessage(LivingEntity entity, boolean actionBar, String message) {
+        if (entity instanceof PlayerEntity player && actionBar) {
+            player.sendMessage(Text.of(message), true);
+        } else {
+            entity.sendMessage(Text.of(message));
+        }
+    }
+    public static void sendDebugMessage(LivingEntity entity, boolean actionBar, Text message) {
+        if (entity instanceof PlayerEntity player && actionBar) {
+            player.sendMessage(message, true);
+        } else {
+            entity.sendMessage(message);
+        }
+    }
+
     /**Equation: -0.0002x^2 + 5*/
     public static double calculateDivergenceDropOff(double input) {
         return MathHelper.clamp(-0.0002 * (input * input) + 5.0, 0.0, 5.0);
