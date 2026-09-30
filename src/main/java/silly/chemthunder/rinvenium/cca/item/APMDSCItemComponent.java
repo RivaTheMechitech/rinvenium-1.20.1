@@ -4,11 +4,14 @@ import dev.onyxstudios.cca.api.v3.item.ItemComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.UUID;
+
 public class APMDSCItemComponent extends ItemComponent {
     private static final String ION_CELL_COUNT = "ion_cell_count";
     private static final String IS_CHARGING = "is_charging";
     private static final String STARSTRUCK_COUNT = "starstruck_count";
     private static final String LOW_POWER_COUNT = "low_power_count";
+    private static final String BEAM_RENDER_UUID = "beam_render_uuid";
 
     public static final int MAX_ION_CELL_COUNT = 10;
     public static final int MAX_STARSTRUCK_COUNT = 2; // 3 shots per ion cell as the count starts from index of 0
@@ -57,5 +60,12 @@ public class APMDSCItemComponent extends ItemComponent {
     }
     public void setIsCharging(boolean isCharging) {
         this.putBoolean(IS_CHARGING, isCharging);
+    }
+
+    public UUID getBeamRenderUuid() {
+        return this.getUuid(BEAM_RENDER_UUID);
+    }
+    public void setBeamRenderUuid(UUID uuid) {
+        this.putUuid(BEAM_RENDER_UUID, uuid);
     }
 }

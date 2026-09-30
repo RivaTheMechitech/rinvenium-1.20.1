@@ -1,5 +1,7 @@
 package silly.chemthunder.rinvenium.item;
 
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -10,11 +12,17 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import silly.chemthunder.rinvenium.cca.RinveniumComponents;
@@ -22,9 +30,14 @@ import silly.chemthunder.rinvenium.cca.entity.APMDSCComponent;
 import silly.chemthunder.rinvenium.cca.item.APMDSCItemComponent;
 import silly.chemthunder.rinvenium.index.RinveniumEnchantments;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
+import silly.chemthunder.rinvenium.index.RinveniumPackets;
+import silly.chemthunder.rinvenium.render.APMDSCBeamRender;
+import silly.chemthunder.rinvenium.render.manager.client.APMDSCBeamManager;
 import silly.chemthunder.rinvenium.util.RinveniumUtil;
+import silly.chemthunder.rinvenium.util.inject.RenderContainer;
 
 import java.lang.reflect.Type;
+import java.util.UUID;
 
 import static silly.chemthunder.rinvenium.cca.item.APMDSCItemComponent.*;
 
@@ -126,8 +139,17 @@ public class APMDSCItem extends Item {
         }
 
         // Damaging entities
+        Vec3d startPos = player.getEyePos().add(player.getRotationVector().normalize().multiply(0.5));
+        HitResult hitResult = player.raycast(6.0, 0.0f, false);
+        Vec3d endPos;
+        if (hitResult.getType() == HitResult.Type.BLOCK) {
+            BlockHitResult blockHitResult = (BlockHitResult) hitResult;
+            endPos = blockHitResult.getPos();
+        } else {
+            endPos = hitResult.getPos();
+        }
         if (entityComponent.getInt() > calculateWindUpTimeForEnchant(stack)) {
-            EntityHitResult entityHitResult = RinveniumUtil.raycastWithDivergenceBox(player, player.getEyePos(), player.getRotationVecClient(), 6.0, 0.375f, false);
+            EntityHitResult entityHitResult = RinveniumUtil.raycastWithDivergenceBox(player, startPos, player.getRotationVecClient(), 6.0, 0.375f, false);
             if (entityHitResult != null) {
                 Entity entity = entityHitResult.getEntity();
                 if (entity instanceof LivingEntity target && !target.hasStatusEffect(StatusEffects.POISON)) {
@@ -137,7 +159,27 @@ public class APMDSCItem extends Item {
         }
 
         // Wind up particles
+        if (entityComponent.getInt() < calculateWindUpTimeForEnchant(stack)) {
+            world.addParticle(ParticleTypes.PORTAL, player.getX(), player.getY(), player.getZ(), 0.0D, 0.0D, 0.0D);
+        }
 
+        // Shoot beam
+        if (entityComponent.getInt() == calculateWindUpTimeForEnchant(stack)) {
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                UUID uuid = UUID.randomUUID();
+                itemComponent.setBeamRenderUuid(uuid);
+                PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeUuid(uuid);
+                buf.writeDouble(startPos.getX());
+                buf.writeDouble(startPos.getY());
+                buf.writeDouble(startPos.getZ());
+                buf.writeDouble(endPos.getX());
+                buf.writeDouble(endPos.getY());
+                buf.writeDouble(endPos.getZ());
+                buf.writeInt(calculateShootTimeForEnchant(stack) + APMDSCBeamRender.FADE_IN_DURATION + APMDSCBeamRender.FADE_OUT_DURATION);
+                ServerPlayNetworking.send(serverPlayer, RinveniumPackets.ADD_APMDSC_BEAM, buf);
+            }
+        }
     }
 
     @Override
@@ -155,6 +197,14 @@ public class APMDSCItem extends Item {
                     itemComponent.setLowPowerCount(0);
                 } else {
                     itemComponent.addLowPowerCount(1);
+                }
+            }
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                UUID uuid = itemComponent.getBeamRenderUuid();
+                if (uuid != null) {
+                    PacketByteBuf buf = PacketByteBufs.create();
+                    buf.writeUuid(uuid);
+                    ServerPlayNetworking.send(serverPlayer, RinveniumPackets.STOP_APMDSC_BEAM, buf);
                 }
             }
         }

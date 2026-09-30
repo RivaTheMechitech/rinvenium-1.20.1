@@ -31,6 +31,8 @@ public class RinveniumPackets {
     public static final Identifier ADD_FAKE_PLAYER = createS2CId("add_fake_player");
     public static final Identifier FAKE_PLAYER_ARM_SWING = createS2CId("fake_player_arm_swing");
     public static final Identifier REMOVE_FAKE_PLAYER = createS2CId("remove_fake_player");
+    public static final Identifier ADD_APMDSC_BEAM = createS2CId("add_apmdsc_beam");
+    public static final Identifier STOP_APMDSC_BEAM = createS2CId("stop_apmdsc_beam");
 
     public static void registerS2CPackets() {
         ClientPlayNetworking.registerGlobalReceiver(FLASH_PARTICLE, SpawnFlashParticleS2CPacket::receive);
@@ -42,6 +44,8 @@ public class RinveniumPackets {
         ClientPlayNetworking.registerGlobalReceiver(ADD_FAKE_PLAYER, AddFakePlayerS2CPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(FAKE_PLAYER_ARM_SWING, FakePlayerSwingArmS2CPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(REMOVE_FAKE_PLAYER, RemoveFakePlayerS2CPacket::receive);
+        ClientPlayNetworking.registerGlobalReceiver(ADD_APMDSC_BEAM, AddAPMDSCBeamS2CPacket::receive);
+        ClientPlayNetworking.registerGlobalReceiver(STOP_APMDSC_BEAM, StopAPMDSCBeamS2CPacket::receive);
     }
 
     public static Identifier createC2SId(String name) {

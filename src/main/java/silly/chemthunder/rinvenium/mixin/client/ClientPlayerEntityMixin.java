@@ -32,6 +32,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Unique private final ImpactFrameManager impactFrameManager = new ImpactFrameManager();
     @Unique private final SlashRendererManager slashRendererManager = new SlashRendererManager();
     @Unique private final FakePlayerRendererManager fakePlayerRendererManager = new FakePlayerRendererManager();
+    @Unique private final APMDSCBeamManager apmdscBeamManager = new APMDSCBeamManager();
 
     public ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {
         super(world, profile);
@@ -84,5 +85,9 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Override
     public FakePlayerRendererManager getFakePlayerRendererManager() {
         return this.fakePlayerRendererManager;
+    }
+    @Override
+    public APMDSCBeamManager getAPMDSCBeamManager() {
+        return this.apmdscBeamManager;
     }
 }
