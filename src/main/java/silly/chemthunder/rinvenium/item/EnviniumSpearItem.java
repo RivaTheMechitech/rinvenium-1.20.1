@@ -27,6 +27,7 @@ import silly.chemthunder.rinvenium.cca.item.SpearTextureItemComponent;
 import silly.chemthunder.rinvenium.index.RinveniumEnchantments;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
 import silly.chemthunder.rinvenium.index.RinveniumSoundEvents;
+import silly.chemthunder.rinvenium.util.RinveniumUtil;
 
 import java.util.List;
 import java.util.UUID;
@@ -233,12 +234,10 @@ public class EnviniumSpearItem extends SwordItem {
 
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (EnchantmentHelper.getLevel(RinveniumEnchantments.RUSH, stack) <= 0) {
-            tooltip.add(Text.translatable("desc.spear.unenchanted_1").formatted(Formatting.DARK_GRAY).formatted(Formatting.ITALIC));
-            tooltip.add(Text.translatable("desc.spear.unenchanted_2").formatted(Formatting.DARK_GRAY).formatted(Formatting.ITALIC));
-            tooltip.add(Text.translatable("desc.spear.unenchanted_3").formatted(Formatting.DARK_GRAY).formatted(Formatting.ITALIC));
+            RinveniumUtil.addExpandableTooltip(Text.translatable("desc.spear.unenchanted").formatted(Formatting.GRAY), Text.translatable("item.rinvenium.expand_toolip"), tooltip, true);
             tooltip.add(Text.empty());
         } else {
-            //tooltip.add(Text.translatable("desc.spear.enchanted_1").formatted(Formatting.DARK_GRAY).formatted(Formatting.ITALIC));
+            RinveniumUtil.addExpandableTooltip(Text.translatable("desc.spear.enchanted").formatted(Formatting.GRAY), Text.translatable("item.rinvenium.expand_toolip"), tooltip, true);
         }
         String textureName = this.getTexture(stack).name.substring(0, 1).toUpperCase() + this.getTexture(stack).name.substring(1);
         if (this.getTexture(stack) == Texture.HEARTTECH) {

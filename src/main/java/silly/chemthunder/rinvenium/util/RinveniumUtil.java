@@ -1,24 +1,33 @@
 package silly.chemthunder.rinvenium.util;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
+import net.minecraft.world.World;
+import org.lwjgl.glfw.GLFW;
 import silly.chemthunder.rinvenium.index.RinveniumStatusEffects;
+import silly.chemthunder.rinvenium.item.DescriptionItem;
 import silly.chemthunder.rinvenium.particle.RailgunTrailParticleEffect;
 import silly.chemthunder.rinvenium.particle.SmokeTrailParticleEffect;
 
+import java.util.List;
 import java.util.UUID;
 
 public class RinveniumUtil {
@@ -297,5 +306,74 @@ public class RinveniumUtil {
     public static boolean shouldLockPlayerMovement(ClientPlayerEntity player) {
         if (player == null || player.isDead()) return false;
         return player.hasStatusEffect(RinveniumStatusEffects.WATCHED);
+    }
+
+    /** Adds a tooltip that shows when [Shift] is held down.
+     * If an item is and instance of {@link  DescriptionItem}, an anonymous class can be made in the registry that overrides the default formatting.<br>
+     * For example:
+     * <blockquote><pre>
+     *     Item ION_CELL = create("ion_cell", new DescriptionItem(new FabricItemSettings().food(RinveniumFoodComponents.ION_CELL), "ion_cell"));
+     * </pre></blockquote>
+     * This can be overridden as:
+     * <blockquote><pre>
+     *     Item ION_CELL = create("ion_cell", new DescriptionItem(new FabricItemSettings().food(RinveniumFoodComponents.ION_CELL), "ion_cell") {
+     *         &#64;Override
+     *         public void appendTooltip(ItemStack stack, &#64;Nullable World world, List&lt;Text&gt; tooltip, TooltipContext context){
+     *             RinveniumUtil.addExpandableTooltip(...);
+     *             super.appendTooltip(stack, world, tooltip, context);
+     *         }
+     *     });
+     * </pre></blockquote>
+     * @param text The {@link Text} that will show when [Shift] is held down. By default, the {@link DescriptionItem}
+     *             has this method implemented and is formatted to {@link Formatting#GRAY}.
+     * @param fallback The {@link Text} that will show to prompt the player to press [Shift].
+     * @param tooltip The tooltip parameter given by {@link Item#appendTooltip(ItemStack, World, List, TooltipContext)}
+     * @param shouldWrap Whether the {@code text} should be wrapped. Text wrapping length is defined by {@link #MAX_WRAPPED_TOOLTIP_CHAR_LENGTH}.
+     */
+    public static void addExpandableTooltip(Text text, Text fallback, List<Text> tooltip, boolean shouldWrap) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        long window = client.getWindow().getHandle();
+        boolean shiftKeyDown = GLFW.glfwGetKey(window, GLFW.GLFW_KEY_LEFT_SHIFT) == GLFW.GLFW_PRESS || GLFW.glfwGetKey(window, GLFW.GLFW_KEY_RIGHT_SHIFT) == GLFW.GLFW_PRESS;
+        if (shiftKeyDown) {
+            if (shouldWrap) {
+                addWrappedTooltip(text, tooltip);
+            } else {
+                tooltip.add(text);
+            }
+        } else {
+            tooltip.add(fallback);
+        }
+    }
+
+    public static final int MAX_WRAPPED_TOOLTIP_CHAR_LENGTH = 40;
+
+    public static void addWrappedTooltip(Text text, List<Text> tooltip) {
+        String fullText = text.getString();
+        Style style = text.getStyle();
+        String[] paragraphs = fullText.split("\\\\n");
+        for (String paragraph : paragraphs) {
+            paragraph = paragraph.trim();
+            String[] wordsPerParagraph = paragraph.split(" ");
+            if (wordsPerParagraph.length == 0) {
+                tooltip.add(Text.literal(" "));
+            } else {
+                int characterCount = 0;
+                String line = "";
+                for (String word : wordsPerParagraph) {
+                    characterCount += word.length();
+                    characterCount++;
+                    if (characterCount > MAX_WRAPPED_TOOLTIP_CHAR_LENGTH) {
+                        tooltip.add(Text.literal(line).setStyle(style));
+                        line = "";
+                        characterCount = 0;
+                    }
+                    line = line.concat(word).concat(" ");
+                }
+                if (!line.isEmpty()) {
+                    tooltip.add(Text.literal(line).setStyle(style));
+                }
+            }
+        }
+
     }
 }

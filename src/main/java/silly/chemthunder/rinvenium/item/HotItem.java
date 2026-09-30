@@ -20,8 +20,8 @@ import silly.chemthunder.rinvenium.util.RinveniumUtil;
 public class HotItem extends DescriptionItem {
     public final Item quenchedItem;
 
-    public HotItem(Settings settings, Item quenchedItem, String itemName, int numberOfLines) {
-        super(settings, itemName, numberOfLines);
+    public HotItem(Settings settings, Item quenchedItem, String itemName) {
+        super(settings, itemName);
         this.quenchedItem = quenchedItem;
     }
 

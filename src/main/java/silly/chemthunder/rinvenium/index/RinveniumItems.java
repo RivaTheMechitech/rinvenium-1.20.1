@@ -28,16 +28,16 @@ public interface RinveniumItems {
     Item CORE_CHARGE_GRENADE = create("core_charge_grenade", new CoreChargeGrenadeItem(new FabricItemSettings().maxCount(16)));
     Item APMDSC = create("apmdsc", new APMDSCItem(new FabricItemSettings().maxCount(1)));
 
-    Item AURIO_INGOT = create("aurio_ingot", new DescriptionItem(new FabricItemSettings(), "aurio_ingot", 2));
-    Item ENVINIA_INGOT = create("envinia_ingot", new DescriptionItem(new FabricItemSettings().fireproof(), "envinia_ingot", 2));
-    Item ENVIXIUS_INGOT = create("envixius_ingot", new DescriptionItem(new FabricItemSettings().fireproof(), "envixius_ingot", 2));
-    Item ENVIXIUS_PLATE = create("envixius_plate", new DescriptionItem(new FabricItemSettings().fireproof(), "envixius_plate", 2));
-    Item SUPERHEATED_AURIO_INGOT = create("superheated_aurio_ingot", new HotItem(new FabricItemSettings(), AURIO_INGOT, "superheated_aurio_ingot", 2));
-    Item SUPERHEATED_ENVINIA_INGOT = create("superheated_envinia_ingot", new HotItem(new FabricItemSettings(), ENVINIA_INGOT, "superheated_envinia_ingot", 2));
-    Item SUPERHEATED_ENVIXIUS_INGOT = create("superheated_envixius_ingot", new HotItem(new FabricItemSettings().fireproof(), ENVIXIUS_INGOT, "superheated_envixius_ingot", 2));
-    Item SUPERHEATED_ENVIXIUS_PLATE = create("superheated_envixius_plate", new HotItem(new FabricItemSettings().fireproof(), ENVIXIUS_PLATE, "superheated_envixius_plate", 1));
+    Item AURIO_INGOT = create("aurio_ingot", new DescriptionItem(new FabricItemSettings(), "aurio_ingot"));
+    Item ENVINIA_INGOT = create("envinia_ingot", new DescriptionItem(new FabricItemSettings().fireproof(), "envinia_ingot"));
+    Item ENVIXIUS_INGOT = create("envixius_ingot", new DescriptionItem(new FabricItemSettings().fireproof(), "envixius_ingot"));
+    Item ENVIXIUS_PLATE = create("envixius_plate", new DescriptionItem(new FabricItemSettings().fireproof(), "envixius_plate"));
+    Item SUPERHEATED_AURIO_INGOT = create("superheated_aurio_ingot", new HotItem(new FabricItemSettings(), AURIO_INGOT, "superheated_aurio_ingot"));
+    Item SUPERHEATED_ENVINIA_INGOT = create("superheated_envinia_ingot", new HotItem(new FabricItemSettings(), ENVINIA_INGOT, "superheated_envinia_ingot"));
+    Item SUPERHEATED_ENVIXIUS_INGOT = create("superheated_envixius_ingot", new HotItem(new FabricItemSettings().fireproof(), ENVIXIUS_INGOT, "superheated_envixius_ingot"));
+    Item SUPERHEATED_ENVIXIUS_PLATE = create("superheated_envixius_plate", new HotItem(new FabricItemSettings().fireproof(), ENVIXIUS_PLATE, "superheated_envixius_plate"));
     Item BATTERY = create("battery", new Item(new FabricItemSettings().food(RinveniumFoodComponents.BATTERY)));
-    Item ION_CELL = create("ion_cell", new DescriptionItem(new FabricItemSettings().food(RinveniumFoodComponents.ION_CELL), "ion_cell", 1));
+    Item ION_CELL = create("ion_cell", new DescriptionItem(new FabricItemSettings().food(RinveniumFoodComponents.ION_CELL), "ion_cell"));
 
     Item ENVIXIA_CORE = create("envixia_core", new EnvixiaCoreItem(new FabricItemSettings().maxCount(1).fireproof()));
     Item ENVIXIA_HELMET = create("envixia_helmet", new EnvixiaArmorItem(RinveniumArmorMaterials.ENIVIXIA, ArmorItem.Type.HELMET, new FabricItemSettings().maxCount(1).fireproof()));

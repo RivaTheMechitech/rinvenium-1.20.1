@@ -7,24 +7,21 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import silly.chemthunder.rinvenium.util.RinveniumUtil;
 
 import java.util.List;
 
 public class DescriptionItem extends Item {
     private final String item;
-    private final int numberOfLines;
 
-    public DescriptionItem(Settings settings, String item, int numberOfLines) {
+    public DescriptionItem(Settings settings, String item) {
         super(settings);
         this.item = item;
-        this.numberOfLines = numberOfLines;
     }
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        for (int i = 1; i <= numberOfLines; i++) {
-            tooltip.add(Text.translatable("item.rinvenium." + item + ".desc" + i).formatted(Formatting.GRAY));
-        }
+        RinveniumUtil.addExpandableTooltip(Text.translatable("item.rinvenium." + item + ".desc").formatted(Formatting.GRAY), Text.translatable("item.rinvenium.expand_toolip"), tooltip, true);
         super.appendTooltip(stack, world, tooltip, context);
     }
 } // i like this, this is good, maybe add a . between the "desc" and the number though for formatting's sake

@@ -2,6 +2,7 @@ package silly.chemthunder.rinvenium.item;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -21,6 +22,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import silly.chemthunder.rinvenium.cca.entity.EnvixiaFormComponent;
 import silly.chemthunder.rinvenium.cca.entity.HailOfTheGodComponent;
 import silly.chemthunder.rinvenium.entity.GunshotEntity;
@@ -31,6 +33,8 @@ import silly.chemthunder.rinvenium.index.RinveniumParticles;
 import silly.chemthunder.rinvenium.index.RinveniumSoundEvents;
 import silly.chemthunder.rinvenium.index.RinveniumStatusEffects;
 import silly.chemthunder.rinvenium.util.RinveniumUtil;
+
+import java.util.List;
 
 public class HotGItem extends Item {
     public static final int BULLET_PER_SEC = 10;
@@ -326,5 +330,11 @@ public class HotGItem extends Item {
     @Override
     public int getItemBarStep(ItemStack stack) {
         return 0;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        RinveniumUtil.addExpandableTooltip(Text.translatable("item.rinvenium.hail_of_the_gods.desc").formatted(Formatting.GRAY), Text.translatable("item.rinvenium.expand_toolip"), tooltip, true);
+        super.appendTooltip(stack, world, tooltip, context);
     }
 }

@@ -17,45 +17,42 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
     public void generateTranslations(TranslationBuilder translationBuilder) {
         translationBuilder.add(RinveniumItems.DEBUGGER, "Debugger");
 
+        translationBuilder.add("item.rinvenium.expand_toolip", "§7Hold§r §6[Shift]§r §7for more information.");
+        translationBuilder.add("item.rinvenium.expand_toolip.debug", "Testing expandable tooltips. \\n And Testing with custom paragraphs. \\n \\n And multi lines");
+
         translationBuilder.add(RinveniumItems.ENVINIUM_SPEAR, "Envinium Spear");
         translationBuilder.add(RinveniumItems.HAIL_OF_THE_GODS, "Hail of the Gods");
+        translationBuilder.add("item.rinvenium.hail_of_the_gods.desc", "A minigun that goes brrrrtttt. \\n \\n Starts with high spread, that slowly becomes more accurate. Be careful though, this weapon is prone to overheating. \\n After overheating, it enters a shotgun mode. If you let it heat up even more, things may go boom...");
         translationBuilder.add(RinveniumItems.DAEDALUS_STORMSHOT, "Daedalus Stormshot");
 
         translationBuilder.add(RinveniumItems.AURIO_INGOT, "Aurio Ingot");
-        translationBuilder.add("item.rinvenium.aurio_ingot.desc1", "Obtained by [R-Click] a Superheated Aurio Ingot");
-        translationBuilder.add("item.rinvenium.aurio_ingot.desc2", "on a water cauldron or source block.");
+        translationBuilder.add("item.rinvenium.aurio_ingot.desc", "Obtained by [R-Click] a Superheated Aurio Ingot on a water cauldron or source block.");
 
         translationBuilder.add(RinveniumItems.ENVINIA_INGOT, "Envinia Ingot");
-        translationBuilder.add("item.rinvenium.envinia_ingot.desc1", "Obtained by [R-Click] a Superheated Envinia Ingot");
-        translationBuilder.add("item.rinvenium.envinia_ingot.desc2", "on a water cauldron or source block.");
+        translationBuilder.add("item.rinvenium.envinia_ingot.desc", "Obtained by [R-Click] a Superheated Envinia Ingot on a water cauldron or source block.");
 
         translationBuilder.add(RinveniumItems.ENVIXIUS_INGOT, "Envixius Ingot");
-        translationBuilder.add("item.rinvenium.envixius_ingot.desc1", "Obtained by [R-Click] a Superheated Envixius Ingot");
-        translationBuilder.add("item.rinvenium.envixius_ingot.desc2", "on a water cauldron or source block.");
+        translationBuilder.add("item.rinvenium.envixius_ingot.desc", "Obtained by [R-Click] a Superheated Envixius Ingot on a water cauldron or source block.");
 
         translationBuilder.add(RinveniumItems.ENVIXIUS_PLATE, "Envixius Plate");
-        translationBuilder.add("item.rinvenium.envixius_plate.desc1", "Obtained by [R-Click] a Superheated Envixius Plate");
-        translationBuilder.add("item.rinvenium.envixius_plate.desc2", "on a water cauldron or source block.");
+        translationBuilder.add("item.rinvenium.envixius_plate.desc", "Obtained by [R-Click] a Superheated Envixius Plate on a water cauldron or source block.");
 
         translationBuilder.add(RinveniumItems.SUPERHEATED_AURIO_INGOT, "Superheated Aurio Ingot");
-        translationBuilder.add("item.rinvenium.superheated_aurio_ingot.desc1", "Obtained by dropping a Gold Ingot and Copper Ingot");
-        translationBuilder.add("item.rinvenium.superheated_aurio_ingot.desc2", "into an empty cauldron above a soul flame.");
+        translationBuilder.add("item.rinvenium.superheated_aurio_ingot.desc", "Obtained by dropping a Gold Ingot and Copper Ingot into an empty cauldron above a soul flame.");
 
         translationBuilder.add(RinveniumItems.SUPERHEATED_ENVINIA_INGOT, "Superheated Envinia Ingot");
-        translationBuilder.add("item.rinvenium.superheated_envinia_ingot.desc1", "Obtained by dropping a Netherite Scrap and Iron Ingot");
-        translationBuilder.add("item.rinvenium.superheated_envinia_ingot.desc2", "into an empty cauldron above a soul flame.");
+        translationBuilder.add("item.rinvenium.superheated_envinia_ingot.desc", "Obtained by dropping a Netherite Scrap and Iron Ingot into an empty cauldron above a soul flame.");
 
         translationBuilder.add(RinveniumItems.SUPERHEATED_ENVIXIUS_INGOT, "Superheated Envixius Ingot");
-        translationBuilder.add("item.rinvenium.superheated_envixius_ingot.desc1", "Obtained by dropping an Envinia Ingot and Aurio Ingot");
-        translationBuilder.add("item.rinvenium.superheated_envixius_ingot.desc2", "into an empty cauldron above a soul flame.");
+        translationBuilder.add("item.rinvenium.superheated_envixius_ingot.desc", "Obtained by dropping an Envinia Ingot and Aurio Ingot into an empty cauldron above a soul flame.");
 
         translationBuilder.add(RinveniumItems.SUPERHEATED_ENVIXIUS_PLATE, "Superheated Envixius Plate");
-        translationBuilder.add("item.rinvenium.superheated_envixius_plate.desc1", "Obtained by having an anvil fall on Superheated Envixius Ingot.");
+        translationBuilder.add("item.rinvenium.superheated_envixius_plate.desc", "Obtained by having an anvil fall on Superheated Envixius Ingot.");
 
         translationBuilder.add(RinveniumItems.BATTERY, "Battery");
 
         translationBuilder.add(RinveniumItems.ION_CELL, "Ion Cell");
-        translationBuilder.add("item.rinvenium.ion_cell.desc1", "Obtained by dropping a battery on a powered beacon.");
+        translationBuilder.add("item.rinvenium.ion_cell.desc", "Obtained by dropping a battery on a powered beacon.");
 
         translationBuilder.add(RinveniumItems.ENVIXIA_CORE, "Envixia Core");
         translationBuilder.add(RinveniumItems.ENVIXIA_HELMET, "Envixia Helmet");
@@ -67,11 +64,9 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(RinveniumEnchantments.RUSH, "Rush");
         translationBuilder.add("enchantment.rinvenium.rush.desc", "The Envinium Spear will charge over time, \nallowing the user to rush forward at great speeds on right-click.");
 
-        translationBuilder.add("desc.spear.unenchanted_1", "Holding right-click allows the Envinium Spear to parry attacks,");
-        translationBuilder.add("desc.spear.unenchanted_2", "knocking entities back and giving the user an attack buff.");
-        translationBuilder.add("desc.spear.unenchanted_3", "Attacking in a certain time frame will increase the damage by 50%.");
+        translationBuilder.add("desc.spear.unenchanted", "Holding right-click allows the Envinium Spear to parry attacks, knocking entities back and giving the user an attack buff. \\n Attacking in a certain time frame will increase the damage by 50%.");
 
-        translationBuilder.add("desc.spear.enchanted_1", "[Debug] If the dash does not work, right-click while sneaking to reset the timers.");
+        translationBuilder.add("desc.spear.enchanted", "[Debug] If the dash does not work, right-click while sneaking to reset the timers.");
         //endregion
 
         translationBuilder.add("death.attack.niki", "fuck you");
