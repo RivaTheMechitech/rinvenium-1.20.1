@@ -108,6 +108,9 @@ public class EnviniumSpearItemRenderer implements BuiltinItemRendererRegistry.Dy
             case SCARLET -> "scarlet";
             case HEARTTECH -> "hearttech";
             case DEFAULT -> "default";
+            case AVALI -> "avali";
+            case ASCENT -> "ascent";
+            case KNIGHT -> "knight";
         };
         append = "_" + append;
         return append;

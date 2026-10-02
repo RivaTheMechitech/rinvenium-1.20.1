@@ -34,6 +34,9 @@ public abstract class ModelLoaderMixin {
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear_shijaji", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear_scarlet", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear_hearttech", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear_ascent", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear_knight", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear_avali", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_default", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_remake", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_hstar", "inventory"));
@@ -44,6 +47,9 @@ public abstract class ModelLoaderMixin {
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_shijaji", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_scarlet", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_hearttech", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_ascent", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_knight", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_avali", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_default", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_remake", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_hstar", "inventory"));
@@ -54,5 +60,8 @@ public abstract class ModelLoaderMixin {
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_shijaji", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_scarlet", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_hearttech", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_ascent", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_knight", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d_blocking_avali", "inventory"));
     }
 }
