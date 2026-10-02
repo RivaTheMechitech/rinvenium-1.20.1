@@ -10,7 +10,6 @@ import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import org.jetbrains.annotations.NotNull;
@@ -39,19 +38,16 @@ public class EnviniumSpearItemRenderer implements BuiltinItemRendererRegistry.Dy
             return;
         }
         assert this.spearId != null;
-        boolean leftHanded = holder.getMainArm().equals(Arm.LEFT);
         EnviniumSpearItem.Texture texture = EnviniumSpearItem.Texture.DEFAULT;
         if (stack.getItem() instanceof EnviniumSpearItem spearItem) {
             texture = spearItem.getTexture(stack);
         }
         String append = getSpearTexture(texture);
+        String blocking = "";
         if (mode != ModelTransformationMode.GUI && mode != ModelTransformationMode.GROUND) {
             SpearParryComponent spearParryComponent = SpearParryComponent.get(holder);
-            String blocking;
             if (spearParryComponent.getDoubleBoolValue2()) {
                 blocking = "_blocking";
-            } else {
-                blocking = "";
             }
             modelId = new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d" + blocking + append, "inventory");
         } else {
@@ -63,13 +59,21 @@ public class EnviniumSpearItemRenderer implements BuiltinItemRendererRegistry.Dy
         if (mode == ModelTransformationMode.GUI) {
             matrices.translate(0.5, 0.5, 0);
         } else if (mode == ModelTransformationMode.THIRD_PERSON_LEFT_HAND) {
-            matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(90));
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
-            matrices.translate(-0.5, -1.35, -0.8);
+            if (blocking.isBlank()) {
+                matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(90));
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+                matrices.translate(-0.5, -1.35, -0.8);
+            } else {
+                matrices.translate(1.5, 0.5, 0.5);
+            }
         } else if (mode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND) {
-            matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(45));
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
-            matrices.translate(-0.5, 0, -0.9);
+            if (blocking.isBlank()) {
+                matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(45));
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+                matrices.translate(-0.5, 0, -0.9);
+            } else {
+                matrices.translate(1.5, 0.5, 0.5);
+            }
         } else {
             matrices.translate(0.5, 0.5, 0.5);
         }
@@ -92,7 +96,7 @@ public class EnviniumSpearItemRenderer implements BuiltinItemRendererRegistry.Dy
             }
         }
 
-        itemRenderer.renderItem(stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, spearModel);
+        itemRenderer.renderItem(stack, mode, false, matrices, vertexConsumers, light, overlay, spearModel);
         matrices.pop();
     }
 
