@@ -12,6 +12,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
@@ -81,6 +83,8 @@ public class WorldRendererListener {
         double camZ = camera.getPos().getZ();
 
         MatrixStack matrices = context.matrixStack();
+        matrices.push();
+
         matrices.translate(-camX, -camY, -camZ);
         matrices.translate(beam.startPos.getX(), beam.startPos.getY(), beam.startPos.getZ());
 
@@ -95,9 +99,18 @@ public class WorldRendererListener {
             RenderSystem.depthMask(MinecraftClient.isFabulousGraphicsOrBetter());
             RenderSystem.enableDepthTest();
 
-            bufferbuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+            bufferbuilder.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.POSITION_COLOR);
 
-            buildAPMDSCBeamVertices(beam, bufferbuilder, transformation, camX, camY, camZ);
+            Vec3d startPos = player.getEyePos().add(player.getRotationVecClient().normalize().multiply(0.5f));
+            HitResult hitResult = player.raycast(6.0, 0.0f, false);
+            Vec3d endPos = hitResult.getPos();
+            if (hitResult.getType() == HitResult.Type.BLOCK) {
+                BlockHitResult blockHitResult = (BlockHitResult) hitResult;
+                endPos = blockHitResult.getPos();
+            }
+
+            bufferbuilder.vertex(startPos.x, startPos.y, startPos.z).color(0.0f, 1.0f, 1.0f, 1.0f).next();
+            bufferbuilder.vertex(endPos.x, endPos.y, endPos.z).color(0.0f, 1.0f, 1.0f, 1.0f).next();
 
             RenderSystem.setShader(GameRenderer::getPositionColorProgram);
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);

@@ -15,6 +15,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
@@ -22,6 +23,7 @@ import net.minecraft.world.World;
 import silly.chemthunder.rinvenium.cca.entity.DeathSequenceComponent;
 import silly.chemthunder.rinvenium.index.RinveniumPackets;
 import silly.chemthunder.rinvenium.index.RinveniumStatusEffects;
+import silly.chemthunder.rinvenium.render.APMDSCBeamRender;
 import silly.chemthunder.rinvenium.render.SlashRender;
 import silly.chemthunder.rinvenium.render.VertexColorSet;
 import silly.chemthunder.rinvenium.render.manager.server.CustomFogManager;
@@ -29,6 +31,7 @@ import silly.chemthunder.rinvenium.util.RinveniumUtil;
 import silly.chemthunder.rinvenium.util.persistent.DeathSequenceState;
 
 import java.util.List;
+import java.util.UUID;
 
 public class DebuggerItem extends Item {
     public DebuggerItem(Settings settings) {
@@ -44,6 +47,30 @@ public class DebuggerItem extends Item {
                 MinecraftClient client = MinecraftClient.getInstance();
 
             } else { // Server Side Standing
+                if (player instanceof ServerPlayerEntity serverPlayer) {
+                    Vec3d startPos = player.getEyePos().add(player.getRotationVector().normalize().multiply(0.5));
+                    HitResult hitResult = player.raycast(6.0, 0.0f, false);
+                    Vec3d endPos;
+                    if (hitResult.getType() == HitResult.Type.BLOCK) {
+                        BlockHitResult blockHitResult = (BlockHitResult) hitResult;
+                        endPos = blockHitResult.getPos();
+                    } else {
+                        endPos = hitResult.getPos();
+                    }
+                    UUID uuid = UUID.randomUUID();
+                    PacketByteBuf buf = PacketByteBufs.create();
+                    buf.writeUuid(uuid);
+                    buf.writeDouble(startPos.getX());
+                    buf.writeDouble(startPos.getY());
+                    buf.writeDouble(startPos.getZ());
+                    buf.writeDouble(endPos.getX());
+                    buf.writeDouble(endPos.getY());
+                    buf.writeDouble(endPos.getZ());
+                    buf.writeInt(60);
+                    ServerPlayNetworking.send(serverPlayer, RinveniumPackets.ADD_APMDSC_BEAM, buf);
+
+                }
+
                 /** Spawns Raycast particle beam */
                 /*
                 if (world instanceof ServerWorld serverWorld) {
