@@ -1,10 +1,12 @@
 package silly.chemthunder.rinvenium.entity;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -47,6 +49,15 @@ public class CoreChargeGrenadeEntity extends ThrownItemEntity {
         this.setVelocity(vec3d);
         Vec3d vec3d2 = vec3d.normalize().multiply(0.05F);
         this.setPos(this.getX() - vec3d2.x, this.getY() - vec3d2.y, this.getZ() - vec3d2.z);
-        this.setOnGround(true);
+    }
+
+    @Override
+    protected void onEntityHit(EntityHitResult entityHitResult) {
+        super.onEntityHit(entityHitResult);
+        Entity entity = entityHitResult.getEntity();
+        Vec3d rotation = entity.getRotationVector();
+        Vec3d ccgrotation = this.getRotationVector();
+        Vec3d lastVec = rotation.subtract(ccgrotation);
+        this.setVelocity(lastVec);
     }
 }
