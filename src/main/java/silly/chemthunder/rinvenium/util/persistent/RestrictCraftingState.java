@@ -8,7 +8,7 @@ import net.minecraft.world.PersistentState;
 public class RestrictCraftingState extends PersistentState {
     public static final String LOCK_RECIPES_KEY = "RinveniumLockedRecipes";
 
-    public boolean lockRecipes = false;
+    public boolean lockRecipes = true;
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
