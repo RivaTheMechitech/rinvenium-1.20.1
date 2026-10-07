@@ -13,6 +13,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.HungerManager;
+import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ElytraItem;
 import net.minecraft.item.Item;
@@ -30,6 +31,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -42,6 +44,7 @@ import silly.chemthunder.rinvenium.cca.entity.riva.SpearHealComponent;
 import silly.chemthunder.rinvenium.datagen.RinveniumItemTagProvider;
 import silly.chemthunder.rinvenium.index.*;
 import silly.chemthunder.rinvenium.item.EnviniumSpearItem;
+import silly.chemthunder.rinvenium.item.EnvixiaArmorItem;
 import silly.chemthunder.rinvenium.util.inject.HungerDecrement;
 
 @Mixin(PlayerEntity.class)
@@ -49,6 +52,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
     @Shadow public abstract void startFallFlying();
     @Shadow public abstract HungerManager getHungerManager();
+
+    @Shadow
+    @Final
+    private PlayerAbilities abilities;
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -362,5 +369,18 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             }
         }
         */
+    }
+
+    @Inject(method = "getOffGroundSpeed", at = @At("RETURN"), cancellable = true)
+    private void getOffGroundSpeed(CallbackInfoReturnable<Float> cir) {
+        if (this.abilities.flying && !this.hasVehicle()) {
+            cir.setReturnValue(this.isSprinting() ? this.abilities.getFlySpeed() * 2.0F : this.abilities.getFlySpeed());
+        } else {
+            if (EnvixiaArmorItem.hasFullSuit((PlayerEntity) ((Object) this))) {
+                cir.setReturnValue((this.isSprinting() ? 0.025999999F : 0.02F) * 1.5f);
+            } else {
+                cir.setReturnValue(this.isSprinting() ? 0.025999999F : 0.02F);
+            }
+        }
     }
 }
