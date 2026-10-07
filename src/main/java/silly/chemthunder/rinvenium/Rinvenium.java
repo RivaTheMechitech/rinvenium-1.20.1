@@ -21,6 +21,7 @@ public class Rinvenium implements ModInitializer {
 
 	public void onInitialize() {
         RinveniumItems.init();
+        RinveniumItemGroups.registerItemGroups();
         RinveniumFoodComponents.initRinveniumFoodComponents();
         RinveniumEnchantments.init();
         RinveniumStatusEffects.init();

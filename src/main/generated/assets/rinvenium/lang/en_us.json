@@ -51,6 +51,7 @@
   "item.rinvenium.superheated_envixius_ingot.desc": "Obtained by dropping an Envinia Ingot and Aurio Ingot into an empty cauldron above a soul flame.",
   "item.rinvenium.superheated_envixius_plate": "Superheated Envixius Plate",
   "item.rinvenium.superheated_envixius_plate.desc": "Obtained by having an anvil fall on Superheated Envixius Ingot.",
+  "itemgroup.rinvenium": "Rinvenium",
   "sound.rinvenium.bell": "Ominous Bell Rings",
   "sound.rinvenium.envixia_core_use": "Envixia core activates",
   "sound.rinvenium.envixius_forged": "Envixius Ingot forged",

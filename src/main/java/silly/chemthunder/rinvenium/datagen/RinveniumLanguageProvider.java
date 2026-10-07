@@ -108,6 +108,8 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(getSoundTranslationKey(RinveniumSoundEvents.ION_CELL_FORMED), "Ion Cell formed");
         translationBuilder.add(getSoundTranslationKey(RinveniumSoundEvents.PLATE_FORMED), "Envixius Plate formed");
         translationBuilder.add(getSoundTranslationKey(RinveniumSoundEvents.BELL), "Ominous Bell Rings");
+
+        translationBuilder.add("itemgroup.rinvenium", "Rinvenium");
     }
 
     public static String getSoundTranslationKey(SoundEvent sound) {
