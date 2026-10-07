@@ -38,7 +38,15 @@ public class EnvixiaArmorItem extends ArmorItem {
         if (entity instanceof PlayerEntity player) {
             if (hasFullSuit(player)) {
                 if (!player.getAttributes().hasModifierForAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED, SPEED_MODIFIER)) {
-                    player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).addTemporaryModifier(new EntityAttributeModifier(
+                        player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).addTemporaryModifier(new EntityAttributeModifier(
+                                SPEED_MODIFIER,
+                                SPEED_MODIFIER_ID,
+                                0.3,
+                                EntityAttributeModifier.Operation.MULTIPLY_TOTAL
+                        ));
+                }
+                if (!player.getAttributes().hasModifierForAttribute(EntityAttributes.GENERIC_FLYING_SPEED, SPEED_MODIFIER)) {
+                    player.getAttributeInstance(EntityAttributes.GENERIC_FLYING_SPEED).addTemporaryModifier(new EntityAttributeModifier(
                             SPEED_MODIFIER,
                             SPEED_MODIFIER_ID,
                             0.3,
@@ -49,6 +57,9 @@ public class EnvixiaArmorItem extends ArmorItem {
             } else {
                 if (player.getAttributes().hasModifierForAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED, SPEED_MODIFIER)) {
                     player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).removeModifier(SPEED_MODIFIER);
+                }
+                if (player.getAttributes().hasModifierForAttribute(EntityAttributes.GENERIC_FLYING_SPEED, SPEED_MODIFIER)) {
+                    player.getAttributeInstance(EntityAttributes.GENERIC_FLYING_SPEED).removeModifier(SPEED_MODIFIER);
                 }
                 this.isFullSuit = false;
             }

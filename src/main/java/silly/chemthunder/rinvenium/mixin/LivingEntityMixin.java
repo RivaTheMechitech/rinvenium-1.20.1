@@ -6,6 +6,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -16,10 +18,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -33,7 +33,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import silly.chemthunder.rinvenium.Rinvenium;
-import silly.chemthunder.rinvenium.cca.entity.DeathSequenceComponent;
 import silly.chemthunder.rinvenium.cca.entity.EnvixiaFormComponent;
 import silly.chemthunder.rinvenium.cca.entity.SpearParryComponent;
 import silly.chemthunder.rinvenium.index.RinveniumDamageSources;
@@ -42,7 +41,6 @@ import silly.chemthunder.rinvenium.index.RinveniumItems;
 import silly.chemthunder.rinvenium.index.RinveniumSoundEvents;
 import silly.chemthunder.rinvenium.index.RinveniumStatusEffects;
 import silly.chemthunder.rinvenium.item.EnvixiaArmorItem;
-import silly.chemthunder.rinvenium.util.persistent.DeathSequenceState;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements Attackable {
@@ -239,5 +237,16 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
         }
         */
         return true;
+    }
+
+    @Inject(method = "createLivingAttributes", at = @At(value = "HEAD"), cancellable = true)
+    private static void rinvenium$createLivingAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
+        cir.setReturnValue(DefaultAttributeContainer.builder()
+                .add(EntityAttributes.GENERIC_MAX_HEALTH)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED)
+                .add(EntityAttributes.GENERIC_ARMOR)
+                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS)
+                .add(EntityAttributes.GENERIC_FLYING_SPEED));
     }
 }
