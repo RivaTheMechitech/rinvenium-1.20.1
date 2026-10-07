@@ -67,6 +67,10 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add("desc.spear.unenchanted", "Holding right-click allows the Envinium Spear to parry attacks, knocking entities back and giving the user an attack buff. \\n Attacking in a certain time frame will increase the damage by 50%.");
 
         translationBuilder.add("desc.spear.enchanted", "[Debug] If the dash does not work, right-click while sneaking to reset the timers.");
+
+        translationBuilder.add(RinveniumEnchantments.LOW_POWER_OUTPUT, "Low Power Output");
+        translationBuilder.add(RinveniumEnchantments.HIGH_POWER_OUTPUT, "High Power Output");
+        translationBuilder.add(RinveniumEnchantments.STARSTRUCK, "Starstruck");
         //endregion
 
         translationBuilder.add("death.attack.niki", "fuck you");
