@@ -276,7 +276,8 @@ public class EnviniumSpearItem extends SwordItem {
         HEARTTECH("hearttech"),
         ASCENT("ascent"),
         KNIGHT("knight"),
-        AVALI("avali");
+        AVALI("avali"),
+        RIFTSHATTER("riftshatter");
 
         private String name;
 
