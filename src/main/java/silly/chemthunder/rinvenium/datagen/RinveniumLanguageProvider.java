@@ -64,7 +64,7 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(RinveniumEnchantments.RUSH, "Rush");
         translationBuilder.add("enchantment.rinvenium.rush.desc", "The Envinium Glaive will charge over time, \nallowing the user to rush forward at great speeds on right-click.");
 
-        translationBuilder.add("desc.glaive.unenchanted", "Holding right-click allows the Envinium Glaive to parry attacks, knocking entities back and giving the user an attack buff. \\n Attacking in a certain time frame will increase the damage by 50%.");
+        translationBuilder.add("desc.glaive.unenchanted", "Holding right-click allows the Envinium Glaive to parry attacks, knocking entities back and giving the user an attack buff. \\n Attacking in a certain time frame will increase the damage by +4");
 
         translationBuilder.add("desc.glaive.enchanted", "[Debug] If the dash does not work, right-click while sneaking to reset the timers.");
 

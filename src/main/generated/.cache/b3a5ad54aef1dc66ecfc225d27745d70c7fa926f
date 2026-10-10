@@ -1,4 +1,4 @@
-// 1.20.1	2026-10-10T17:20:57.2115815	Rinvenium/Recipes
+// 1.20.1	2026-10-10T17:30:18.4318869	Rinvenium/Recipes
 42297c74f8d2041f252520630a9c71b26d2e30ba data\rinvenium\advancements\recipes\combat\envixia_leggings.json
 232fc7f7431f19ac16088bd12fcf261ef38a41c1 data\rinvenium\recipes\superheated_envixius_plate.json
 a9a6197210bdf9e29f60a198cb76415dbb555f3a data\rinvenium\recipes\envixia_core.json
@@ -12,8 +12,8 @@ beac4fe4da60405d63cf6b85075716059105eb12 data\rinvenium\recipes\envixia_leggings
 ef973e332b7effaa8d0da7d5b2f5c2b175dec470 data\rinvenium\recipes\envixia_boots.json
 3ec9c128b5e84dc003d52d2cff8e3030fd65060e data\rinvenium\advancements\recipes\misc\superheated_envinia_ingot.json
 fd98c93455397268afe95f5b87b8d88e74a2cccc data\rinvenium\advancements\recipes\misc\superheated_envixius_ingot.json
-a884d66f8567c2c50b3325a51c113517a4600573 data\rinvenium\advancements\recipes\combat\envixia_core.json
 d77e70c1bc87253ad5b79fb56e32ce199edfd06a data\rinvenium\recipes\envinium_glaive.json
+a884d66f8567c2c50b3325a51c113517a4600573 data\rinvenium\advancements\recipes\combat\envixia_core.json
 12e7f79938e528a7158d72f82165f0068ebbea7c data\rinvenium\advancements\recipes\misc\battery.json
 300c0e41e767a9dea36de9b1f04a2c0159bbeb45 data\rinvenium\advancements\recipes\combat\envixia_chestplate.json
 0b0e1f5bd4498d059b4c4e65b5d6df367df330e4 data\rinvenium\recipes\superheated_envinia_ingot.json

@@ -11,7 +11,7 @@
   "death.attack.orchid": "%s was executed",
   "death.attack.orchid.player": "%s was executed",
   "desc.glaive.enchanted": "[Debug] If the dash does not work, right-click while sneaking to reset the timers.",
-  "desc.glaive.unenchanted": "Holding right-click allows the Envinium Glaive to parry attacks, knocking entities back and giving the user an attack buff. \\n Attacking in a certain time frame will increase the damage by 50%.",
+  "desc.glaive.unenchanted": "Holding right-click allows the Envinium Glaive to parry attacks, knocking entities back and giving the user an attack buff. \\n Attacking in a certain time frame will increase the damage by +4",
   "effect.rinvenium.sparked": "Sparked",
   "effect.rinvenium.sparked.desc": "Deals low damage rapidly and can chain to nearby players if they are wet.",
   "effect.rinvenium.sparked_with_cooldown": "Electrified",
