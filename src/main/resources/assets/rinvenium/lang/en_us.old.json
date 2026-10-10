@@ -1,10 +1,10 @@
 {
-  "item.rinvenium.envinium_spear": "Envinium Spear",
+  "item.rinvenium.envinium_glaive": "Envinium Glaive",
   "item.rinvenium.hail_of_the_gods": "Hail of the Gods",
   "item.rinvenium.battery": "Battery",
 
   "enchantment.rinvenium.rush": "Rush",
-  "enchantment.rinvenium.rush.desc": "The Envinium Spear will charge over time, \nallowing the user to rush forward at great speeds on right-click.",
+  "enchantment.rinvenium.rush.desc": "The Envinium Glaive will charge over time, \nallowing the user to rush forward at great speeds on right-click.",
 
   "death.attack.niki": "fuck you",
   "death.attack.niki.player": "fuck you",
@@ -16,14 +16,14 @@
 
   "effect.rinvenium.sparked": "Sparked",
 
-  "desc.spear.unenchanted_1": "Holding right-click allows the Envinium Spear to parry attacks,",
-  "desc.spear.unenchanted_2": "knocking entities back and gives the user an attack buff.",
-  "desc.spear.unenchanted_3": "Attacking in a certain time frame will increase the damage by 50%.",
-  "desc.spear.enchanted_1": "[Debug] If the dash does not work, right-click while sneaking to reset the timers.",
-  "sound.rinvenium.spear_dash": "Spear rushes",
-  "sound.rinvenium.spear_dash_impact": "Spear rush hits",
-  "sound.rinvenium.spear_parry": "Spear parries",
-  "sound.rinvenium.spear_slash": "Spear slashes",
+  "desc.glaive.unenchanted_1": "Holding right-click allows the Envinium Glaive to parry attacks,",
+  "desc.glaive.unenchanted_2": "knocking entities back and gives the user an attack buff.",
+  "desc.glaive.unenchanted_3": "Attacking in a certain time frame will increase the damage by 50%.",
+  "desc.glaive.enchanted_1": "[Debug] If the dash does not work, right-click while sneaking to reset the timers.",
+  "sound.rinvenium.glaive_dash": "Glaive rushes",
+  "sound.rinvenium.glaive_dash_impact": "Glaive rush hits",
+  "sound.rinvenium.glaive_parry": "Glaive parries",
+  "sound.rinvenium.glaive_slash": "Glaive slashes",
   "sound.rinvenium.hail_of_the_gods.shoot": "Hail of the Gods goes BBRRRTT",
   "sound.rinvenium.hail_of_the_gods.overheat": "Hail of the Gods overheats"
 }

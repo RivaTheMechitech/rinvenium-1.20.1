@@ -3,9 +3,9 @@ package silly.chemthunder.rinvenium.index.client;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.util.Identifier;
 import silly.chemthunder.rinvenium.cca.RinveniumComponents;
-import silly.chemthunder.rinvenium.cca.item.SpearTextureItemComponent;
+import silly.chemthunder.rinvenium.cca.item.GlaiveTextureItemComponent;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
-import silly.chemthunder.rinvenium.item.EnviniumSpearItem;
+import silly.chemthunder.rinvenium.item.EnviniumGlaiveItem;
 import silly.chemthunder.rinvenium.item.EnvixiaCoreItem;
 
 public class RinveniumModelPredicateProvider {
@@ -21,12 +21,12 @@ public class RinveniumModelPredicateProvider {
                 }
         );
         ModelPredicateProviderRegistry.register(
-                RinveniumItems.ENVINIUM_SPEAR,
-                new Identifier("custom_spear_texture"),
+                RinveniumItems.ENVINIUM_GLAIVE,
+                new Identifier("custom_glaive_texture"),
                 (stack, world, entity, seed) -> {
-                    if (stack.isOf(RinveniumItems.ENVINIUM_SPEAR)) {
-                        SpearTextureItemComponent spearTextureItemComponent = RinveniumComponents.SPEAR_TEXTURE.get(stack);
-                        return (float) EnviniumSpearItem.Texture.valueOf(spearTextureItemComponent.getTexture().toUpperCase()).ordinal() / EnviniumSpearItem.Texture.values().length;
+                    if (stack.isOf(RinveniumItems.ENVINIUM_GLAIVE)) {
+                        GlaiveTextureItemComponent glaiveTextureItemComponent = RinveniumComponents.GLAIVE_TEXTURE.get(stack);
+                        return (float) EnviniumGlaiveItem.Texture.valueOf(glaiveTextureItemComponent.getTexture().toUpperCase()).ordinal() / EnviniumGlaiveItem.Texture.values().length;
                     }
                     return 0.0f;
                 }

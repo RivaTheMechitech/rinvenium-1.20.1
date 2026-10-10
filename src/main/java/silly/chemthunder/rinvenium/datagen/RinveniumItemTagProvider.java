@@ -7,7 +7,6 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.TagKey;
-import org.jetbrains.annotations.Nullable;
 import silly.chemthunder.rinvenium.Rinvenium;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
 
@@ -28,7 +27,7 @@ public class RinveniumItemTagProvider extends FabricTagProvider.ItemTagProvider 
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
         this.getOrCreateTagBuilder(BIG_ITEM_RENDERING)
                 .add(
-                        RinveniumItems.ENVINIUM_SPEAR
+                        RinveniumItems.ENVINIUM_GLAIVE
                 );
         this.getOrCreateTagBuilder(ENVIXIA_CORE_INGREDIENTS)
                 .add(
@@ -43,7 +42,7 @@ public class RinveniumItemTagProvider extends FabricTagProvider.ItemTagProvider 
                         RinveniumItems.ENVIXIA_CHESTPLATE,
                         RinveniumItems.ENVIXIA_LEGGINGS,
                         RinveniumItems.ENVIXIA_BOOTS,
-                        RinveniumItems.ENVINIUM_SPEAR
+                        RinveniumItems.ENVINIUM_GLAIVE
                 );
         this.getOrCreateTagBuilder(ENVIXIA_MUNCHIES)
                 .add(
@@ -52,7 +51,7 @@ public class RinveniumItemTagProvider extends FabricTagProvider.ItemTagProvider 
                 );
         this.getOrCreateTagBuilder(TRIGGERS_RESKIN_SCREEN)
                 .add(
-                        RinveniumItems.ENVINIUM_SPEAR
+                        RinveniumItems.ENVINIUM_GLAIVE
                 );
     }
 }

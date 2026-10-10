@@ -1,6 +1,11 @@
 {
   "replace": false,
   "values": [
-    "rinvenium:envixia_core"
+    "rinvenium:envixia_core",
+    "rinvenium:envixia_helmet",
+    "rinvenium:envixia_chestplate",
+    "rinvenium:envixia_leggings",
+    "rinvenium:envixia_boots",
+    "rinvenium:envinium_glaive"
   ]
 }

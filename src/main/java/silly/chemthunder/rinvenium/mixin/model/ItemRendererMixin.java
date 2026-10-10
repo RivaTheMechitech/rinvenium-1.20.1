@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
-import silly.chemthunder.rinvenium.render.EnviniumSpearItemRenderer;
+import silly.chemthunder.rinvenium.render.EnviniumGlaiveItemRenderer;
 
 
 @Mixin(ItemRenderer.class)
@@ -26,8 +26,8 @@ public abstract class ItemRendererMixin {
         )
     )
     private void rinvenium$storeEntity(LivingEntity entity, ItemStack item, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, World world, int light, int overlay, int seed, CallbackInfo ci) {
-        if (item.isOf(RinveniumItems.ENVINIUM_SPEAR) && entity instanceof PlayerEntity player) {
-            EnviniumSpearItemRenderer.holder = player;
+        if (item.isOf(RinveniumItems.ENVINIUM_GLAIVE) && entity instanceof PlayerEntity player) {
+            EnviniumGlaiveItemRenderer.holder = player;
         }
     }
 
@@ -41,24 +41,24 @@ public abstract class ItemRendererMixin {
     public BakedModel useModel(BakedModel value, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         PlayerEntity player = MinecraftClient.getInstance().player;
         if (player != null && entity != null) {
-            if (stack.isOf(RinveniumItems.ENVINIUM_SPEAR)) {
-                EnviniumSpearItem.Texture texture = EnviniumSpearItem.Texture.DEFAULT;
-                if (stack.getItem() instanceof EnviniumSpearItem spearItem) {
-                    texture = spearItem.getTexture(stack);
+            if (stack.isOf(RinveniumItems.ENVINIUM_GLAIVE)) {
+                EnviniumGlaiveItem.Texture texture = EnviniumGlaiveItem.Texture.DEFAULT;
+                if (stack.getItem() instanceof EnviniumGlaiveItem glaiveItem) {
+                    texture = glaiveItem.getTexture(stack);
                 }
                 if (renderMode != ModelTransformationMode.GUI && renderMode != ModelTransformationMode.GROUND) {
-                    SpearParryComponent spearParryComponent = SpearParryComponent.get(entity);
+                    GlaiveParryComponent glaiveParryComponent = GlaiveParryComponent.get(entity);
                     String blocking;
-                    if (spearParryComponent.getDoubleBoolValue2()) {
+                    if (glaiveParryComponent.getDoubleBoolValue2()) {
                         blocking = "_blocking";
                     } else {
                         blocking = "";
                     }
-                    String append = getSpearTexture(texture);
-                    return ((ItemRendererAccessor) this).renderer$getModels().getModelManager().getModel(new ModelIdentifier(Rinvenium.MOD_ID, "spear_handheld_2d" + blocking + append, "inventory"));
+                    String append = getGlaiveTexture(texture);
+                    return ((ItemRendererAccessor) this).renderer$getModels().getModelManager().getModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d" + blocking + append, "inventory"));
                 }/* else {
-                    String append = getSpearTexture(texture);
-                    return ((ItemRendererAccessor) this).renderer$getModels().getModelManager().getModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_spear" + append, "inventory"));
+                    String append = getGlaiveTexture(texture);
+                    return ((ItemRendererAccessor) this).renderer$getModels().getModelManager().getModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_glaive" + append, "inventory"));
                 }
             }
         }
@@ -66,7 +66,7 @@ public abstract class ItemRendererMixin {
     }*/
 /*
     @Unique
-    private static @NotNull String getSpearTexture(EnviniumSpearItem.Texture texture) {
+    private static @NotNull String getGlaiveTexture(EnviniumGlaiveItem.Texture texture) {
         String append = switch (texture) {
             case REMAKE -> "remake";
             case HSTAR -> "hstar";
