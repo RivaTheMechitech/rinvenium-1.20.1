@@ -34,14 +34,14 @@
   ],
   "custom": {
     "cardinal-components": [
-      "rinvenium:spear",
-      "rinvenium:spear_texture",
+      "rinvenium:glaive",
+      "rinvenium:glaive_texture",
       "rinvenium:dash",
       "rinvenium:riva_ascent",
-      "rinvenium:spear_parry",
+      "rinvenium:glaive_parry",
       "rinvenium:hail_of_the_gods",
       "rinvenium:envixia_form",
-      "rinvenium:spear_heal",
+      "rinvenium:glaive_heal",
       "rinvenium:death_sequence",
       "rinvenium:apmdsc_entity",
       "rinvenium:apmdsc_item"

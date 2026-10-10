@@ -15,8 +15,8 @@ public class RinveniumItemGroups {
     public static final ItemGroup RINVENIUM_GROUP = Registry.register(Registries.ITEM_GROUP,
             new Identifier(Rinvenium.MOD_ID, "rinvenium_group"),
             FabricItemGroup.builder().displayName(Text.translatable("itemgroup.rinvenium"))
-                    .icon(() -> new ItemStack(ENVINIUM_SPEAR)).entries((displayContext, entries) -> {
-                        entries.add(ENVINIUM_SPEAR);
+                    .icon(() -> new ItemStack(ENVINIUM_GLAIVE)).entries((displayContext, entries) -> {
+                        entries.add(ENVINIUM_GLAIVE);
                         entries.add(HAIL_OF_THE_GODS);
                         entries.add(ENVIXIA_CORE);
                         entries.add(ENVIXIA_HELMET);

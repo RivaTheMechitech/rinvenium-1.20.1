@@ -20,7 +20,7 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add("item.rinvenium.expand_toolip", "§7Hold§r §6[Shift]§r §7for more information.");
         translationBuilder.add("item.rinvenium.expand_toolip.debug", "Testing expandable tooltips. \\n And Testing with custom paragraphs. \\n \\n And multi lines");
 
-        translationBuilder.add(RinveniumItems.ENVINIUM_SPEAR, "Envinium Spear");
+        translationBuilder.add(RinveniumItems.ENVINIUM_GLAIVE, "Envinium Glaive");
         translationBuilder.add(RinveniumItems.HAIL_OF_THE_GODS, "Hail of the Gods");
         translationBuilder.add("item.rinvenium.hail_of_the_gods.desc", "A minigun that goes brrrrtttt. \\n \\n Starts with high spread, that slowly becomes more accurate. Be careful though, this weapon is prone to overheating. \\n After overheating, it enters a shotgun mode. If you let it heat up even more, things may go boom...");
         translationBuilder.add(RinveniumItems.DAEDALUS_STORMSHOT, "Daedalus Stormshot");
@@ -60,13 +60,13 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(RinveniumItems.ENVIXIA_LEGGINGS, "Envixia Leggings");
         translationBuilder.add(RinveniumItems.ENVIXIA_BOOTS, "Envixia Boots");
 
-        //region Spear
+        //region Glaivee
         translationBuilder.add(RinveniumEnchantments.RUSH, "Rush");
-        translationBuilder.add("enchantment.rinvenium.rush.desc", "The Envinium Spear will charge over time, \nallowing the user to rush forward at great speeds on right-click.");
+        translationBuilder.add("enchantment.rinvenium.rush.desc", "The Envinium Glaive will charge over time, \nallowing the user to rush forward at great speeds on right-click.");
 
-        translationBuilder.add("desc.spear.unenchanted", "Holding right-click allows the Envinium Spear to parry attacks, knocking entities back and giving the user an attack buff. \\n Attacking in a certain time frame will increase the damage by 50%.");
+        translationBuilder.add("desc.glaive.unenchanted", "Holding right-click allows the Envinium Glaive to parry attacks, knocking entities back and giving the user an attack buff. \\n Attacking in a certain time frame will increase the damage by 50%.");
 
-        translationBuilder.add("desc.spear.enchanted", "[Debug] If the dash does not work, right-click while sneaking to reset the timers.");
+        translationBuilder.add("desc.glaive.enchanted", "[Debug] If the dash does not work, right-click while sneaking to reset the timers.");
 
         translationBuilder.add(RinveniumEnchantments.LOW_POWER_OUTPUT, "Low Power Output");
         translationBuilder.add(RinveniumEnchantments.HIGH_POWER_OUTPUT, "High Power Output");
@@ -96,10 +96,10 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(RinveniumStatusEffects.SWISS_CHEESE, "Swiss Cheese");
         translationBuilder.add("effect.rinvenium.swiss_cheese.desc", "Applies a visually impairing overlay of holes.");
 
-        translationBuilder.add(getSoundTranslationKey(RinveniumSoundEvents.SPEAR_DASH), "Spear rushes");
-        translationBuilder.add(getSoundTranslationKey(RinveniumSoundEvents.SPEAR_DASH_IMPACT), "Spear rush hits");
-        translationBuilder.add(getSoundTranslationKey(RinveniumSoundEvents.SPEAR_PARRY), "Spear parries");
-        translationBuilder.add(getSoundTranslationKey(RinveniumSoundEvents.SPEAR_SLASH), "Spear slashes");
+        translationBuilder.add(getSoundTranslationKey(RinveniumSoundEvents.GLAIVE_DASH), "Glaive rushes");
+        translationBuilder.add(getSoundTranslationKey(RinveniumSoundEvents.GLAIVE_DASH_IMPACT), "Glaive rush hits");
+        translationBuilder.add(getSoundTranslationKey(RinveniumSoundEvents.GLAIVE_PARRY), "Glaive parries");
+        translationBuilder.add(getSoundTranslationKey(RinveniumSoundEvents.GLAIVE_SLASH), "Glaive slashes");
 
         translationBuilder.add("sound.rinvenium.hail_of_the_gods.shoot", "Hail of the Gods goes BRRRTT");
         translationBuilder.add("sound.rinvenium.hail_of_the_gods.overheat", "Hail of the Gods overheats"); // these should also prolly use 'getSoundTranslationKey'

@@ -17,12 +17,12 @@ import silly.chemthunder.rinvenium.index.RinveniumItems;
 
 @Mixin(TridentRiptideFeatureRenderer.class)
 public abstract class TridentFeatureRendererMixin {
-    @Unique private static final Identifier SPEAR_RIPTIDE_TEXTURE = Rinvenium.id("textures/entity/spear_riptide.png");
+    @Unique private static final Identifier GLAIVE_RIPTIDE_TEXTURE = Rinvenium.id("textures/entity/glaive_riptide.png");
 
     @ModifyVariable(method = "render", at = @At("STORE"))
-    private VertexConsumer rinvenium$spearRiptide(VertexConsumer orig, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, LivingEntity livingEntity) {
-        if (livingEntity instanceof PlayerEntity && livingEntity.isUsingRiptide() && (livingEntity.getMainHandStack().getItem() == RinveniumItems.ENVINIUM_SPEAR || (livingEntity.getOffHandStack().getItem() == RinveniumItems.ENVINIUM_SPEAR))) {
-            return vertexConsumerProvider.getBuffer(RenderLayer.getEntityTranslucentEmissive(SPEAR_RIPTIDE_TEXTURE));
+    private VertexConsumer rinvenium$glaiveRiptide(VertexConsumer orig, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, LivingEntity livingEntity) {
+        if (livingEntity instanceof PlayerEntity && livingEntity.isUsingRiptide() && (livingEntity.getMainHandStack().getItem() == RinveniumItems.ENVINIUM_GLAIVE || (livingEntity.getOffHandStack().getItem() == RinveniumItems.ENVINIUM_GLAIVE))) {
+            return vertexConsumerProvider.getBuffer(RenderLayer.getEntityTranslucentEmissive(GLAIVE_RIPTIDE_TEXTURE));
         }
         return orig;
     }

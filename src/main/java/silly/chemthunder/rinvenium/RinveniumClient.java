@@ -13,7 +13,7 @@ import silly.chemthunder.rinvenium.index.RinveniumItems;
 import silly.chemthunder.rinvenium.index.RinveniumPackets;
 import silly.chemthunder.rinvenium.index.RinveniumParticles;
 import silly.chemthunder.rinvenium.index.client.RinveniumModelPredicateProvider;
-import silly.chemthunder.rinvenium.render.EnviniumSpearItemRenderer;
+import silly.chemthunder.rinvenium.render.EnviniumGlaiveItemRenderer;
 
 public class RinveniumClient implements ClientModInitializer {
     public void onInitializeClient() {
@@ -25,9 +25,9 @@ public class RinveniumClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(EnvixiaArmorRenderer.ENVIXIA_ARMOR, EnvixiaArmorModel::getTexturedModelData);
         ArmorRenderer.register(new EnvixiaArmorRenderer(), RinveniumItems.ENVIXIA_HELMET, RinveniumItems.ENVIXIA_CHESTPLATE, RinveniumItems.ENVIXIA_LEGGINGS, RinveniumItems.ENVIXIA_BOOTS);
-        Rinvenium.LOGGER.info("Registering spear renderer");
-        EnviniumSpearItemRenderer enviniumSpearItemRenderer = new EnviniumSpearItemRenderer(new Identifier(Rinvenium.MOD_ID, "envinium_spear"));
-        BuiltinItemRendererRegistry.INSTANCE.register(RinveniumItems.ENVINIUM_SPEAR, enviniumSpearItemRenderer);
-        Rinvenium.LOGGER.info("Spear renderer registered");
+        Rinvenium.LOGGER.info("Registering glaive renderer");
+        EnviniumGlaiveItemRenderer enviniumGlaiveItemRenderer = new EnviniumGlaiveItemRenderer(new Identifier(Rinvenium.MOD_ID, "envinium_glaive"));
+        BuiltinItemRendererRegistry.INSTANCE.register(RinveniumItems.ENVINIUM_GLAIVE, enviniumGlaiveItemRenderer);
+        Rinvenium.LOGGER.info("Glaive renderer registered");
     }
 }

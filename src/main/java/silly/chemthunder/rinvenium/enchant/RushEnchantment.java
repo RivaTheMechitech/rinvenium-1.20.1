@@ -17,6 +17,6 @@ public class RushEnchantment extends Enchantment {
     }
 
     public boolean isAcceptableItem(ItemStack stack) {
-        return stack.isOf(RinveniumItems.ENVINIUM_SPEAR) || stack.isOf(Items.BOOK) || stack.isOf(Items.ENCHANTED_BOOK);
+        return stack.isOf(RinveniumItems.ENVINIUM_GLAIVE) || stack.isOf(Items.BOOK) || stack.isOf(Items.ENCHANTED_BOOK);
     }
 }

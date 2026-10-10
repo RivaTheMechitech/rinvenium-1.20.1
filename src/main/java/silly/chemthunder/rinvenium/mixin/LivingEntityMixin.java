@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import silly.chemthunder.rinvenium.Rinvenium;
 import silly.chemthunder.rinvenium.cca.entity.EnvixiaFormComponent;
-import silly.chemthunder.rinvenium.cca.entity.SpearParryComponent;
+import silly.chemthunder.rinvenium.cca.entity.GlaiveParryComponent;
 import silly.chemthunder.rinvenium.index.*;
 import silly.chemthunder.rinvenium.item.EnvixiaArmorItem;
 
@@ -62,7 +62,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
             EnvixiaFormComponent envixiaFormComponent = EnvixiaFormComponent.get(player);
             if (envixiaFormComponent.getTripleBoolValue1()) {
                 return original.call(instance, box).expand(1.5);
-            } else if (user.getStackInHand(user.getActiveHand()).isOf(RinveniumItems.ENVINIUM_SPEAR)) {
+            } else if (user.getStackInHand(user.getActiveHand()).isOf(RinveniumItems.ENVINIUM_GLAIVE)) {
                 return original.call(instance, box).expand(0.5);
             }
         }
@@ -82,8 +82,8 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
         if (you instanceof PlayerEntity player) {
             ItemStack stack = player.getStackInHand(player.getActiveHand());
             var hasChanneling = EnchantmentHelper.hasChanneling(stack);
-            var hasSpear = EnchantmentHelper.getLevel(RinveniumEnchantments.RUSH, stack) > 0;
-            if (hasChanneling || hasSpear) {
+            var hasGlaive = EnchantmentHelper.getLevel(RinveniumEnchantments.RUSH, stack) > 0;
+            if (hasChanneling || hasGlaive) {
                 if (!Rinvenium.haters.contains(player.getUuid())) {
                     living.addStatusEffect(new StatusEffectInstance(RinveniumStatusEffects.SPARKED, 10));
 
@@ -105,7 +105,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
                     }
                 }
                 if (player.getWorld() instanceof ServerWorld serverWorld) {
-                    serverWorld.playSound(null, player.getBlockPos(), RinveniumSoundEvents.SPEAR_DASH_IMPACT, SoundCategory.PLAYERS, 1, 1);
+                    serverWorld.playSound(null, player.getBlockPos(), RinveniumSoundEvents.GLAIVE_DASH_IMPACT, SoundCategory.PLAYERS, 1, 1);
                 }
             }
         }
@@ -118,14 +118,14 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
             target = "Lnet/minecraft/entity/LivingEntity;modifyAppliedDamage(Lnet/minecraft/entity/damage/DamageSource;F)F"
         )
     )
-    private float rinvenium$spearParryDamage(LivingEntity entity, DamageSource source, float amount, Operation<Float> original) {
+    private float rinvenium$glaiveParryDamage(LivingEntity entity, DamageSource source, float amount, Operation<Float> original) {
         float base = original.call(entity, source, amount);
-        if (source.getAttacker() instanceof PlayerEntity player && player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_SPEAR)) {
-            SpearParryComponent spearParryComponent = SpearParryComponent.get(player);
-            if (spearParryComponent.getDoubleIntValue2() > 0 && EnchantmentHelper.getLevel(RinveniumEnchantments.RUSH, player.getStackInHand(Hand.MAIN_HAND)) <= 0) {
-                spearParryComponent.setDoubleIntValue2(0);
-                spearParryComponent.setDoubleIntValue1(SpearParryComponent.MAX_PARRY_WINDOW);
-                spearParryComponent.setDoubleBoolValue1(true);
+        if (source.getAttacker() instanceof PlayerEntity player && player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_GLAIVE)) {
+            GlaiveParryComponent glaiveParryComponent = GlaiveParryComponent.get(player);
+            if (glaiveParryComponent.getDoubleIntValue2() > 0 && EnchantmentHelper.getLevel(RinveniumEnchantments.RUSH, player.getStackInHand(Hand.MAIN_HAND)) <= 0) {
+                glaiveParryComponent.setDoubleIntValue2(0);
+                glaiveParryComponent.setDoubleIntValue1(GlaiveParryComponent.MAX_PARRY_WINDOW);
+                glaiveParryComponent.setDoubleBoolValue1(true);
                 return base * 1.5f;
             }
         }

@@ -39,11 +39,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import silly.chemthunder.rinvenium.cca.entity.EnvixiaFormComponent;
-import silly.chemthunder.rinvenium.cca.entity.SpearParryComponent;
-import silly.chemthunder.rinvenium.cca.entity.riva.SpearHealComponent;
+import silly.chemthunder.rinvenium.cca.entity.GlaiveParryComponent;
+import silly.chemthunder.rinvenium.cca.entity.riva.GlaiveHealComponent;
 import silly.chemthunder.rinvenium.datagen.RinveniumItemTagProvider;
 import silly.chemthunder.rinvenium.index.*;
-import silly.chemthunder.rinvenium.item.EnviniumSpearItem;
+import silly.chemthunder.rinvenium.item.EnviniumGlaiveItem;
 import silly.chemthunder.rinvenium.item.EnvixiaArmorItem;
 import silly.chemthunder.rinvenium.util.inject.HungerDecrement;
 
@@ -64,9 +64,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     /*@Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V"))
     private void customHitSound(Entity target, CallbackInfo ci) {
         PlayerEntity player = (PlayerEntity) ((Object)this);
-        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_SPEAR)) {
-            SpearParryComponent spearParryComponent = SpearParryComponent.get(player);
-            if (spearParryComponent.getDoubleIntValue2() > 0) {
+        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_GLAIVE)) {
+            GlaiveParryComponent glaiveParryComponent = GlaiveParryComponent.get(player);
+            if (glaiveParryComponent.getDoubleIntValue2() > 0) {
                 this.getWorld().playSound(target.getX(), target.getY(), target.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, SoundCategory.PLAYERS, 2.0f, 1.0f, true);
             }
             this.getWorld().playSound(target.getX(), target.getY(), target.getZ(), SoundEvents.BLOCK_COPPER_BREAK, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
@@ -75,15 +75,15 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     /*@WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V"))
     private void rinvenium$customHitSounds(World world, PlayerEntity except, double x, double y, double z, SoundEvent sound, SoundCategory category, float volume, float pitch, Operation<Void> original, @Local(argsOnly = true) Entity target) {
         PlayerEntity player = (PlayerEntity) ((Object)this);
-        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_SPEAR)) {
-            SpearParryComponent spearParryComponent = SpearParryComponent.get(player);
-            if (spearParryComponent.getDoubleIntValue2() > 0) {
+        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_GLAIVE)) {
+            GlaiveParryComponent glaiveParryComponent = GlaiveParryComponent.get(player);
+            if (glaiveParryComponent.getDoubleIntValue2() > 0) {
                 if (world instanceof ServerWorld serverWorld) {
                     serverWorld.playSound(target.getX(), target.getY(), target.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, SoundCategory.PLAYERS, 2.0f, 1.0f, true);
                 }
             }
             if (world instanceof ServerWorld serverWorld) {
-                serverWorld.playSound(target.getX(), target.getY(), target.getZ(), RinveniumSoundEvents.SPEAR_SLASH, SoundCategory.PLAYERS, 0.8f, 1.0f, true);
+                serverWorld.playSound(target.getX(), target.getY(), target.getZ(), RinveniumSoundEvents.GLAIVE_SLASH, SoundCategory.PLAYERS, 0.8f, 1.0f, true);
             }
         } else {
             original.call(world, except, x, y, z, sound, category, volume, pitch);
@@ -99,14 +99,14 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     )
     private SoundEvent rinvenium$maybeActuallyPlaysCustomSoundsSweep(Operation<SoundEvent> original, @Local (argsOnly = true) Entity target) {
         PlayerEntity player = (PlayerEntity) ((Object)this);
-        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_SPEAR)) {
-            SpearParryComponent spearParryComponent = SpearParryComponent.get(player);
-            if (spearParryComponent.getDoubleIntValue2() > 0) {
+        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_GLAIVE)) {
+            GlaiveParryComponent glaiveParryComponent = GlaiveParryComponent.get(player);
+            if (glaiveParryComponent.getDoubleIntValue2() > 0) {
                 if (this.getEntityWorld() instanceof ServerWorld serverWorld) {
                     serverWorld.playSound(target.getX(), target.getY(), target.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, SoundCategory.PLAYERS, 2.0f, 1.0f, true);
                 }
             }
-            return RinveniumSoundEvents.SPEAR_SLASH;
+            return RinveniumSoundEvents.GLAIVE_SLASH;
         } else {
             return original.call();
         }
@@ -121,14 +121,14 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     )
     private SoundEvent rinvenium$maybeActuallyPlaysCustomSoundsKB(Operation<SoundEvent> original, @Local (argsOnly = true) Entity target) {
         PlayerEntity player = (PlayerEntity) ((Object)this);
-        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_SPEAR)) {
-            SpearParryComponent spearParryComponent = SpearParryComponent.get(player);
-            if (spearParryComponent.getDoubleIntValue2() > 0) {
+        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_GLAIVE)) {
+            GlaiveParryComponent glaiveParryComponent = GlaiveParryComponent.get(player);
+            if (glaiveParryComponent.getDoubleIntValue2() > 0) {
                 if (this.getEntityWorld() instanceof ServerWorld serverWorld) {
                     serverWorld.playSound(target.getX(), target.getY(), target.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, SoundCategory.PLAYERS, 2.0f, 1.0f, true);
                 }
             }
-            return RinveniumSoundEvents.SPEAR_SLASH;
+            return RinveniumSoundEvents.GLAIVE_SLASH;
         } else {
             return original.call();
         }
@@ -143,11 +143,11 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     )
     private SoundEvent rinvenium$maybeActuallyPlaysCustomSoundsCrit(Operation<SoundEvent> original, @Local (argsOnly = true) Entity target) {
         PlayerEntity player = (PlayerEntity) ((Object)this);
-        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_SPEAR)) {
+        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_GLAIVE)) {
             if (this.getEntityWorld() instanceof ServerWorld serverWorld) {
                 serverWorld.playSound(target.getX(), target.getY(), target.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, SoundCategory.PLAYERS, 2.0f, 1.0f, true);
             }
-            return RinveniumSoundEvents.SPEAR_SLASH;
+            return RinveniumSoundEvents.GLAIVE_SLASH;
         } else {
             return original.call();
         }
@@ -162,14 +162,14 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     )
     private SoundEvent rinvenium$maybeActuallyPlaysCustomSoundsStrong(Operation<SoundEvent> original, @Local (argsOnly = true) Entity target) {
         PlayerEntity player = (PlayerEntity) ((Object)this);
-        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_SPEAR)) {
-            SpearParryComponent spearParryComponent = SpearParryComponent.get(player);
-            if (spearParryComponent.getDoubleIntValue2() > 0) {
+        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_GLAIVE)) {
+            GlaiveParryComponent glaiveParryComponent = GlaiveParryComponent.get(player);
+            if (glaiveParryComponent.getDoubleIntValue2() > 0) {
                 if (this.getEntityWorld() instanceof ServerWorld serverWorld) {
                     serverWorld.playSound(target.getX(), target.getY(), target.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, SoundCategory.PLAYERS, 2.0f, 1.0f, true);
                 }
             }
-            return RinveniumSoundEvents.SPEAR_SLASH;
+            return RinveniumSoundEvents.GLAIVE_SLASH;
         } else {
             return original.call();
         }
@@ -184,14 +184,14 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     )
     private SoundEvent rinvenium$maybeActuallyPlaysCustomSoundsWeak(Operation<SoundEvent> original, @Local (argsOnly = true) Entity target) {
         PlayerEntity player = (PlayerEntity) ((Object)this);
-        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_SPEAR)) {
-            SpearParryComponent spearParryComponent = SpearParryComponent.get(player);
-            if (spearParryComponent.getDoubleIntValue2() > 0) {
+        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_GLAIVE)) {
+            GlaiveParryComponent glaiveParryComponent = GlaiveParryComponent.get(player);
+            if (glaiveParryComponent.getDoubleIntValue2() > 0) {
                 if (this.getEntityWorld() instanceof ServerWorld serverWorld) {
                     serverWorld.playSound(target.getX(), target.getY(), target.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, SoundCategory.PLAYERS, 2.0f, 1.0f, true);
                 }
             }
-            return RinveniumSoundEvents.SPEAR_SLASH;
+            return RinveniumSoundEvents.GLAIVE_SLASH;
         } else {
             return original.call();
         }
@@ -206,10 +206,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     )
     private float rinvenium$handleParry(PlayerEntity player, DamageSource source, float amount, Operation<Float> original) {
         float base = original.call(player, source, amount);
-        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_SPEAR)) {
-            SpearParryComponent spearParryComponent = SpearParryComponent.get(player);
+        if (player.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_GLAIVE)) {
+            GlaiveParryComponent glaiveParryComponent = GlaiveParryComponent.get(player);
             if (!source.isIn(DamageTypeTags.BYPASSES_EFFECTS)) {
-                if (spearParryComponent.getDoubleBoolValue2() && spearParryComponent.getDoubleBoolValue1()) {
+                if (glaiveParryComponent.getDoubleBoolValue2() && glaiveParryComponent.getDoubleBoolValue1()) {
                     Vec3d damagePos = source.getPosition();
                     Vec3d rotVec;
                     Vec3d difference;
@@ -224,11 +224,11 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                             return base;
                         }
                         if (angle < -0.35) {
-                            EnviniumSpearItem.parried = true;
+                            EnviniumGlaiveItem.parried = true;
                             var13 = this.getEntityWorld();
                             if (var13 instanceof ServerWorld) {
                                 serverWorld = (ServerWorld) var13;
-                                serverWorld.playSoundFromEntity(null, this, RinveniumSoundEvents.SPEAR_PARRY, SoundCategory.PLAYERS, 1.0f, 1.0f + this.getEntityWorld().random.nextFloat() * 0.2f);
+                                serverWorld.playSoundFromEntity(null, this, RinveniumSoundEvents.GLAIVE_PARRY, SoundCategory.PLAYERS, 1.0f, 1.0f + this.getEntityWorld().random.nextFloat() * 0.2f);
                                 serverWorld.playSoundFromEntity(null, this, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 1.0f, 1.0f + this.getEntityWorld().random.nextFloat() * 0.2f);
                             }
                             PacketByteBuf buf = PacketByteBufs.create();
@@ -244,8 +244,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                                 ServerPlayNetworking.send(serverPlayerEntity, RinveniumPackets.ADD_SCREEN_FLASH, buf);
                                 serverPlayerEntity.sendMessage(Text.literal("Your attack was parried").formatted(Formatting.RED), true);
                             }
-                            spearParryComponent.setDoubleIntValue2(SpearParryComponent.MAX_DAMAGE_WINDOW);
-                            spearParryComponent.setDoubleBoolValue1(false);
+                            glaiveParryComponent.setDoubleIntValue2(GlaiveParryComponent.MAX_DAMAGE_WINDOW);
+                            glaiveParryComponent.setDoubleBoolValue1(false);
                             if (source.getAttacker() instanceof PlayerEntity playerEntity) {
                                 Vec3d launchVec = rotVec;
                                 launchVec = launchVec.add(new Vec3d(0.0, 0.7, 0.0));
@@ -266,11 +266,11 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             }
         }
 
-        if (source.getAttacker() instanceof PlayerEntity attacker && attacker.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_SPEAR)) {
-            SpearParryComponent attackerSpearParryComponent = SpearParryComponent.get(attacker);
-            if (attackerSpearParryComponent.getDoubleIntValue2() > 0 && EnchantmentHelper.getLevel(RinveniumEnchantments.RUSH, attacker.getStackInHand(Hand.MAIN_HAND)) <= 0) {
-                attackerSpearParryComponent.setDoubleIntValue2(0);
-                attackerSpearParryComponent.setDoubleBoolValue1(true);
+        if (source.getAttacker() instanceof PlayerEntity attacker && attacker.getStackInHand(Hand.MAIN_HAND).isOf(RinveniumItems.ENVINIUM_GLAIVE)) {
+            GlaiveParryComponent attackerGlaiveParryComponent = GlaiveParryComponent.get(attacker);
+            if (attackerGlaiveParryComponent.getDoubleIntValue2() > 0 && EnchantmentHelper.getLevel(RinveniumEnchantments.RUSH, attacker.getStackInHand(Hand.MAIN_HAND)) <= 0) {
+                attackerGlaiveParryComponent.setDoubleIntValue2(0);
+                attackerGlaiveParryComponent.setDoubleBoolValue1(true);
                 return base * 1.5f;
             }
         }
@@ -330,10 +330,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             target = "Lnet/minecraft/enchantment/EnchantmentHelper;getKnockback(Lnet/minecraft/entity/LivingEntity;)I"
         )
     )
-    private void rinvenium$spearHeal(Entity target, CallbackInfo ci, @Local(ordinal = 0) boolean bl) {
+    private void rinvenium$glaiveHeal(Entity target, CallbackInfo ci, @Local(ordinal = 0) boolean bl) {
         if (bl) {
-            SpearHealComponent spearHealComponent = SpearHealComponent.get((PlayerEntity) ((Object) this));
-            //spearHealComponent.incrementInt();
+            GlaiveHealComponent glaiveHealComponent = GlaiveHealComponent.get((PlayerEntity) ((Object) this));
+            //glaiveHealComponent.incrementInt();
         }
     }
 

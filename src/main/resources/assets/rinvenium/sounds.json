@@ -1,18 +1,18 @@
 {
-  "spear_dash": {
-    "subtitle": "sound.rinvenium.spear_dash",
+  "glaive_dash": {
+    "subtitle": "sound.rinvenium.glaive_dash",
     "sounds": ["rinvenium:env_dash"]
   },
-  "spear_dash_impact": {
-    "subtitle": "sound.rinvenium.spear_dash_impact",
+  "glaive_dash_impact": {
+    "subtitle": "sound.rinvenium.glaive_dash_impact",
     "sounds": ["rinvenium:env_dash_impact"]
   },
-  "spear_parry": {
-    "subtitle": "sound.rinvenium.spear_parry",
+  "glaive_parry": {
+    "subtitle": "sound.rinvenium.glaive_parry",
     "sounds": ["rinvenium:env_parry"]
   },
-  "spear_slash": {
-    "subtitle": "sound.rinvenium.spear_slash",
+  "glaive_slash": {
+    "subtitle": "sound.rinvenium.glaive_slash",
     "sounds": ["rinvenium:env_slash"]
   },
   "hail_of_the_gods_shoot": {

@@ -11,10 +11,10 @@ public class RinveniumSoundEvents {
         Rinvenium.LOGGER.info("Rinvenium Sound Events was instantiated");
     }
 
-    public static final SoundEvent SPEAR_DASH = registerSound("spear_dash");
-    public static final SoundEvent SPEAR_DASH_IMPACT = registerSound("spear_dash_impact");
-    public static final SoundEvent SPEAR_PARRY = registerSound("spear_parry");
-    public static final SoundEvent SPEAR_SLASH = registerSound("spear_slash");
+    public static final SoundEvent GLAIVE_DASH = registerSound("glaive_dash");
+    public static final SoundEvent GLAIVE_DASH_IMPACT = registerSound("glaive_dash_impact");
+    public static final SoundEvent GLAIVE_PARRY = registerSound("glaive_parry");
+    public static final SoundEvent GLAIVE_SLASH = registerSound("glaive_slash");
     public static final SoundEvent HAIL_OF_THE_GODS_SHOOT = registerSound("hail_of_the_gods_shoot");
     public static final SoundEvent HAIL_OF_THE_GODS_OVERHEAT = registerSound("overheat");
     public static final SoundEvent ENVIXIA_CORE_USE = registerSound("envixia_core_use");
