@@ -100,7 +100,7 @@ public class WorldRendererListener {
             RenderSystem.depthMask(MinecraftClient.isFabulousGraphicsOrBetter());
             RenderSystem.enableDepthTest();
 
-            bufferbuilder.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+            bufferbuilder.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
 
             Vec3d startPos = player.getEyePos().add(player.getRotationVecClient().normalize().multiply(1.5f));
             HitResult hitResult = player.raycast(6.0, 0.0f, false);
@@ -109,19 +109,20 @@ public class WorldRendererListener {
                 BlockHitResult blockHitResult = (BlockHitResult) hitResult;
                 endPos = blockHitResult.getPos();
             }
-            endPos = startPos.add(new Vec3d(6, 0, 0));
+            //endPos = startPos.add(new Vec3d(6, 0, 0));
             float length = (float) startPos.distanceTo(endPos);
-            RinveniumUtil.sendDebugMessage(client.player, true, "length: " + length);
-            bufferbuilder.vertex(transformation, (float) (startPos.x - camX), (float) (startPos.y - camY), (float) (startPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 1.0f).next();
-            bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 1.0f).next();
+            bufferbuilder.vertex(transformation, (float) (startPos.x - camX), (float) (startPos.y - camY), (float) (startPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 1.0f).normal(1.0f, 1.0f, 1.0f).next();
+            bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 1.0f).normal(1.0f, 1.0f, 1.0f).next();
 
             matrices.pop();
 
-            RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+            RenderSystem.setShader(GameRenderer::getRenderTypeLinesProgram);
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
+            RenderSystem.lineWidth(5.0f);
             tessellator.draw();
 
+            RenderSystem.lineWidth(1.0f);
             RenderSystem.enableCull();
             RenderSystem.depthMask(true);
         }
