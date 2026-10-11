@@ -1,6 +1,8 @@
 package silly.chemthunder.rinvenium.render.manager.client;
 
+import net.minecraft.client.MinecraftClient;
 import silly.chemthunder.rinvenium.render.APMDSCBeamRender;
+import silly.chemthunder.rinvenium.util.RinveniumUtil;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 

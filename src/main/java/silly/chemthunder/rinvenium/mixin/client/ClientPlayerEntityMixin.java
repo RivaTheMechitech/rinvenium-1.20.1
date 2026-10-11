@@ -86,6 +86,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     public FakePlayerRendererManager getFakePlayerRendererManager() {
         return this.fakePlayerRendererManager;
     }
+
     @Override
     public APMDSCBeamManager getAPMDSCBeamManager() {
         return this.apmdscBeamManager;

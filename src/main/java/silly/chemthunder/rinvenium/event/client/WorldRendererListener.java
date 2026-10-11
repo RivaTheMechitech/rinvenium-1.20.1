@@ -29,6 +29,7 @@ import silly.chemthunder.rinvenium.render.manager.client.ImpactFrameManager;
 import silly.chemthunder.rinvenium.render.manager.client.FakePlayerRendererManager;
 import silly.chemthunder.rinvenium.render.manager.client.SlashRendererManager;
 import silly.chemthunder.rinvenium.util.RinveniumTextureUtils;
+import silly.chemthunder.rinvenium.util.RinveniumUtil;
 import silly.chemthunder.rinvenium.util.inject.RenderContainer;
 
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class WorldRendererListener {
                         }
                     });
 
-                    APMDSCBeamManager apmdscBeamManager = ((RenderContainer) client.player).getAPMDSCBeamManager();
+                    APMDSCBeamManager apmdscBeamManager = renderContainer.getAPMDSCBeamManager();
                     apmdscBeamManager.tick();
                     apmdscBeamManager.get().forEach(beam -> renderAPMDSCBeam(context, client, world, player, camera, beam));
                 }
@@ -99,18 +100,22 @@ public class WorldRendererListener {
             RenderSystem.depthMask(MinecraftClient.isFabulousGraphicsOrBetter());
             RenderSystem.enableDepthTest();
 
-            bufferbuilder.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.POSITION_COLOR);
+            bufferbuilder.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
 
-            Vec3d startPos = player.getEyePos().add(player.getRotationVecClient().normalize().multiply(0.5f));
+            Vec3d startPos = player.getEyePos().add(player.getRotationVecClient().normalize().multiply(1.5f));
             HitResult hitResult = player.raycast(6.0, 0.0f, false);
             Vec3d endPos = hitResult.getPos();
             if (hitResult.getType() == HitResult.Type.BLOCK) {
                 BlockHitResult blockHitResult = (BlockHitResult) hitResult;
                 endPos = blockHitResult.getPos();
             }
+            endPos = startPos.add(new Vec3d(6, 0, 0));
+            float length = (float) startPos.distanceTo(endPos);
+            RinveniumUtil.sendDebugMessage(client.player, true, "length: " + length);
+            bufferbuilder.vertex(transformation, (float) (startPos.x - camX), (float) (startPos.y - camY), (float) (startPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 1.0f).next();
+            bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 1.0f).next();
 
-            bufferbuilder.vertex(startPos.x, startPos.y, startPos.z).color(0.0f, 1.0f, 1.0f, 1.0f).next();
-            bufferbuilder.vertex(endPos.x, endPos.y, endPos.z).color(0.0f, 1.0f, 1.0f, 1.0f).next();
+            matrices.pop();
 
             RenderSystem.setShader(GameRenderer::getPositionColorProgram);
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);

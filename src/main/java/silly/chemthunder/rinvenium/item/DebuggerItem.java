@@ -26,8 +26,10 @@ import silly.chemthunder.rinvenium.index.RinveniumStatusEffects;
 import silly.chemthunder.rinvenium.render.APMDSCBeamRender;
 import silly.chemthunder.rinvenium.render.SlashRender;
 import silly.chemthunder.rinvenium.render.VertexColorSet;
+import silly.chemthunder.rinvenium.render.manager.client.APMDSCBeamManager;
 import silly.chemthunder.rinvenium.render.manager.server.CustomFogManager;
 import silly.chemthunder.rinvenium.util.RinveniumUtil;
+import silly.chemthunder.rinvenium.util.inject.RenderContainer;
 import silly.chemthunder.rinvenium.util.persistent.DeathSequenceState;
 
 import java.util.List;
@@ -45,30 +47,21 @@ public class DebuggerItem extends Item {
         if (!player.isSneaking()) {
             if (world.isClient) { // Client Side Standing
                 MinecraftClient client = MinecraftClient.getInstance();
+                APMDSCBeamManager manager = ((RenderContainer) player).getAPMDSCBeamManager();
 
             } else { // Server Side Standing
                 if (player instanceof ServerPlayerEntity serverPlayer) {
                     Vec3d startPos = player.getEyePos().add(player.getRotationVector().normalize().multiply(0.5));
                     HitResult hitResult = player.raycast(6.0, 0.0f, false);
-                    Vec3d endPos;
-                    if (hitResult.getType() == HitResult.Type.BLOCK) {
-                        BlockHitResult blockHitResult = (BlockHitResult) hitResult;
-                        endPos = blockHitResult.getPos();
-                    } else {
-                        endPos = hitResult.getPos();
-                    }
+
                     UUID uuid = UUID.randomUUID();
                     PacketByteBuf buf = PacketByteBufs.create();
-                    buf.writeUuid(uuid);
                     buf.writeDouble(startPos.getX());
                     buf.writeDouble(startPos.getY());
                     buf.writeDouble(startPos.getZ());
-                    buf.writeDouble(endPos.getX());
-                    buf.writeDouble(endPos.getY());
-                    buf.writeDouble(endPos.getZ());
-                    buf.writeInt(60);
+                    buf.writeInt(200);
+                    buf.writeUuid(uuid);
                     ServerPlayNetworking.send(serverPlayer, RinveniumPackets.ADD_APMDSC_BEAM, buf);
-
                 }
 
                 /** Spawns Raycast particle beam */
@@ -155,6 +148,7 @@ public class DebuggerItem extends Item {
             } else { // Server Side Sneak
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 20, 10));
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.SATURATION, 20, 20));
+
 
                 /** Sends packets for slash rendering */
                 /*
