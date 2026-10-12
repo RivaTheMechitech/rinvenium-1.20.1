@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.client.render.*;
@@ -100,29 +101,29 @@ public class WorldRendererListener {
             RenderSystem.depthMask(MinecraftClient.isFabulousGraphicsOrBetter());
             RenderSystem.enableDepthTest();
 
-            bufferbuilder.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
+            bufferbuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 
-            Vec3d startPos = player.getEyePos().add(player.getRotationVecClient().normalize().multiply(1.5f));
-            HitResult hitResult = player.raycast(6.0, 0.0f, false);
-            Vec3d endPos = hitResult.getPos();
-            if (hitResult.getType() == HitResult.Type.BLOCK) {
-                BlockHitResult blockHitResult = (BlockHitResult) hitResult;
-                endPos = blockHitResult.getPos();
+            ClientPlayerEntity shooter = null;
+
+            for (AbstractClientPlayerEntity player2 : world.getPlayers()) {
+                if (player2.getUuid().equals(beam.owner)) {
+                    shooter = (ClientPlayerEntity) player2;
+                }
             }
-            //endPos = startPos.add(new Vec3d(6, 0, 0));
-            float length = (float) startPos.distanceTo(endPos);
-            bufferbuilder.vertex(transformation, (float) (startPos.x - camX), (float) (startPos.y - camY), (float) (startPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 1.0f).normal(1.0f, 1.0f, 1.0f).next();
-            bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 1.0f).normal(1.0f, 1.0f, 1.0f).next();
+
+            if (shooter != null) {
+                buildAPMDSCBeamVertices(beam, shooter, bufferbuilder, transformation, camX, camY, camZ);
+            } else {
+                if (shooter == null) Rinvenium.LOGGER.warn("Cannot render APMDSC beam as shooter is null.");
+            }
 
             matrices.pop();
 
-            RenderSystem.setShader(GameRenderer::getRenderTypeLinesProgram);
+            RenderSystem.setShader(GameRenderer::getPositionColorProgram);
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-            RenderSystem.lineWidth(5.0f);
             tessellator.draw();
 
-            RenderSystem.lineWidth(1.0f);
             RenderSystem.enableCull();
             RenderSystem.depthMask(true);
         }
@@ -459,10 +460,26 @@ public class WorldRendererListener {
         bufferbuilder.vertex(transformation, (float) (slash.origin.x - xOffset - camX), (float) (endY - camY), (float) (slash.origin.z - camZ)).color(1.0f, 1.0f, 1.0f, 1.0f).next();
     }
 
-    private static void buildAPMDSCBeamVertices(APMDSCBeamRender beam, BufferBuilder bufferbuilder, Matrix4f transformation, double camX, double camY, double camZ) {
-        bufferbuilder.vertex(transformation, (float) (beam.startPos.x + 0.375 - camX), (float) (beam.startPos.y + 0.375 - camY), (float) (beam.startPos.z + 0.375 - camZ)).color(0.0f, 0.8f, 0.8f, 0.4f); // Top right start
-        bufferbuilder.vertex(transformation, (float) (beam.endPos.x + 0.375 - camX), (float) (beam.endPos.y + 0.375 - camY), (float) (beam.endPos.z + 0.375 - camZ)).color(0.0f, 0.8f, 0.8f, 0.4f); // Top right end
-        bufferbuilder.vertex(transformation, (float) (beam.endPos.x + 0.375 - camX), (float) (beam.endPos.y - 0.375 - camY), (float) (beam.endPos.z + 0.375 - camZ)).color(0.0f, 0.8f, 0.8f, 0.4f); // Bottom right end
-        bufferbuilder.vertex(transformation, (float) (beam.startPos.x + 0.375 - camX), (float) (beam.startPos.y + 0.375 - camY), (float) (beam.startPos.z + 0.375 - camZ)).color(0.0f, 0.8f, 0.8f, 0.4f); // Bottom right start
+    private static void buildAPMDSCBeamVertices(APMDSCBeamRender beam, ClientPlayerEntity shooter, BufferBuilder bufferbuilder, Matrix4f transformation, double camX, double camY, double camZ) {
+        Vec3d startPos = shooter.getEyePos().add(new Vec3d(0, -0.2, 0)).add(shooter.getRotationVecClient().normalize().multiply(1.0f));
+        HitResult hitResult = shooter.raycast(6.0, 0.0f, false);
+        Vec3d endPos = hitResult.getPos();
+        if (hitResult.getType() == HitResult.Type.BLOCK) {
+            BlockHitResult blockHitResult = (BlockHitResult) hitResult;
+            endPos = blockHitResult.getPos();
+        }
+        float yOffset = 0.375f;
+        Vec3d startPosHorizontalOffset = shooter.getEyePos().add(shooter.getRotationVecClient().normalize().multiply(2.0f));
+
+        bufferbuilder.vertex(transformation, (float) (startPos.x - camX), (float) (startPos.y - camY), (float) (startPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
+        bufferbuilder.vertex(transformation, (float) (startPosHorizontalOffset.x - camX), (float) (startPos.y + yOffset - camY), (float) (startPosHorizontalOffset.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
+        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y + yOffset - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
+        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
+
+        bufferbuilder.vertex(transformation, (float) (startPos.x - camX), (float) (startPos.y - camY), (float) (startPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
+        bufferbuilder.vertex(transformation, (float) (startPosHorizontalOffset.x - camX), (float) (startPos.y - yOffset - camY), (float) (startPosHorizontalOffset.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
+        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - yOffset - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
+        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
+
     }
 }

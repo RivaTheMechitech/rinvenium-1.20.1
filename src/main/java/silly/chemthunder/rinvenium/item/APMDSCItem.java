@@ -2,7 +2,6 @@ package silly.chemthunder.rinvenium.item;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -16,6 +15,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
@@ -24,19 +24,14 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import silly.chemthunder.rinvenium.cca.RinveniumComponents;
 import silly.chemthunder.rinvenium.cca.entity.APMDSCComponent;
 import silly.chemthunder.rinvenium.cca.item.APMDSCItemComponent;
 import silly.chemthunder.rinvenium.index.RinveniumEnchantments;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
 import silly.chemthunder.rinvenium.index.RinveniumPackets;
-import silly.chemthunder.rinvenium.render.APMDSCBeamRender;
-import silly.chemthunder.rinvenium.render.manager.client.APMDSCBeamManager;
 import silly.chemthunder.rinvenium.util.RinveniumUtil;
-import silly.chemthunder.rinvenium.util.inject.RenderContainer;
 
-import java.lang.reflect.Type;
 import java.util.UUID;
 
 import static silly.chemthunder.rinvenium.cca.item.APMDSCItemComponent.*;
@@ -166,18 +161,7 @@ public class APMDSCItem extends Item {
         // Shoot beam
         if (entityComponent.getInt() == calculateWindUpTimeForEnchant(stack)) {
             if (player instanceof ServerPlayerEntity serverPlayer) {
-                UUID uuid = UUID.randomUUID();
-                itemComponent.setBeamRenderUuid(uuid);
-                PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeUuid(uuid);
-                buf.writeDouble(startPos.getX());
-                buf.writeDouble(startPos.getY());
-                buf.writeDouble(startPos.getZ());
-                buf.writeDouble(endPos.getX());
-                buf.writeDouble(endPos.getY());
-                buf.writeDouble(endPos.getZ());
-                buf.writeInt(calculateShootTimeForEnchant(stack) + APMDSCBeamRender.FADE_IN_DURATION + APMDSCBeamRender.FADE_OUT_DURATION);
-                ServerPlayNetworking.send(serverPlayer, RinveniumPackets.ADD_APMDSC_BEAM, buf);
+
             }
         }
     }
@@ -279,5 +263,28 @@ public class APMDSCItem extends Item {
     public int getItemBarStep(ItemStack stack) {
         APMDSCItemComponent itemComponent = RinveniumComponents.APMDSC_ITEM.get(stack);
         return MathHelper.ceil((double) (itemComponent.getIonCellCount() * 13 / 10));
+    }
+
+    public enum BeamType implements StringIdentifiable {
+        DEFAULT("default"),
+        LOW_POWER("low_power"),
+        HIGH_POWER("high_power"),
+        STARSTRUCK("starstruck");
+
+        private final String name;
+
+        BeamType(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String asString() {
+            return name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }

@@ -2,11 +2,14 @@ package silly.chemthunder.rinvenium.network.s2c;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
+import silly.chemthunder.rinvenium.item.APMDSCItem;
 import silly.chemthunder.rinvenium.render.APMDSCBeamRender;
 import silly.chemthunder.rinvenium.render.manager.client.APMDSCBeamManager;
 import silly.chemthunder.rinvenium.util.RinveniumUtil;
@@ -18,25 +21,29 @@ public class AddAPMDSCBeamS2CPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         if (client.player != null) {
             if (client.world != null) {
-                double startX = buf.readDouble();
-                double startY = buf.readDouble();
-                double startZ = buf.readDouble();
-                HitResult hitResult = client.player.raycast(6.0, 0.0f, false);
-                Vec3d endPos;
-                if (hitResult.getType() == HitResult.Type.BLOCK) {
-                    BlockHitResult blockHitResult = (BlockHitResult) hitResult;
-                    endPos = blockHitResult.getPos();
-                } else {
-                    endPos = hitResult.getPos();
-                }
-                double endX = endPos.getX();
-                double endY = endPos.getY();
-                double endZ = endPos.getZ();
-                int maxAge = buf.readInt();
                 UUID uuid = buf.readUuid();
-                APMDSCBeamManager manager = ((RenderContainer) client.player).getAPMDSCBeamManager();
-                manager.add(new APMDSCBeamRender(uuid, new Vec3d(startX, startY, startZ), new Vec3d(endX, endY, endZ), maxAge));
-                RinveniumUtil.sendDebugMessage(client.player, true, "beam list size: " + manager.get().size());
+                UUID owner = buf.readUuid();
+                /*double startX = buf.readDouble();
+                double startY = buf.readDouble();
+                double startZ = buf.readDouble();*/
+                int maxAge = buf.readInt();
+                int beamTypeOrdinal = buf.readInt();
+                APMDSCItem.BeamType beamType = APMDSCItem.BeamType.values()[beamTypeOrdinal];
+
+                Vec3d startPos = null;
+                ClientPlayerEntity player = null;
+                for (AbstractClientPlayerEntity player2 : client.world.getPlayers()) {
+                    if (player2.getUuid().equals(owner)) {
+                        player = (ClientPlayerEntity) player2;
+                        startPos = player.getEyePos().add(player.getRotationVecClient().normalize().multiply(1.0f));
+                    }
+                }
+                if (player != null) {
+                    APMDSCBeamManager manager = ((RenderContainer) client.player).getAPMDSCBeamManager();
+                    if (startPos != null) {
+                        manager.add(new APMDSCBeamRender(uuid, owner, startPos /*new Vec3d(startX, startY, startZ)*/, maxAge, beamType));
+                    }
+                }
             }
         }
     }

@@ -12,25 +12,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import silly.chemthunder.rinvenium.cca.entity.DeathSequenceComponent;
 import silly.chemthunder.rinvenium.index.RinveniumPackets;
-import silly.chemthunder.rinvenium.index.RinveniumStatusEffects;
-import silly.chemthunder.rinvenium.render.APMDSCBeamRender;
-import silly.chemthunder.rinvenium.render.SlashRender;
-import silly.chemthunder.rinvenium.render.VertexColorSet;
 import silly.chemthunder.rinvenium.render.manager.client.APMDSCBeamManager;
-import silly.chemthunder.rinvenium.render.manager.server.CustomFogManager;
-import silly.chemthunder.rinvenium.util.RinveniumUtil;
 import silly.chemthunder.rinvenium.util.inject.RenderContainer;
-import silly.chemthunder.rinvenium.util.persistent.DeathSequenceState;
 
 import java.util.List;
 import java.util.UUID;
@@ -50,17 +39,23 @@ public class DebuggerItem extends Item {
                 APMDSCBeamManager manager = ((RenderContainer) player).getAPMDSCBeamManager();
 
             } else { // Server Side Standing
+
+                /** APMDSC Beam */
                 if (player instanceof ServerPlayerEntity serverPlayer) {
                     Vec3d startPos = player.getEyePos().add(player.getRotationVector().normalize().multiply(0.5));
                     HitResult hitResult = player.raycast(6.0, 0.0f, false);
 
                     UUID uuid = UUID.randomUUID();
                     PacketByteBuf buf = PacketByteBufs.create();
+                    buf.writeUuid(uuid);
+                    buf.writeUuid(player.getUuid());
+                    /*
                     buf.writeDouble(startPos.getX());
                     buf.writeDouble(startPos.getY());
                     buf.writeDouble(startPos.getZ());
+                    */
                     buf.writeInt(200);
-                    buf.writeUuid(uuid);
+                    buf.writeInt(APMDSCItem.BeamType.DEFAULT.ordinal());
                     ServerPlayNetworking.send(serverPlayer, RinveniumPackets.ADD_APMDSC_BEAM, buf);
                 }
 
@@ -179,7 +174,7 @@ public class DebuggerItem extends Item {
                 */
                 //CustomFogManager.clear();
 
-                /** Cancels Death Squence */
+                /** Cancels Death Sequence */
                 /*
                 DeathSequenceComponent deathSequenceComponent = DeathSequenceComponent.get(player);
                 deathSequenceComponent.setBool(false);
