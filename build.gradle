@@ -53,7 +53,6 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation "maven.modrinth:ozone_chemthunder:${project.ozone_version}"
     modImplementation include ("maven.modrinth:midnightlib:${project.midnightlib_version}")
 
     //For this you also need the following
