@@ -77,15 +77,18 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add("death.attack.niki.player", "fuck you");
         translationBuilder.add("death.attack.niki.item", "fuck you");
 
-        translationBuilder.add("death.attack.electricity", "%s was electrocuted");
-        translationBuilder.add("death.attack.electricity.player", "%s was electrocuted by %s");
-        translationBuilder.add("death.attack.electricity_with_cooldown", "%s was electrocuted");
-        translationBuilder.add("death.attack.electricity_with_cooldown.player", "%s was electrocuted by %s");
+        translationBuilder.add("death.attack.electricity", "%1$s was electrocuted");
+        translationBuilder.add("death.attack.electricity.player", "%1$s was electrocuted by %2$s");
+        translationBuilder.add("death.attack.electricity.item", "%1$s was electrocuted by %2$s using %3$s");
+        translationBuilder.add("death.attack.electricity_with_cooldown", "%1$s was electrocuted");
+        translationBuilder.add("death.attack.electricity_with_cooldown.player", "%1$s was electrocuted by %2$s");
+        translationBuilder.add("death.attack.electricity_with_cooldown.item", "%1$s was electrocuted by %2$s using %3$s");
         translationBuilder.add("death.attack.orchid", "%s was executed");
         translationBuilder.add("death.attack.orchid.player", "%s was executed");
 
         translationBuilder.add("death.attack.boop", "%s was peppered a thousand times");
         translationBuilder.add("death.attack.boop.player", "%s was peppered a thousand times by %s");
+        translationBuilder.add("death.attack.boop.item", "%1$s was peppered a thousand times by %2$s using %3$s");
 
         translationBuilder.add(RinveniumStatusEffects.SPARKED, "Sparked");
         translationBuilder.add("effect.rinvenium.sparked.desc", "Deals low damage rapidly and can chain to nearby players if they are wet.");
