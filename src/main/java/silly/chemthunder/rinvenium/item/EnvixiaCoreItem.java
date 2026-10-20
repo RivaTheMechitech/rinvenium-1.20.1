@@ -38,9 +38,8 @@ import java.util.stream.Stream;
 public class EnvixiaCoreItem extends Item {
     public static final String INGREDIENTS_KEY = "Ingredients";
     public static final Map<Item, Integer> INGREDIENT_GOAL = Map.of(
-            Items.REDSTONE, 220,
+            Items.REDSTONE_BLOCK, 64,
             Items.REPEATER, 48,
-            Items.REDSTONE_BLOCK, 32,
             RinveniumItems.ION_CELL, 16,
             RinveniumItems.ENVIXIUS_PLATE, 12,
             Items.BEACON, 1
@@ -234,6 +233,8 @@ public class EnvixiaCoreItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         NbtCompound nbtCompound = stack.getNbt();
+        int redstoneCount = 0;
+        int repeaterCount = 0;
         int cellCount = 0;
         int plateCount = 0;
         int beaconCount = 0;
@@ -243,6 +244,12 @@ public class EnvixiaCoreItem extends Item {
             List<ItemStack> ingredients = nbtList.stream().map(NbtCompound.class::cast).map(ItemStack::fromNbt).toList();
             List<Item> ingredientItems = new java.util.ArrayList<>(List.of());
             ingredients.forEach(itemStack -> ingredientItems.add(itemStack.getItem()));
+            if (ingredientItems.contains(Items.REDSTONE_BLOCK)) {
+                redstoneCount = ingredients.get(ingredientItems.indexOf(Items.REDSTONE_BLOCK)).getCount();
+            }
+            if (ingredientItems.contains(Items.REPEATER)) {
+                repeaterCount = ingredients.get(ingredientItems.indexOf(Items.REPEATER)).getCount();
+            }
             if (ingredientItems.contains(RinveniumItems.ION_CELL)) {
                 cellCount = ingredients.get(ingredientItems.indexOf(RinveniumItems.ION_CELL)).getCount();
             }
@@ -253,6 +260,8 @@ public class EnvixiaCoreItem extends Item {
                 beaconCount = ingredients.get(ingredientItems.indexOf(Items.BEACON)).getCount();
             }
         }
+        tooltip.add(Text.literal("- ").append(Items.REDSTONE_BLOCK.getName()).append(Text.literal(": " + redstoneCount + "/" + INGREDIENT_GOAL.get(Items.REDSTONE_BLOCK))).formatted(redstoneCount == INGREDIENT_GOAL.get(Items.REDSTONE_BLOCK) ? Formatting.GREEN : Formatting.RED));
+        tooltip.add(Text.literal("- ").append(Items.REPEATER.getName()).append(Text.literal(": " + repeaterCount + "/" + INGREDIENT_GOAL.get(Items.REPEATER))).formatted(repeaterCount == INGREDIENT_GOAL.get(Items.REPEATER) ? Formatting.GREEN : Formatting.RED));
         tooltip.add(Text.literal("- ").append(RinveniumItems.ION_CELL.getName()).append(Text.literal(": " + cellCount + "/" + INGREDIENT_GOAL.get(RinveniumItems.ION_CELL))).formatted(cellCount == INGREDIENT_GOAL.get(RinveniumItems.ION_CELL) ? Formatting.GREEN : Formatting.RED));
         tooltip.add(Text.literal("- ").append(RinveniumItems.ENVIXIUS_PLATE.getName()).append(Text.literal(": " + plateCount + "/" + INGREDIENT_GOAL.get(RinveniumItems.ENVIXIUS_PLATE))).formatted(plateCount == INGREDIENT_GOAL.get(RinveniumItems.ENVIXIUS_PLATE) ? Formatting.GREEN : Formatting.RED));
         tooltip.add(Text.literal("- ").append(Items.BEACON.getName()).append(Text.literal(": " + beaconCount + "/" + INGREDIENT_GOAL.get(Items.BEACON))).formatted(beaconCount == INGREDIENT_GOAL.get(Items.BEACON) ? Formatting.GREEN : Formatting.RED));

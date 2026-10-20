@@ -31,6 +31,8 @@ public class RinveniumItemTagProvider extends FabricTagProvider.ItemTagProvider 
                 );
         this.getOrCreateTagBuilder(ENVIXIA_CORE_INGREDIENTS)
                 .add(
+                        Items.REDSTONE_BLOCK,
+                        Items.REPEATER,
                         RinveniumItems.ION_CELL,
                         RinveniumItems.ENVIXIUS_PLATE,
                         Items.BEACON
