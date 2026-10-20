@@ -161,7 +161,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
 
     @Inject(method = "tickFallFlying", at = @At(value = "HEAD"), cancellable = true)
     private void rinvenium$envixiaElytraFlight(CallbackInfo ci) {
-        boolean bl = this.getFlag(Entity.FALL_FLYING_FLAG_INDEX);
+        /*boolean bl = this.getFlag(Entity.FALL_FLYING_FLAG_INDEX);
         if (((LivingEntity) ((Object)this)) instanceof PlayerEntity player && bl && !this.isOnGround() && !this.hasVehicle() && !this.hasStatusEffect(StatusEffects.LEVITATION)) {
             EnvixiaFormComponent envixiaFormComponent = EnvixiaFormComponent.get(player);
             ItemStack itemStack = this.getEquippedStack(EquipmentSlot.CHEST);
@@ -187,14 +187,16 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
             }
             ci.cancel();
             return;
-        }
+        }*/
     }
 
     @Inject(method = "isGlowing", at = @At("HEAD"), cancellable = true)
     private void rinvenium$evnixiaGlowing(CallbackInfoReturnable<Boolean> cir) {
         if (((LivingEntity) ((Object)this)) instanceof PlayerEntity player) {
             EnvixiaFormComponent envixiaFormComponent = EnvixiaFormComponent.get(player);
-            cir.setReturnValue(envixiaFormComponent.getTripleBoolValue1());
+            if (envixiaFormComponent.getTripleBoolValue1()) {
+                cir.setReturnValue(envixiaFormComponent.getTripleBoolValue1());
+            }
         }
     }
 
