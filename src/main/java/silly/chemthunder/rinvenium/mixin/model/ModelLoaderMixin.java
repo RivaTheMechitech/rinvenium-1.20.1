@@ -39,6 +39,7 @@ public abstract class ModelLoaderMixin {
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_glaive_avali", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_glaive_riftshatter", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_glaive_starfall", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "envinium_glaive_terminum", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_default", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_remake", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_hstar", "inventory"));
@@ -54,6 +55,7 @@ public abstract class ModelLoaderMixin {
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_avali", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_riftshatter", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_starfall", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_terminum", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_blocking_default", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_blocking_remake", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_blocking_hstar", "inventory"));
@@ -67,6 +69,8 @@ public abstract class ModelLoaderMixin {
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_blocking_ascent", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_blocking_knight", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_blocking_avali", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_blocking_riftshatter", "inventory"));
         this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_blocking_starfall", "inventory"));
+        this.addModel(new ModelIdentifier(Rinvenium.MOD_ID, "glaive_handheld_2d_blocking_terminum", "inventory"));
     }
 }

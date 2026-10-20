@@ -280,7 +280,8 @@ public class EnviniumGlaiveItem extends SwordItem {
         KNIGHT("knight"),
         AVALI("avali"),
         RIFTSHATTER("riftshatter"),
-        STARFALL("starfall");
+        STARFALL("starfall"),
+        TERMINUM("terminum");
 
         private String name;
 

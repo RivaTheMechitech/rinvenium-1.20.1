@@ -123,6 +123,7 @@ public class EnviniumGlaiveItemRenderer implements BuiltinItemRendererRegistry.D
             case KNIGHT -> "knight";
             case RIFTSHATTER -> "riftshatter";
             case STARFALL -> "starfall";
+            case TERMINUM -> "terminum";
         };
         append = "_" + append;
         return append;
