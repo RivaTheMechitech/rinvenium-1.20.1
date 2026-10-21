@@ -1,4 +1,4 @@
-package silly.chemthunder.rinvenium.util.inject;
+package silly.chemthunder.rinvenium.util.inject.client;
 
 import silly.chemthunder.rinvenium.render.manager.client.*;
 import silly.chemthunder.rinvenium.render.manager.client.FakePlayerRendererManager;

@@ -1,26 +1,22 @@
 package silly.chemthunder.rinvenium.item;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -29,12 +25,12 @@ import silly.chemthunder.rinvenium.cca.entity.APMDSCComponent;
 import silly.chemthunder.rinvenium.cca.item.APMDSCItemComponent;
 import silly.chemthunder.rinvenium.index.RinveniumEnchantments;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
-import silly.chemthunder.rinvenium.index.RinveniumPackets;
-import silly.chemthunder.rinvenium.util.RinveniumUtil;
+import silly.chemthunder.rinvenium.util.inject.SyncedRenderContainer;
 
-import java.util.UUID;
+import java.util.List;
 
 import static silly.chemthunder.rinvenium.cca.item.APMDSCItemComponent.*;
+import static silly.chemthunder.rinvenium.item.APMDSCItem.BeamType.*;
 
 public class APMDSCItem extends Item {
     public static final int RELOAD_ICD = 10;
@@ -144,12 +140,11 @@ public class APMDSCItem extends Item {
             endPos = hitResult.getPos();
         }
         if (entityComponent.getInt() > calculateWindUpTimeForEnchant(stack)) {
-            EntityHitResult entityHitResult = RinveniumUtil.raycastWithDivergenceBox(player, startPos, player.getRotationVecClient(), 6.0, 0.375f, false);
-            if (entityHitResult != null) {
-                Entity entity = entityHitResult.getEntity();
-                if (entity instanceof LivingEntity target && !target.hasStatusEffect(StatusEffects.POISON)) {
-                    target.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 600, 2));
-                }
+            Box box = new Box(startPos, endPos).expand(0.375);
+            List<LivingEntity> targets = world.getEntitiesByClass(LivingEntity.class, box, living -> living.isAlive() && living.canHit() && !living.isSpectator());
+            targets.remove(player);
+            for (LivingEntity target : targets) {
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 20, 1)); //todo change to custom effects
             }
         }
 
@@ -160,8 +155,8 @@ public class APMDSCItem extends Item {
 
         // Shoot beam
         if (entityComponent.getInt() == calculateWindUpTimeForEnchant(stack)) {
-            if (player instanceof ServerPlayerEntity serverPlayer) {
-
+            if (!((SyncedRenderContainer) player).shouldRenderAPMDSCBeam()) {
+                ((SyncedRenderContainer) player).setShouldRenderAPMDSCBeam(true);
             }
         }
     }
@@ -183,14 +178,7 @@ public class APMDSCItem extends Item {
                     itemComponent.addLowPowerCount(1);
                 }
             }
-            if (player instanceof ServerPlayerEntity serverPlayer) {
-                UUID uuid = itemComponent.getBeamRenderUuid();
-                if (uuid != null) {
-                    PacketByteBuf buf = PacketByteBufs.create();
-                    buf.writeUuid(uuid);
-                    ServerPlayNetworking.send(serverPlayer, RinveniumPackets.STOP_APMDSC_BEAM, buf);
-                }
-            }
+            ((SyncedRenderContainer) player).setShouldRenderAPMDSCBeam(false);
         }
         entityComponent.setBool(false);
     }
@@ -245,6 +233,10 @@ public class APMDSCItem extends Item {
         return -1;
     }
 
+    public StatusEffect getStatusEffectForEnchant(ItemStack stack) {
+        return null;
+    }
+
     @Override
     public int getMaxUseTime(ItemStack stack) {
         return 72000;
@@ -256,7 +248,16 @@ public class APMDSCItem extends Item {
     }
     @Override
     public int getItemBarColor(ItemStack stack) {
-        return 0x00FFFF;
+        if (EnchantmentHelper.getLevel(RinveniumEnchantments.HIGH_POWER_OUTPUT, stack) > 0) {
+            return HIGH_POWER.getColor();
+        }
+        if (EnchantmentHelper.getLevel(RinveniumEnchantments.LOW_POWER_OUTPUT, stack) > 0) {
+            return LOW_POWER.getColor();
+        }
+        if (EnchantmentHelper.getLevel(RinveniumEnchantments.STARSTRUCK, stack) > 0) {
+            return STARSTRUCK.getColor();
+        }
+        return DEFAULT.getColor();
     }
 
     @Override
@@ -266,15 +267,17 @@ public class APMDSCItem extends Item {
     }
 
     public enum BeamType implements StringIdentifiable {
-        DEFAULT("default"),
-        LOW_POWER("low_power"),
-        HIGH_POWER("high_power"),
-        STARSTRUCK("starstruck");
+        DEFAULT("default", 0x2CFBD7),
+        LOW_POWER("low_power", 0xFB902C),
+        HIGH_POWER("high_power", 0xAF2CFB),
+        STARSTRUCK("starstruck", 0xFBD92C);
 
         private final String name;
+        private final int color;
 
-        BeamType(String name) {
+        BeamType(String name, int color) {
             this.name = name;
+            this.color = color;
         }
 
         @Override
@@ -285,6 +288,10 @@ public class APMDSCItem extends Item {
         @Override
         public String toString() {
             return name;
+        }
+
+        public int getColor() {
+            return color;
         }
     }
 }

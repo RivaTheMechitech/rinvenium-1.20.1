@@ -8,10 +8,11 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -30,8 +31,8 @@ import silly.chemthunder.rinvenium.render.manager.client.ImpactFrameManager;
 import silly.chemthunder.rinvenium.render.manager.client.FakePlayerRendererManager;
 import silly.chemthunder.rinvenium.render.manager.client.SlashRendererManager;
 import silly.chemthunder.rinvenium.util.RinveniumTextureUtils;
-import silly.chemthunder.rinvenium.util.RinveniumUtil;
-import silly.chemthunder.rinvenium.util.inject.RenderContainer;
+import silly.chemthunder.rinvenium.util.inject.SyncedRenderContainer;
+import silly.chemthunder.rinvenium.util.inject.client.RenderContainer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,13 +70,68 @@ public class WorldRendererListener {
 
                     APMDSCBeamManager apmdscBeamManager = renderContainer.getAPMDSCBeamManager();
                     apmdscBeamManager.tick();
-                    apmdscBeamManager.get().forEach(beam -> renderAPMDSCBeam(context, client, world, player, camera, beam));
+                    apmdscBeamManager.get().forEach(beam -> renderAPMDSCBeam_(context, client, world, player, camera, beam));
+                    renderAPMDSCBeams(context, client, world, camera);
                 }
             }
         });
     }
 
-    private static void renderAPMDSCBeam(WorldRenderContext context, MinecraftClient client, ClientWorld world, ClientPlayerEntity player, Camera camera, APMDSCBeamRender beam) {
+    private static void renderAPMDSCBeams(WorldRenderContext context, MinecraftClient client, ClientWorld world, Camera camera) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        double viewDistance = client.options.getClampedViewDistance() * 16;
+
+        double camX = camera.getPos().getX();
+        double camY = camera.getPos().getY();
+        double camZ = camera.getPos().getZ();
+
+        for (AbstractClientPlayerEntity playerEntity : world.getPlayers()) {
+            SyncedRenderContainer syncedRenderContainer = (SyncedRenderContainer) playerEntity;
+
+            if (playerEntity != null && syncedRenderContainer.shouldRenderAPMDSCBeam()) {
+
+                Vec3d startPos = playerEntity.getEyePos().add(playerEntity.getRotationVector().normalize().multiply(0.5));
+
+                MatrixStack matrices = context.matrixStack();
+                matrices.push();
+
+                matrices.translate(-camX, -camY, -camZ);
+                matrices.translate(startPos.getX(), startPos.getY(), startPos.getZ());
+
+                Matrix4f transformation = matrices.peek().getPositionMatrix();
+
+                matrices.translate(-startPos.getX(), -startPos.getY(), -startPos.getZ());
+                matrices.translate(camX, camY, camZ);
+
+                if (startPos.squaredDistanceTo(camera.getPos()) < viewDistance * viewDistance) {
+                    RenderSystem.disableCull();
+                    RenderSystem.enableBlend();
+                    RenderSystem.depthMask(MinecraftClient.isFabulousGraphicsOrBetter());
+                    RenderSystem.enableDepthTest();
+
+                    bufferbuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+
+                    buildAPMDSCBeamVertices(playerEntity, bufferbuilder, transformation, camX, camY, camZ);
+
+
+                    matrices.pop();
+
+                    RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+                    RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+                    tessellator.draw();
+
+                    RenderSystem.enableCull();
+                    RenderSystem.depthMask(true);
+
+                }
+            }
+
+        }
+    }
+
+    private static void renderAPMDSCBeam_(WorldRenderContext context, MinecraftClient client, ClientWorld world, ClientPlayerEntity player, Camera camera, APMDSCBeamRender beam) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         double viewDistance = client.options.getClampedViewDistance() * 16;
@@ -103,16 +159,16 @@ public class WorldRendererListener {
 
             bufferbuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 
-            ClientPlayerEntity shooter = null;
+            AbstractClientPlayerEntity shooter = null;
 
             for (AbstractClientPlayerEntity player2 : world.getPlayers()) {
                 if (player2.getUuid().equals(beam.owner)) {
-                    shooter = (ClientPlayerEntity) player2;
+                    shooter = player2;
                 }
             }
 
             if (shooter != null) {
-                buildAPMDSCBeamVertices(beam, shooter, bufferbuilder, transformation, camX, camY, camZ);
+                buildAPMDSCBeamVertices_(beam, shooter, bufferbuilder, transformation, camX, camY, camZ);
             } else {
                 if (shooter == null) Rinvenium.LOGGER.warn("Cannot render APMDSC beam as shooter is null.");
             }
@@ -460,7 +516,29 @@ public class WorldRendererListener {
         bufferbuilder.vertex(transformation, (float) (slash.origin.x - xOffset - camX), (float) (endY - camY), (float) (slash.origin.z - camZ)).color(1.0f, 1.0f, 1.0f, 1.0f).next();
     }
 
-    private static void buildAPMDSCBeamVertices(APMDSCBeamRender beam, ClientPlayerEntity shooter, BufferBuilder bufferbuilder, Matrix4f transformation, double camX, double camY, double camZ) {
+    private static void buildAPMDSCBeamVertices_(APMDSCBeamRender beam, AbstractClientPlayerEntity shooter, BufferBuilder bufferbuilder, Matrix4f transformation, double camX, double camY, double camZ) {
+        Vec3d startPos = shooter.getEyePos().add(new Vec3d(0, -0.2, 0)).add(shooter.getRotationVecClient().normalize().multiply(1.0f));
+        HitResult hitResult = shooter.raycast(6.0, 0.0f, false);
+        Vec3d endPos = hitResult.getPos();
+        if (hitResult.getType() == HitResult.Type.BLOCK) {
+            BlockHitResult blockHitResult = (BlockHitResult) hitResult;
+            endPos = blockHitResult.getPos();
+        }
+        float yOffset = 0.375f;
+        Vec3d startPosHorizontalOffset = shooter.getEyePos().add(shooter.getRotationVecClient().normalize().multiply(2.0f));
+
+        bufferbuilder.vertex(transformation, (float) (startPos.x - camX), (float) (startPos.y - camY), (float) (startPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
+        bufferbuilder.vertex(transformation, (float) (startPosHorizontalOffset.x - camX), (float) (startPos.y + yOffset - camY), (float) (startPosHorizontalOffset.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
+        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y + yOffset - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
+        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
+
+        bufferbuilder.vertex(transformation, (float) (startPos.x - camX), (float) (startPos.y - camY), (float) (startPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
+        bufferbuilder.vertex(transformation, (float) (startPosHorizontalOffset.x - camX), (float) (startPos.y - yOffset - camY), (float) (startPosHorizontalOffset.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
+        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - yOffset - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
+        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
+
+    }
+    private static void buildAPMDSCBeamVertices(AbstractClientPlayerEntity shooter, BufferBuilder bufferbuilder, Matrix4f transformation, double camX, double camY, double camZ) {
         Vec3d startPos = shooter.getEyePos().add(new Vec3d(0, -0.2, 0)).add(shooter.getRotationVecClient().normalize().multiply(1.0f));
         HitResult hitResult = shooter.raycast(6.0, 0.0f, false);
         Vec3d endPos = hitResult.getPos();

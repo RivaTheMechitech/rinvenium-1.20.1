@@ -11,6 +11,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerAbilities;
@@ -34,6 +37,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -45,10 +49,16 @@ import silly.chemthunder.rinvenium.datagen.RinveniumItemTagProvider;
 import silly.chemthunder.rinvenium.index.*;
 import silly.chemthunder.rinvenium.item.EnviniumGlaiveItem;
 import silly.chemthunder.rinvenium.item.EnvixiaArmorItem;
+import silly.chemthunder.rinvenium.util.RinveniumUtil;
 import silly.chemthunder.rinvenium.util.inject.HungerDecrement;
+import silly.chemthunder.rinvenium.util.inject.SyncedRenderContainer;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin extends LivingEntity {
+public abstract class PlayerEntityMixin extends LivingEntity implements SyncedRenderContainer {
+    @Unique
+    private static final TrackedData<Boolean> SHOULD_RENDER_APMDSC_BEAM = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+
     @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
     @Shadow public abstract void startFallFlying();
     @Shadow public abstract HungerManager getHungerManager();
@@ -59,6 +69,25 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    @Override
+    public boolean shouldRenderAPMDSCBeam() {
+        return this.getDataTracker().get(SHOULD_RENDER_APMDSC_BEAM);
+    }
+
+    @Override
+    public void setShouldRenderAPMDSCBeam(boolean shouldRenderAPMDSCBeam) {
+        this.getDataTracker().set(SHOULD_RENDER_APMDSC_BEAM, shouldRenderAPMDSCBeam);
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    public void tick(CallbackInfo ci) {
+
+    }
+    @Inject(method = "initDataTracker", at = @At("TAIL"))
+    public void initDataTracker(CallbackInfo ci) {
+        this.dataTracker.startTracking(SHOULD_RENDER_APMDSC_BEAM, false);
     }
 
     /*@Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V"))
@@ -299,12 +328,12 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         cancellable = true
     )
     private void rinvenium$envixiaFlight(CallbackInfoReturnable<Boolean> cir) {
-        ItemStack itemStack = this.getEquippedStack(EquipmentSlot.CHEST);
+        /*ItemStack itemStack = this.getEquippedStack(EquipmentSlot.CHEST);
         EnvixiaFormComponent envixiaFormComponent = EnvixiaFormComponent.get((PlayerEntity) ((Object) this));
         if ((itemStack.isOf(RinveniumItems.ENVIXIA_CHESTPLATE) && envixiaFormComponent.getTripleBoolValue1()) || (itemStack.isOf(Items.ELYTRA) && ElytraItem.isUsable(itemStack))) {
             this.startFallFlying();
             cir.setReturnValue(true);
-        }
+        }*/
     }
 
     @WrapOperation(

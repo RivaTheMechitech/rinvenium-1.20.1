@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import silly.chemthunder.rinvenium.event.server.ServerPlayConnectionListener;
 import silly.chemthunder.rinvenium.event.server.ServerTickListener;
 import silly.chemthunder.rinvenium.index.*;
 
@@ -33,6 +34,7 @@ public class Rinvenium implements ModInitializer {
         RinveniumCommands.registerRinveniumCommands();
 
         ServerTickListener.execute();
+        ServerPlayConnectionListener.execute();
 
 		LOGGER.info(MOD_ID + " has been successfully initalized!");
         LOGGER.info("balls");
