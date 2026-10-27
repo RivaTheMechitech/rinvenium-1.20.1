@@ -4,16 +4,12 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import silly.chemthunder.rinvenium.item.APMDSCItem;
 import silly.chemthunder.rinvenium.render.APMDSCBeamRender;
 import silly.chemthunder.rinvenium.render.manager.client.APMDSCBeamManager;
-import silly.chemthunder.rinvenium.util.RinveniumUtil;
-import silly.chemthunder.rinvenium.util.inject.RenderContainer;
+import silly.chemthunder.rinvenium.util.inject.client.RenderContainer;
 
 import java.util.UUID;
 
@@ -31,10 +27,10 @@ public class AddAPMDSCBeamS2CPacket {
                 APMDSCItem.BeamType beamType = APMDSCItem.BeamType.values()[beamTypeOrdinal];
 
                 Vec3d startPos = null;
-                ClientPlayerEntity player = null;
+                AbstractClientPlayerEntity player = null;
                 for (AbstractClientPlayerEntity player2 : client.world.getPlayers()) {
                     if (player2.getUuid().equals(owner)) {
-                        player = (ClientPlayerEntity) player2;
+                        player = player2;
                         startPos = player.getEyePos().add(player.getRotationVecClient().normalize().multiply(1.0f));
                     }
                 }

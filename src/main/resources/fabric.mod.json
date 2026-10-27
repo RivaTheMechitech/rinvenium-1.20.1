@@ -6,11 +6,14 @@
   "description": "A devious slug chugs nineteen batteries to systematically wipe out all of the continental United States",
   "authors": [
     "RivaSlugCat - Author",
-    "Midget807 - Developer"
+    "Midget807 - Developer",
+    "Hstar747 - Head Artist",
+    "Mitzi/Lyra - Modeler Extraordinaire"
   ],
   "contributors": [
-    "Chemthunder - Developer",
-    "HStar747 - Artist"
+    "Chemthunder - Legacy Developer",
+    "ThatOneGalVal - Quality/Bug Tester"
+    
   ],
   "license": "CC0-1.0",
   "icon": "assets/rinvenium/icon.png",

@@ -12,7 +12,7 @@ import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import silly.chemthunder.rinvenium.render.manager.client.ImpactFrameManager;
-import silly.chemthunder.rinvenium.util.inject.RenderContainer;
+import silly.chemthunder.rinvenium.util.inject.client.RenderContainer;
 
 @Mixin(EntityRenderDispatcher.class)
 public abstract class EntityRenderDispatcherMixin implements SynchronousResourceReloader {

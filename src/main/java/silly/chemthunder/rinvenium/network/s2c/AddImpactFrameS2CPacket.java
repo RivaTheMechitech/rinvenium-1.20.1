@@ -7,7 +7,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.Vec3d;
 import silly.chemthunder.rinvenium.render.ImpactFrame;
 import silly.chemthunder.rinvenium.render.manager.client.ImpactFrameManager;
-import silly.chemthunder.rinvenium.util.inject.RenderContainer;
+import silly.chemthunder.rinvenium.util.inject.client.RenderContainer;
 
 import java.util.UUID;
 

@@ -95,10 +95,12 @@ public class EnviniumGlaiveItemRenderer implements BuiltinItemRendererRegistry.D
                 matrices.translate(0, -0.125, 0.125);
             }
         } else if (texture.equals(EnviniumGlaiveItem.Texture.STARFALL)) {
-            if (mode == ModelTransformationMode.THIRD_PERSON_RIGHT_HAND) {
-                matrices.translate(0, -0.75, 0.125);
-            } else if (mode == ModelTransformationMode.THIRD_PERSON_LEFT_HAND) {
-                matrices.translate(0, 0.125, 0.45);
+            if (blocking.isEmpty()) {
+                if (mode == ModelTransformationMode.THIRD_PERSON_RIGHT_HAND) {
+                    matrices.translate(0, -0.75, 0.125);
+                } else if (mode == ModelTransformationMode.THIRD_PERSON_LEFT_HAND) {
+                    matrices.translate(0, 0.125, 0.45);
+                }
             }
         }
 

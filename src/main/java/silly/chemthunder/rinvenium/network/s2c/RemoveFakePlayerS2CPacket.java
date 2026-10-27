@@ -4,9 +4,8 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Hand;
 import silly.chemthunder.rinvenium.render.manager.client.FakePlayerRendererManager;
-import silly.chemthunder.rinvenium.util.inject.RenderContainer;
+import silly.chemthunder.rinvenium.util.inject.client.RenderContainer;
 
 public class RemoveFakePlayerS2CPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {

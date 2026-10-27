@@ -24,7 +24,7 @@ import silly.chemthunder.rinvenium.index.RinveniumItems;
 import silly.chemthunder.rinvenium.render.manager.client.FlashManager;
 import silly.chemthunder.rinvenium.render.manager.client.ImpactFrameManager;
 import silly.chemthunder.rinvenium.util.RinveniumTextureUtils;
-import silly.chemthunder.rinvenium.util.inject.RenderContainer;
+import silly.chemthunder.rinvenium.util.inject.client.RenderContainer;
 
 @SuppressWarnings("DiscouragedShift")
 @Mixin(InGameHud.class)

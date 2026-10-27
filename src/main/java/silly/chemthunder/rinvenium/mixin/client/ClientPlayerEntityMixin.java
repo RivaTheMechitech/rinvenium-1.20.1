@@ -23,7 +23,7 @@ import silly.chemthunder.rinvenium.cca.entity.EnvixiaFormComponent;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
 import silly.chemthunder.rinvenium.render.manager.client.*;
 import silly.chemthunder.rinvenium.render.manager.client.FakePlayerRendererManager;
-import silly.chemthunder.rinvenium.util.inject.RenderContainer;
+import silly.chemthunder.rinvenium.util.inject.client.RenderContainer;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity implements RenderContainer {
@@ -59,12 +59,12 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
         )
     )
     private void rinvenium$elytraFly(CallbackInfo ci) {
-        ItemStack itemStack = this.getEquippedStack(EquipmentSlot.CHEST);
+        /*ItemStack itemStack = this.getEquippedStack(EquipmentSlot.CHEST);
         EnvixiaFormComponent envixiaFormComponent = EnvixiaFormComponent.get((ClientPlayerEntity) ((Object)this));
         
         if (((itemStack.isOf(RinveniumItems.ENVIXIA_CHESTPLATE) && envixiaFormComponent.getTripleBoolValue1()) || (itemStack.isOf(Items.ELYTRA) && ElytraItem.isUsable(itemStack))) && this.checkFallFlying()) {
             this.networkHandler.sendPacket(new ClientCommandC2SPacket(this, ClientCommandC2SPacket.Mode.START_FALL_FLYING));
-        }
+        }*/
     }
 
     @Override
