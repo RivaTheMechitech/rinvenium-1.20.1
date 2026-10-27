@@ -39,12 +39,7 @@ public class RinveniumItemTagProvider extends FabricTagProvider.ItemTagProvider 
                 );
         this.getOrCreateTagBuilder(LOCKED_RECIPES)
                 .add(
-                        RinveniumItems.ENVIXIA_CORE,
-                        RinveniumItems.ENVIXIA_HELMET,
-                        RinveniumItems.ENVIXIA_CHESTPLATE,
-                        RinveniumItems.ENVIXIA_LEGGINGS,
-                        RinveniumItems.ENVIXIA_BOOTS,
-                        RinveniumItems.ENVINIUM_GLAIVE
+                        RinveniumItems.ENVIXIA_CORE
                 );
         this.getOrCreateTagBuilder(ENVIXIA_MUNCHIES)
                 .add(
