@@ -13,6 +13,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+
 import silly.chemthunder.rinvenium.Rinvenium;
 
 public class EnvixiaArmorRenderer implements ArmorRenderer {
