@@ -11,6 +11,7 @@ import net.minecraft.entity.LivingEntity;
 // Paste this class into your mod and generate all required imports
 public class EnvixiaArmorModel<T extends LivingEntity> extends BipedEntityModel<T> {
 	public ModelPart headpiece;
+	public ModelPart clearGlassHelmet;
 	public ModelPart chestplate;
 	public ModelPart jetpack;
 	public ModelPart right_wing;
@@ -24,6 +25,7 @@ public class EnvixiaArmorModel<T extends LivingEntity> extends BipedEntityModel<
 	public EnvixiaArmorModel(ModelPart root) {
         super(root);
         this.headpiece = root.getChild("headpiece");
+		this.clearGlassHelmet = root.getChild("clearGlassHelmet");
 		this.chestplate = root.getChild("chestplate");
 		this.jetpack = this.chestplate.getChild("jetpack");
 		this.right_wing = this.jetpack.getChild("right_wing");
@@ -45,6 +47,8 @@ public class EnvixiaArmorModel<T extends LivingEntity> extends BipedEntityModel<
 			.uv(26, 91).cuboid(-5.0F, -4.0F, 4.0F, 10.0F, 1.0F, 1.0F, new Dilation(0.0F))
 			.uv(0, 75).cuboid(-5.0F, -7.0F, -3.0F, 1.0F, 6.0F, 6.0F, new Dilation(0.2F))
 			.uv(14, 75).cuboid(4.0F, -7.0F, -3.0F, 1.0F, 6.0F, 6.0F, new Dilation(0.2F)), ModelTransform.pivot(-0.0F, 3.0F, 0.0F));
+
+		ModelPartData clearGlassHelmet = modelPartData.addChild("clearGlassHelmet", ModelPartBuilder.create().uv(0, 112).cuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new Dilation(0.3F)), ModelTransform.pivot(-0.0F, 3.0F, 0.0F));
 
 		ModelPartData cube_r1 = headpiece.addChild("cube_r1", ModelPartBuilder.create().uv(14, 89).cuboid(0.5F, 0.5F, 2.0F, 0.0F, 3.0F, 9.0F, new Dilation(0.0F))
 			.uv(0, 81).cuboid(-8.5F, 0.5F, 2.0F, 0.0F, 3.0F, 9.0F, new Dilation(0.0F)), ModelTransform.of(4.0F, -6.0F, 0.0F, 0.7854F, 0.0F, 0.0F));
@@ -94,6 +98,7 @@ public class EnvixiaArmorModel<T extends LivingEntity> extends BipedEntityModel<
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		headpiece.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+		clearGlassHelmet.render(matrices, vertexConsumer, light, overlay, red, green, blue, 0.8f);
 		chestplate.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 		right_arm.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 		left_arm.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);

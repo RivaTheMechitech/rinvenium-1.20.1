@@ -30,6 +30,7 @@ public class EnvixiaArmorRenderer implements ArmorRenderer {
 
         contextModel.copyBipedStateTo(model);
         model.headpiece.copyTransform(contextModel.head);
+        model.clearGlassHelmet.copyTransform(contextModel.head);
         model.chestplate.copyTransform(contextModel.body);
         model.right_arm.copyTransform(contextModel.rightArm);
         model.left_arm.copyTransform(contextModel.leftArm);
@@ -39,6 +40,7 @@ public class EnvixiaArmorRenderer implements ArmorRenderer {
         model.left_boot.copyTransform(contextModel.leftLeg);
         model.setVisible(true);
         model.headpiece.visible = slot == EquipmentSlot.HEAD;
+        model.clearGlassHelmet.visible = slot == EquipmentSlot.HEAD;
         model.chestplate.visible = slot == EquipmentSlot.CHEST;
         model.right_arm.visible = slot == EquipmentSlot.CHEST;
         model.left_arm.visible = slot == EquipmentSlot.CHEST;
@@ -47,6 +49,6 @@ public class EnvixiaArmorRenderer implements ArmorRenderer {
         model.right_boot.visible = slot == EquipmentSlot.FEET;
         model.left_boot.visible = slot == EquipmentSlot.FEET;
 
-        model.render(matrices, ItemRenderer.getArmorGlintConsumer(vertexConsumers, RenderLayer.getArmorCutoutNoCull(TEXTURE), true, false), light, OverlayTexture.DEFAULT_UV, 1.0f, 1.0f, 1.0f, 1.0f);
+        model.render(matrices, ItemRenderer.getArmorGlintConsumer(vertexConsumers, RenderLayer.getEntityTranslucent(TEXTURE), true, false), light, OverlayTexture.DEFAULT_UV, 1.0f, 1.0f, 1.0f, 1.0f);
     }
 }
