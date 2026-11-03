@@ -11,8 +11,6 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -70,7 +68,6 @@ public class WorldRendererListener {
 
                     APMDSCBeamManager apmdscBeamManager = renderContainer.getAPMDSCBeamManager();
                     apmdscBeamManager.tick();
-                    apmdscBeamManager.get().forEach(beam -> renderAPMDSCBeam_(context, client, world, player, camera, beam));
                     renderAPMDSCBeams(context, client, world, camera);
                 }
             }
@@ -110,14 +107,15 @@ public class WorldRendererListener {
                     RenderSystem.depthMask(MinecraftClient.isFabulousGraphicsOrBetter());
                     RenderSystem.enableDepthTest();
 
-                    bufferbuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+                    bufferbuilder.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
 
                     buildAPMDSCBeamVertices(playerEntity, bufferbuilder, transformation, camX, camY, camZ);
 
 
                     matrices.pop();
 
-                    RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+                    RenderSystem.lineWidth(3.0f);
+                    RenderSystem.setShader(GameRenderer::getRenderTypeLinesProgram);
                     RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
                     tessellator.draw();
@@ -539,25 +537,105 @@ public class WorldRendererListener {
 
     }
     private static void buildAPMDSCBeamVertices(AbstractClientPlayerEntity shooter, BufferBuilder bufferbuilder, Matrix4f transformation, double camX, double camY, double camZ) {
-        Vec3d startPos = shooter.getEyePos().add(new Vec3d(0, -0.2, 0)).add(shooter.getRotationVecClient().normalize().multiply(1.0f));
+        Vec3d startPos = shooter.getEyePos().add(new Vec3d(0, -0.2, 0)).add(shooter.getRotationVecClient().normalize().multiply(2.0f));
         HitResult hitResult = shooter.raycast(6.0, 0.0f, false);
         Vec3d endPos = hitResult.getPos();
         if (hitResult.getType() == HitResult.Type.BLOCK) {
             BlockHitResult blockHitResult = (BlockHitResult) hitResult;
             endPos = blockHitResult.getPos();
         }
-        float yOffset = 0.375f;
-        Vec3d startPosHorizontalOffset = shooter.getEyePos().add(shooter.getRotationVecClient().normalize().multiply(2.0f));
+        Vec3d yawVec = new Vec3d(
+                -Math.sin(Math.toRadians(shooter.getYaw())),
+                0,
+                Math.cos(Math.toRadians(shooter.getYaw()))
+        ).normalize();
 
-        bufferbuilder.vertex(transformation, (float) (startPos.x - camX), (float) (startPos.y - camY), (float) (startPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
-        bufferbuilder.vertex(transformation, (float) (startPosHorizontalOffset.x - camX), (float) (startPos.y + yOffset - camY), (float) (startPosHorizontalOffset.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
-        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y + yOffset - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
-        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
+        Vec3d direction = startPos.subtract(endPos);
+        Vec3d upVector = new Vec3d(0.0, 1.0, 0.0);
+        Vec3d horizontal = direction.crossProduct(yawVec).normalize();
+        boolean crossWithGlobalUp = false;
+        if (Math.abs(direction.normalize().y) < 0.1) {
+            horizontal = direction.crossProduct(new Vec3d(0.0, 1.0, 0.0)).normalize().negate();
+            crossWithGlobalUp = true;
+        }
+        if (direction.y > 0.0 && !crossWithGlobalUp) {
+            horizontal = horizontal.negate();
+        }
+        Vec3d localUp = direction.crossProduct(horizontal).normalize();
 
-        bufferbuilder.vertex(transformation, (float) (startPos.x - camX), (float) (startPos.y - camY), (float) (startPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
-        bufferbuilder.vertex(transformation, (float) (startPosHorizontalOffset.x - camX), (float) (startPos.y - yOffset - camY), (float) (startPosHorizontalOffset.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
-        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - yOffset - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
-        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
+        bufferbuilder.vertex(
+                transformation,
+                (float) (startPos.x - camX),
+                (float) (startPos.y - camY),
+                (float) (startPos.z - camZ)
+        ).color(1.0f, 1.0f, 1.0f, 1.0f)
+                .normal(1.0f, 1.0f, 1.0f).next();
+        bufferbuilder.vertex(
+                transformation,
+                (float) (endPos.x - camX),
+                (float) (endPos.y - camY),
+                (float) (endPos.z - camZ)
+        ).color(1.0f, 1.0f, 1.0f, 1.0f)
+                .normal(1.0f, 1.0f, 1.0f).next();
 
+        bufferbuilder.vertex(
+                transformation,
+                (float) (endPos.x - camX),
+                (float) (endPos.y - camY),
+                (float) (endPos.z - camZ)
+        ).color(0.0f, 1.0f, 0.0f, 1.0f)
+                .normal(1.0f, 1.0f, 1.0f).next();
+        bufferbuilder.vertex(
+                transformation,
+                (float) (endPos.add(upVector).x - camX),
+                (float) (endPos.add(upVector).y - camY),
+                (float) (endPos.add(upVector).z - camZ)
+        ).color(0.0f, 1.0f, 0.0f, 1.0f)
+                .normal(1.0f, 1.0f, 1.0f).next();
+
+        bufferbuilder.vertex(
+                        transformation,
+                        (float) (endPos.x - camX),
+                        (float) (endPos.y - camY),
+                        (float) (endPos.z - camZ)
+                ).color(1.0f, 0.0f, 0.0f, 1.0f)
+                .normal(1.0f, 1.0f, 1.0f).next();
+        bufferbuilder.vertex(
+                        transformation,
+                        (float) (endPos.add(horizontal).x - camX),
+                        (float) (endPos.add(horizontal).y - camY),
+                        (float) (endPos.add(horizontal).z - camZ)
+                ).color(1.0f, 0.0f, 0.0f, 1.0f)
+                .normal(1.0f, 1.0f, 1.0f).next();
+
+        bufferbuilder.vertex(
+                        transformation,
+                        (float) (endPos.x - camX),
+                        (float) (endPos.y - camY),
+                        (float) (endPos.z - camZ)
+                ).color(0.0f, 1.0f, 0.5f, 1.0f)
+                .normal(1.0f, 1.0f, 1.0f).next();
+        bufferbuilder.vertex(
+                        transformation,
+                        (float) (endPos.add(localUp).x - camX),
+                        (float) (endPos.add(localUp).y - camY),
+                        (float) (endPos.add(localUp).z - camZ)
+                ).color(0.0f, 1.0f, 0.5f, 1.0f)
+                .normal(1.0f, 1.0f, 1.0f).next();
+
+        bufferbuilder.vertex(
+                        transformation,
+                        (float) (endPos.x - camX),
+                        (float) (endPos.y - camY),
+                        (float) (endPos.z - camZ)
+                ).color(1.0f, 1.0f, 0.0f, 1.0f)
+                .normal(1.0f, 1.0f, 1.0f).next();
+        bufferbuilder.vertex(
+                        transformation,
+                        (float) (endPos.add(yawVec).x - camX),
+                        (float) (endPos.add(yawVec).y - camY),
+                        (float) (endPos.add(yawVec).z - camZ)
+                ).color(1.0f, 1.0f, 0.0f, 1.0f)
+                .normal(1.0f, 1.0f, 1.0f).next();
     }
 }
