@@ -10,7 +10,9 @@ import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -19,8 +21,10 @@ import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import silly.chemthunder.rinvenium.Rinvenium;
-import silly.chemthunder.rinvenium.render.APMDSCBeamRender;
+import silly.chemthunder.rinvenium.index.RinveniumEnchantments;
+import silly.chemthunder.rinvenium.index.RinveniumItems;
 import silly.chemthunder.rinvenium.render.FakePlayerRender;
 import silly.chemthunder.rinvenium.render.ImpactFrame;
 import silly.chemthunder.rinvenium.render.SlashRender;
@@ -34,6 +38,10 @@ import silly.chemthunder.rinvenium.util.inject.client.RenderContainer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static silly.chemthunder.rinvenium.item.APMDSCItem.BeamType.DEFAULT;
+import static silly.chemthunder.rinvenium.item.APMDSCItem.BeamType.HIGH_POWER;
+import static silly.chemthunder.rinvenium.item.APMDSCItem.BeamType.LOW_POWER;
 
 public class WorldRendererListener {
     public static int time = 0;
@@ -74,7 +82,15 @@ public class WorldRendererListener {
         });
     }
 
+    /** Renders the APMDSC beam. This method includes an option for debug lines
+     * that are vectors used to construct, and corresponding to the beam's geometry.
+     * <br>
+     * <br>
+     * To enable the debug lines, edit the {@code boolean shouldRenderDebugLines = false} to {@code true}.*/
+
     private static void renderAPMDSCBeams(WorldRenderContext context, MinecraftClient client, ClientWorld world, Camera camera) {
+        boolean shouldRenderDebugLines = false;
+
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         double viewDistance = client.options.getClampedViewDistance() * 16;
@@ -87,14 +103,33 @@ public class WorldRendererListener {
             SyncedRenderContainer syncedRenderContainer = (SyncedRenderContainer) playerEntity;
 
             if (playerEntity != null && syncedRenderContainer.shouldRenderAPMDSCBeam()) {
-
-                Vec3d startPos = playerEntity.getEyePos().add(playerEntity.getRotationVector().normalize().multiply(0.5));
+                Vec3d startPos = playerEntity.getEyePos().add(new Vec3d(0, -0.2, 0)).add(playerEntity.getRotationVector().normalize().multiply(2.0f));
+                HitResult hitResult = playerEntity.raycast(6.0, 0.0f, false);
+                Vec3d endPos = hitResult.getPos();
+                if (hitResult.getType() == HitResult.Type.BLOCK) {
+                    BlockHitResult blockHitResult = (BlockHitResult) hitResult;
+                    endPos = blockHitResult.getPos();
+                }
+                Vec3d direction = startPos.subtract(endPos);
 
                 MatrixStack matrices = context.matrixStack();
                 matrices.push();
 
                 matrices.translate(-camX, -camY, -camZ);
                 matrices.translate(startPos.getX(), startPos.getY(), startPos.getZ());
+
+                ItemStack stack = playerEntity.getStackInHand(playerEntity.getActiveHand());
+                float spr = 3.0f; // seconds per rotation
+                if (stack.isOf(RinveniumItems.APMDSC)) {
+                    if (EnchantmentHelper.getLevel(RinveniumEnchantments.HIGH_POWER_OUTPUT, stack) > 0) {
+                        spr = 1.5f;
+                    }
+                    if (EnchantmentHelper.getLevel(RinveniumEnchantments.LOW_POWER_OUTPUT, stack) > 0) {
+                        spr = 5.0f;
+                    }
+                }
+                float angle = (float) ((playerEntity.age / (spr * 20.0f)) * (Math.PI * 2.0f));
+                matrices.multiply(new Quaternionf().fromAxisAngleRad(direction.toVector3f(), angle));
 
                 Matrix4f transformation = matrices.peek().getPositionMatrix();
 
@@ -107,15 +142,23 @@ public class WorldRendererListener {
                     RenderSystem.depthMask(MinecraftClient.isFabulousGraphicsOrBetter());
                     RenderSystem.enableDepthTest();
 
-                    bufferbuilder.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
+                    if (shouldRenderDebugLines) {
+                        bufferbuilder.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
+                    } else {
+                        bufferbuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+                    }
 
-                    buildAPMDSCBeamVertices(playerEntity, bufferbuilder, transformation, camX, camY, camZ);
+                    buildAPMDSCBeamVertices(playerEntity, bufferbuilder, transformation, camX, camY, camZ, shouldRenderDebugLines);
 
 
                     matrices.pop();
 
-                    RenderSystem.lineWidth(3.0f);
-                    RenderSystem.setShader(GameRenderer::getRenderTypeLinesProgram);
+                    if (shouldRenderDebugLines) {
+                        RenderSystem.lineWidth(3.0f);
+                        RenderSystem.setShader(GameRenderer::getRenderTypeLinesProgram);
+                    } else {
+                        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+                    }
                     RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
                     tessellator.draw();
@@ -126,60 +169,6 @@ public class WorldRendererListener {
                 }
             }
 
-        }
-    }
-
-    private static void renderAPMDSCBeam_(WorldRenderContext context, MinecraftClient client, ClientWorld world, ClientPlayerEntity player, Camera camera, APMDSCBeamRender beam) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        double viewDistance = client.options.getClampedViewDistance() * 16;
-
-        double camX = camera.getPos().getX();
-        double camY = camera.getPos().getY();
-        double camZ = camera.getPos().getZ();
-
-        MatrixStack matrices = context.matrixStack();
-        matrices.push();
-
-        matrices.translate(-camX, -camY, -camZ);
-        matrices.translate(beam.startPos.getX(), beam.startPos.getY(), beam.startPos.getZ());
-
-        Matrix4f transformation = matrices.peek().getPositionMatrix();
-
-        matrices.translate(-beam.startPos.getX(), -beam.startPos.getY(), -beam.startPos.getZ());
-        matrices.translate(camX, camY, camZ);
-
-        if (beam.startPos.squaredDistanceTo(camera.getPos()) < viewDistance * viewDistance) {
-            RenderSystem.disableCull();
-            RenderSystem.enableBlend();
-            RenderSystem.depthMask(MinecraftClient.isFabulousGraphicsOrBetter());
-            RenderSystem.enableDepthTest();
-
-            bufferbuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-
-            AbstractClientPlayerEntity shooter = null;
-
-            for (AbstractClientPlayerEntity player2 : world.getPlayers()) {
-                if (player2.getUuid().equals(beam.owner)) {
-                    shooter = player2;
-                }
-            }
-
-            if (shooter != null) {
-                buildAPMDSCBeamVertices_(beam, shooter, bufferbuilder, transformation, camX, camY, camZ);
-            } else {
-                if (shooter == null) Rinvenium.LOGGER.warn("Cannot render APMDSC beam as shooter is null.");
-            }
-
-            matrices.pop();
-
-            RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-            tessellator.draw();
-
-            RenderSystem.enableCull();
-            RenderSystem.depthMask(true);
         }
     }
 
@@ -514,128 +503,477 @@ public class WorldRendererListener {
         bufferbuilder.vertex(transformation, (float) (slash.origin.x - xOffset - camX), (float) (endY - camY), (float) (slash.origin.z - camZ)).color(1.0f, 1.0f, 1.0f, 1.0f).next();
     }
 
-    private static void buildAPMDSCBeamVertices_(APMDSCBeamRender beam, AbstractClientPlayerEntity shooter, BufferBuilder bufferbuilder, Matrix4f transformation, double camX, double camY, double camZ) {
-        Vec3d startPos = shooter.getEyePos().add(new Vec3d(0, -0.2, 0)).add(shooter.getRotationVecClient().normalize().multiply(1.0f));
+
+    private static void buildAPMDSCBeamVertices(AbstractClientPlayerEntity shooter, BufferBuilder bufferbuilder, Matrix4f transformation, double camX, double camY, double camZ, boolean shouldRenderDebugLines) {
+        Vec3d startPos = shooter.getEyePos().add(new Vec3d(0, -0.2, 0)).add(shooter.getRotationVector().normalize().multiply(2.0f));
         HitResult hitResult = shooter.raycast(6.0, 0.0f, false);
         Vec3d endPos = hitResult.getPos();
         if (hitResult.getType() == HitResult.Type.BLOCK) {
             BlockHitResult blockHitResult = (BlockHitResult) hitResult;
             endPos = blockHitResult.getPos();
         }
-        float yOffset = 0.375f;
-        Vec3d startPosHorizontalOffset = shooter.getEyePos().add(shooter.getRotationVecClient().normalize().multiply(2.0f));
-
-        bufferbuilder.vertex(transformation, (float) (startPos.x - camX), (float) (startPos.y - camY), (float) (startPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
-        bufferbuilder.vertex(transformation, (float) (startPosHorizontalOffset.x - camX), (float) (startPos.y + yOffset - camY), (float) (startPosHorizontalOffset.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
-        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y + yOffset - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
-        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
-
-        bufferbuilder.vertex(transformation, (float) (startPos.x - camX), (float) (startPos.y - camY), (float) (startPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
-        bufferbuilder.vertex(transformation, (float) (startPosHorizontalOffset.x - camX), (float) (startPos.y - yOffset - camY), (float) (startPosHorizontalOffset.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
-        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - yOffset - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.4f).next();
-        bufferbuilder.vertex(transformation, (float) (endPos.x - camX), (float) (endPos.y - camY), (float) (endPos.z - camZ)).color(0.0f, 1.0f, 1.0f, 0.8f).next();
-
-    }
-    private static void buildAPMDSCBeamVertices(AbstractClientPlayerEntity shooter, BufferBuilder bufferbuilder, Matrix4f transformation, double camX, double camY, double camZ) {
-        Vec3d startPos = shooter.getEyePos().add(new Vec3d(0, -0.2, 0)).add(shooter.getRotationVecClient().normalize().multiply(2.0f));
-        HitResult hitResult = shooter.raycast(6.0, 0.0f, false);
-        Vec3d endPos = hitResult.getPos();
-        if (hitResult.getType() == HitResult.Type.BLOCK) {
-            BlockHitResult blockHitResult = (BlockHitResult) hitResult;
-            endPos = blockHitResult.getPos();
-        }
+        // A vector on the X-Z plane that has the yaw direction
         Vec3d yawVec = new Vec3d(
                 -Math.sin(Math.toRadians(shooter.getYaw())),
                 0,
                 Math.cos(Math.toRadians(shooter.getYaw()))
         ).normalize();
 
+        // Direction of the beam's centre
         Vec3d direction = startPos.subtract(endPos);
+
+        // Global up
         Vec3d upVector = new Vec3d(0.0, 1.0, 0.0);
+
+        // By default, the horizontal (relative) is the cross-product of the direction vector and yaw vector.
+        // This has one edge case; when the pitch == 0
         Vec3d horizontal = direction.crossProduct(yawVec).normalize();
+
+        // Taking the cross-product of the direction and global up (y-axis)
         boolean crossWithGlobalUp = false;
+        // Checks if the pitch of the direction vector is close to zero
         if (Math.abs(direction.normalize().y) < 0.1) {
-            horizontal = direction.crossProduct(new Vec3d(0.0, 1.0, 0.0)).normalize().negate();
+            horizontal = direction.crossProduct(upVector).normalize().negate();
             crossWithGlobalUp = true;
         }
+        // keeps the horizontal pointing relative-right so that the geometry doesn't randomly flip when looking up or down
         if (direction.y > 0.0 && !crossWithGlobalUp) {
             horizontal = horizontal.negate();
         }
+        // Defines a relative upwards vector
         Vec3d localUp = direction.crossProduct(horizontal).normalize();
 
-        bufferbuilder.vertex(
-                transformation,
-                (float) (startPos.x - camX),
-                (float) (startPos.y - camY),
-                (float) (startPos.z - camZ)
-        ).color(1.0f, 1.0f, 1.0f, 1.0f)
-                .normal(1.0f, 1.0f, 1.0f).next();
-        bufferbuilder.vertex(
-                transformation,
-                (float) (endPos.x - camX),
-                (float) (endPos.y - camY),
-                (float) (endPos.z - camZ)
-        ).color(1.0f, 1.0f, 1.0f, 1.0f)
-                .normal(1.0f, 1.0f, 1.0f).next();
+        float outerRadius = 0.375f;
+        float innerRadius = 0.2f;
+        // Potential use for a ratio for the radii
+        //innerRadius = outerRadius * 0.5f;
 
-        bufferbuilder.vertex(
-                transformation,
-                (float) (endPos.x - camX),
-                (float) (endPos.y - camY),
-                (float) (endPos.z - camZ)
-        ).color(0.0f, 1.0f, 0.0f, 1.0f)
-                .normal(1.0f, 1.0f, 1.0f).next();
-        bufferbuilder.vertex(
-                transformation,
-                (float) (endPos.add(upVector).x - camX),
-                (float) (endPos.add(upVector).y - camY),
-                (float) (endPos.add(upVector).z - camZ)
-        ).color(0.0f, 1.0f, 0.0f, 1.0f)
-                .normal(1.0f, 1.0f, 1.0f).next();
+        // Handles color based on enchant. Defaults to the cyan
+        ItemStack stack = shooter.getStackInHand(shooter.getActiveHand());
+        int color = DEFAULT.getColor();
+        if (stack.isOf(RinveniumItems.APMDSC)) {
+            if (EnchantmentHelper.getLevel(RinveniumEnchantments.HIGH_POWER_OUTPUT, stack) > 0) {
+                color = HIGH_POWER.getColor();
+            }
+            if (EnchantmentHelper.getLevel(RinveniumEnchantments.LOW_POWER_OUTPUT, stack) > 0) {
+                color = LOW_POWER.getColor();
+            }
+        }
+        // Bit shifts the BeamType.enum to a float
+        float red = ((color >> 16) & 0xFF) / 255.0f;
+        float green = ((color >> 8) & 0xFF) / 255.0f;
+        float blue = (color & 0xFF) / 255.0f;
 
-        bufferbuilder.vertex(
-                        transformation,
-                        (float) (endPos.x - camX),
-                        (float) (endPos.y - camY),
-                        (float) (endPos.z - camZ)
-                ).color(1.0f, 0.0f, 0.0f, 1.0f)
-                .normal(1.0f, 1.0f, 1.0f).next();
-        bufferbuilder.vertex(
-                        transformation,
-                        (float) (endPos.add(horizontal).x - camX),
-                        (float) (endPos.add(horizontal).y - camY),
-                        (float) (endPos.add(horizontal).z - camZ)
-                ).color(1.0f, 0.0f, 0.0f, 1.0f)
-                .normal(1.0f, 1.0f, 1.0f).next();
+        float innerAlpha = 0.6f;
+        float innerAlphaEnd = 0.0f;
+        float outerAlpha = 0.3f;
+        float outerAlphaEnd = 0.0f;
 
-        bufferbuilder.vertex(
-                        transformation,
-                        (float) (endPos.x - camX),
-                        (float) (endPos.y - camY),
-                        (float) (endPos.z - camZ)
-                ).color(0.0f, 1.0f, 0.5f, 1.0f)
-                .normal(1.0f, 1.0f, 1.0f).next();
-        bufferbuilder.vertex(
-                        transformation,
-                        (float) (endPos.add(localUp).x - camX),
-                        (float) (endPos.add(localUp).y - camY),
-                        (float) (endPos.add(localUp).z - camZ)
-                ).color(0.0f, 1.0f, 0.5f, 1.0f)
-                .normal(1.0f, 1.0f, 1.0f).next();
+        // Build quads for beam
+        if (!shouldRenderDebugLines) {
+            // ====== Inner beam ======
 
-        bufferbuilder.vertex(
-                        transformation,
-                        (float) (endPos.x - camX),
-                        (float) (endPos.y - camY),
-                        (float) (endPos.z - camZ)
-                ).color(1.0f, 1.0f, 0.0f, 1.0f)
-                .normal(1.0f, 1.0f, 1.0f).next();
-        bufferbuilder.vertex(
-                        transformation,
-                        (float) (endPos.add(yawVec).x - camX),
-                        (float) (endPos.add(yawVec).y - camY),
-                        (float) (endPos.add(yawVec).z - camZ)
-                ).color(1.0f, 1.0f, 0.0f, 1.0f)
-                .normal(1.0f, 1.0f, 1.0f).next();
+            // Normalization for redundancy and set the offset perpendicular vector lengths to the inner radius length
+            horizontal = horizontal.normalize().multiply(innerRadius);
+            localUp = localUp.normalize().multiply(innerRadius);
+
+            // === Right face ===
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal).add(localUp).x - camX),
+                    (float) (startPos.add(horizontal).add(localUp).y - camY),
+                    (float) (startPos.add(horizontal).add(localUp).z - camZ)
+            ).color(red, green, blue, innerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal).add(localUp.negate()).x - camX),
+                    (float) (startPos.add(horizontal).add(localUp.negate()).y - camY),
+                    (float) (startPos.add(horizontal).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, innerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal).add(localUp.negate()).x - camX),
+                    (float) (endPos.add(horizontal).add(localUp.negate()).y - camY),
+                    (float) (endPos.add(horizontal).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, innerAlphaEnd).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal).add(localUp).x - camX),
+                    (float) (endPos.add(horizontal).add(localUp).y - camY),
+                    (float) (endPos.add(horizontal).add(localUp).z - camZ)
+            ).color(red, green, blue, innerAlphaEnd).next();
+
+            // === Left face ===
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal.negate()).add(localUp).x - camX),
+                    (float) (startPos.add(horizontal.negate()).add(localUp).y - camY),
+                    (float) (startPos.add(horizontal.negate()).add(localUp).z - camZ)
+            ).color(red, green, blue, innerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).x - camX),
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).y - camY),
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, innerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).x - camX),
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).y - camY),
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, innerAlphaEnd).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal.negate()).add(localUp).x - camX),
+                    (float) (endPos.add(horizontal.negate()).add(localUp).y - camY),
+                    (float) (endPos.add(horizontal.negate()).add(localUp).z - camZ)
+            ).color(red, green, blue, innerAlphaEnd).next();
+
+            // === Up face ===
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal).add(localUp).x - camX),
+                    (float) (startPos.add(horizontal).add(localUp).y - camY),
+                    (float) (startPos.add(horizontal).add(localUp).z - camZ)
+            ).color(red, green, blue, innerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal.negate()).add(localUp).x - camX),
+                    (float) (startPos.add(horizontal.negate()).add(localUp).y - camY),
+                    (float) (startPos.add(horizontal.negate()).add(localUp).z - camZ)
+            ).color(red, green, blue, innerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal.negate()).add(localUp).x - camX),
+                    (float) (endPos.add(horizontal.negate()).add(localUp).y - camY),
+                    (float) (endPos.add(horizontal.negate()).add(localUp).z - camZ)
+            ).color(red, green, blue, innerAlphaEnd).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal).add(localUp).x - camX),
+                    (float) (endPos.add(horizontal).add(localUp).y - camY),
+                    (float) (endPos.add(horizontal).add(localUp).z - camZ)
+            ).color(red, green, blue, innerAlphaEnd).next();
+
+            // === Down face ===
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal).add(localUp.negate()).x - camX),
+                    (float) (startPos.add(horizontal).add(localUp.negate()).y - camY),
+                    (float) (startPos.add(horizontal).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, innerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).x - camX),
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).y - camY),
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, innerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).x - camX),
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).y - camY),
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, innerAlphaEnd).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal).add(localUp.negate()).x - camX),
+                    (float) (endPos.add(horizontal).add(localUp.negate()).y - camY),
+                    (float) (endPos.add(horizontal).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, innerAlphaEnd).next();
+
+            // === Front face ===
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal).add(localUp).x - camX),
+                    (float) (startPos.add(horizontal).add(localUp).y - camY),
+                    (float) (startPos.add(horizontal).add(localUp).z - camZ)
+            ).color(red, green, blue, innerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal).add(localUp.negate()).x - camX),
+                    (float) (startPos.add(horizontal).add(localUp.negate()).y - camY),
+                    (float) (startPos.add(horizontal).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, innerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).x - camX),
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).y - camY),
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, innerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal.negate()).add(localUp).x - camX),
+                    (float) (startPos.add(horizontal.negate()).add(localUp).y - camY),
+                    (float) (startPos.add(horizontal.negate()).add(localUp).z - camZ)
+            ).color(red, green, blue, innerAlpha).next();
+
+            // === Back face ===
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal).add(localUp).x - camX),
+                    (float) (endPos.add(horizontal).add(localUp).y - camY),
+                    (float) (endPos.add(horizontal).add(localUp).z - camZ)
+            ).color(red, green, blue, innerAlphaEnd).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal).add(localUp.negate()).x - camX),
+                    (float) (endPos.add(horizontal).add(localUp.negate()).y - camY),
+                    (float) (endPos.add(horizontal).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, innerAlphaEnd).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).x - camX),
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).y - camY),
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, innerAlphaEnd).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal.negate()).add(localUp).x - camX),
+                    (float) (endPos.add(horizontal.negate()).add(localUp).y - camY),
+                    (float) (endPos.add(horizontal.negate()).add(localUp).z - camZ)
+            ).color(red, green, blue, innerAlphaEnd).next();
+
+
+            // ====== Outer beam ======
+
+            // Normalization for redundancy and set the offset perpendicular vector lengths to the inner radius length
+            horizontal = horizontal.normalize().multiply(outerRadius);
+            localUp = localUp.normalize().multiply(outerRadius);
+            startPos = startPos.add(direction.normalize().multiply(outerRadius - innerRadius));
+
+            // === Right face ===
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal).add(localUp).x - camX),
+                    (float) (startPos.add(horizontal).add(localUp).y - camY),
+                    (float) (startPos.add(horizontal).add(localUp).z - camZ)
+            ).color(red, green, blue, outerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal).add(localUp.negate()).x - camX),
+                    (float) (startPos.add(horizontal).add(localUp.negate()).y - camY),
+                    (float) (startPos.add(horizontal).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, outerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal).add(localUp.negate()).x - camX),
+                    (float) (endPos.add(horizontal).add(localUp.negate()).y - camY),
+                    (float) (endPos.add(horizontal).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, outerAlphaEnd).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal).add(localUp).x - camX),
+                    (float) (endPos.add(horizontal).add(localUp).y - camY),
+                    (float) (endPos.add(horizontal).add(localUp).z - camZ)
+            ).color(red, green, blue, outerAlphaEnd).next();
+
+            // === Left face ===
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal.negate()).add(localUp).x - camX),
+                    (float) (startPos.add(horizontal.negate()).add(localUp).y - camY),
+                    (float) (startPos.add(horizontal.negate()).add(localUp).z - camZ)
+            ).color(red, green, blue, outerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).x - camX),
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).y - camY),
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, outerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).x - camX),
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).y - camY),
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, outerAlphaEnd).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal.negate()).add(localUp).x - camX),
+                    (float) (endPos.add(horizontal.negate()).add(localUp).y - camY),
+                    (float) (endPos.add(horizontal.negate()).add(localUp).z - camZ)
+            ).color(red, green, blue, outerAlphaEnd).next();
+
+            // === Up face ===
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal).add(localUp).x - camX),
+                    (float) (startPos.add(horizontal).add(localUp).y - camY),
+                    (float) (startPos.add(horizontal).add(localUp).z - camZ)
+            ).color(red, green, blue, outerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal.negate()).add(localUp).x - camX),
+                    (float) (startPos.add(horizontal.negate()).add(localUp).y - camY),
+                    (float) (startPos.add(horizontal.negate()).add(localUp).z - camZ)
+            ).color(red, green, blue, outerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal.negate()).add(localUp).x - camX),
+                    (float) (endPos.add(horizontal.negate()).add(localUp).y - camY),
+                    (float) (endPos.add(horizontal.negate()).add(localUp).z - camZ)
+            ).color(red, green, blue, outerAlphaEnd).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal).add(localUp).x - camX),
+                    (float) (endPos.add(horizontal).add(localUp).y - camY),
+                    (float) (endPos.add(horizontal).add(localUp).z - camZ)
+            ).color(red, green, blue, outerAlphaEnd).next();
+
+            // === Down face ===
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal).add(localUp.negate()).x - camX),
+                    (float) (startPos.add(horizontal).add(localUp.negate()).y - camY),
+                    (float) (startPos.add(horizontal).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, outerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).x - camX),
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).y - camY),
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, outerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).x - camX),
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).y - camY),
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, outerAlphaEnd).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal).add(localUp.negate()).x - camX),
+                    (float) (endPos.add(horizontal).add(localUp.negate()).y - camY),
+                    (float) (endPos.add(horizontal).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, outerAlphaEnd).next();
+
+            // === Front face ===
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal).add(localUp).x - camX),
+                    (float) (startPos.add(horizontal).add(localUp).y - camY),
+                    (float) (startPos.add(horizontal).add(localUp).z - camZ)
+            ).color(red, green, blue, outerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal).add(localUp.negate()).x - camX),
+                    (float) (startPos.add(horizontal).add(localUp.negate()).y - camY),
+                    (float) (startPos.add(horizontal).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, outerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).x - camX),
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).y - camY),
+                    (float) (startPos.add(horizontal.negate()).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, outerAlpha).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (startPos.add(horizontal.negate()).add(localUp).x - camX),
+                    (float) (startPos.add(horizontal.negate()).add(localUp).y - camY),
+                    (float) (startPos.add(horizontal.negate()).add(localUp).z - camZ)
+            ).color(red, green, blue, outerAlpha).next();
+
+            // === Back face ===
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal).add(localUp).x - camX),
+                    (float) (endPos.add(horizontal).add(localUp).y - camY),
+                    (float) (endPos.add(horizontal).add(localUp).z - camZ)
+            ).color(red, green, blue, outerAlphaEnd).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal).add(localUp.negate()).x - camX),
+                    (float) (endPos.add(horizontal).add(localUp.negate()).y - camY),
+                    (float) (endPos.add(horizontal).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, outerAlphaEnd).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).x - camX),
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).y - camY),
+                    (float) (endPos.add(horizontal.negate()).add(localUp.negate()).z - camZ)
+            ).color(red, green, blue, outerAlphaEnd).next();
+            bufferbuilder.vertex(
+                    transformation,
+                    (float) (endPos.add(horizontal.negate()).add(localUp).x - camX),
+                    (float) (endPos.add(horizontal.negate()).add(localUp).y - camY),
+                    (float) (endPos.add(horizontal.negate()).add(localUp).z - camZ)
+            ).color(red, green, blue, outerAlphaEnd).next();
+        }
+
+        // Builds debug lines of the local axes for the beam vertices
+        if (shouldRenderDebugLines) {
+            bufferbuilder.vertex(
+                            transformation,
+                            (float) (startPos.x - camX),
+                            (float) (startPos.y - camY),
+                            (float) (startPos.z - camZ)
+                    ).color(1.0f, 1.0f, 1.0f, 1.0f)
+                    .normal(1.0f, 1.0f, 1.0f).next();
+            bufferbuilder.vertex(
+                            transformation,
+                            (float) (endPos.x - camX),
+                            (float) (endPos.y - camY),
+                            (float) (endPos.z - camZ)
+                    ).color(1.0f, 1.0f, 1.0f, 1.0f)
+                    .normal(1.0f, 1.0f, 1.0f).next();
+
+            bufferbuilder.vertex(
+                            transformation,
+                            (float) (endPos.x - camX),
+                            (float) (endPos.y - camY),
+                            (float) (endPos.z - camZ)
+                    ).color(0.0f, 1.0f, 0.0f, 1.0f)
+                    .normal(1.0f, 1.0f, 1.0f).next();
+            bufferbuilder.vertex(
+                            transformation,
+                            (float) (endPos.add(upVector).x - camX),
+                            (float) (endPos.add(upVector).y - camY),
+                            (float) (endPos.add(upVector).z - camZ)
+                    ).color(0.0f, 1.0f, 0.0f, 1.0f)
+                    .normal(1.0f, 1.0f, 1.0f).next();
+
+            bufferbuilder.vertex(
+                            transformation,
+                            (float) (endPos.x - camX),
+                            (float) (endPos.y - camY),
+                            (float) (endPos.z - camZ)
+                    ).color(1.0f, 0.0f, 0.0f, 1.0f)
+                    .normal(1.0f, 1.0f, 1.0f).next();
+            bufferbuilder.vertex(
+                            transformation,
+                            (float) (endPos.add(horizontal).x - camX),
+                            (float) (endPos.add(horizontal).y - camY),
+                            (float) (endPos.add(horizontal).z - camZ)
+                    ).color(1.0f, 0.0f, 0.0f, 1.0f)
+                    .normal(1.0f, 1.0f, 1.0f).next();
+
+            bufferbuilder.vertex(
+                            transformation,
+                            (float) (endPos.x - camX),
+                            (float) (endPos.y - camY),
+                            (float) (endPos.z - camZ)
+                    ).color(0.0f, 1.0f, 0.5f, 1.0f)
+                    .normal(1.0f, 1.0f, 1.0f).next();
+            bufferbuilder.vertex(
+                            transformation,
+                            (float) (endPos.add(localUp).x - camX),
+                            (float) (endPos.add(localUp).y - camY),
+                            (float) (endPos.add(localUp).z - camZ)
+                    ).color(0.0f, 1.0f, 0.5f, 1.0f)
+                    .normal(1.0f, 1.0f, 1.0f).next();
+
+            bufferbuilder.vertex(
+                            transformation,
+                            (float) (endPos.x - camX),
+                            (float) (endPos.y - camY),
+                            (float) (endPos.z - camZ)
+                    ).color(1.0f, 1.0f, 0.0f, 1.0f)
+                    .normal(1.0f, 1.0f, 1.0f).next();
+            bufferbuilder.vertex(
+                            transformation,
+                            (float) (endPos.add(yawVec).x - camX),
+                            (float) (endPos.add(yawVec).y - camY),
+                            (float) (endPos.add(yawVec).z - camZ)
+                    ).color(1.0f, 1.0f, 0.0f, 1.0f)
+                    .normal(1.0f, 1.0f, 1.0f).next();
+        }
     }
 }
