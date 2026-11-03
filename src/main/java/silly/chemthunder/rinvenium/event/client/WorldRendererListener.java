@@ -103,8 +103,12 @@ public class WorldRendererListener {
             SyncedRenderContainer syncedRenderContainer = (SyncedRenderContainer) playerEntity;
 
             if (playerEntity != null && syncedRenderContainer.shouldRenderAPMDSCBeam()) {
-                Vec3d startPos = playerEntity.getEyePos().add(new Vec3d(0, -0.2, 0)).add(playerEntity.getRotationVector().normalize().multiply(2.0f));
-                HitResult hitResult = playerEntity.raycast(6.0, 0.0f, false);
+                float tickDelta = context.tickDelta();
+                Vec3d lerpedPos = playerEntity.getLerpedPos(tickDelta);
+                Vec3d lerpedEyePos = lerpedPos.add(0, playerEntity.getEyeHeight(playerEntity.getPose()), 0);
+
+                Vec3d startPos = lerpedEyePos.add(new Vec3d(0, -0.2, 0)).add(playerEntity.getRotationVec(tickDelta).normalize().multiply(1.2f));
+                HitResult hitResult = playerEntity.raycast(6.0, tickDelta, false);
                 Vec3d endPos = hitResult.getPos();
                 if (hitResult.getType() == HitResult.Type.BLOCK) {
                     BlockHitResult blockHitResult = (BlockHitResult) hitResult;
@@ -148,7 +152,7 @@ public class WorldRendererListener {
                         bufferbuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
                     }
 
-                    buildAPMDSCBeamVertices(playerEntity, bufferbuilder, transformation, camX, camY, camZ, shouldRenderDebugLines);
+                    buildAPMDSCBeamVertices(playerEntity, bufferbuilder, transformation, context, camX, camY, camZ, shouldRenderDebugLines);
 
 
                     matrices.pop();
@@ -504,9 +508,12 @@ public class WorldRendererListener {
     }
 
 
-    private static void buildAPMDSCBeamVertices(AbstractClientPlayerEntity shooter, BufferBuilder bufferbuilder, Matrix4f transformation, double camX, double camY, double camZ, boolean shouldRenderDebugLines) {
-        Vec3d startPos = shooter.getEyePos().add(new Vec3d(0, -0.2, 0)).add(shooter.getRotationVector().normalize().multiply(2.0f));
-        HitResult hitResult = shooter.raycast(6.0, 0.0f, false);
+    private static void buildAPMDSCBeamVertices(AbstractClientPlayerEntity shooter, BufferBuilder bufferbuilder, Matrix4f transformation, WorldRenderContext context, double camX, double camY, double camZ, boolean shouldRenderDebugLines) {
+        float tickDelta = context.tickDelta();
+        Vec3d lerpedPos = shooter.getLerpedPos(tickDelta);
+        Vec3d lerpedEyePos = lerpedPos.add(0, shooter.getEyeHeight(shooter.getPose()), 0);
+        Vec3d startPos = lerpedEyePos.add(new Vec3d(0, -0.2, 0)).add(shooter.getRotationVec(tickDelta).normalize().multiply(1.2f));
+        HitResult hitResult = shooter.raycast(6.0, tickDelta, false);
         Vec3d endPos = hitResult.getPos();
         if (hitResult.getType() == HitResult.Type.BLOCK) {
             BlockHitResult blockHitResult = (BlockHitResult) hitResult;
@@ -514,9 +521,9 @@ public class WorldRendererListener {
         }
         // A vector on the X-Z plane that has the yaw direction
         Vec3d yawVec = new Vec3d(
-                -Math.sin(Math.toRadians(shooter.getYaw())),
+                -Math.sin(Math.toRadians(shooter.getYaw(tickDelta))),
                 0,
-                Math.cos(Math.toRadians(shooter.getYaw()))
+                Math.cos(Math.toRadians(shooter.getYaw(tickDelta)))
         ).normalize();
 
         // Direction of the beam's centre
@@ -544,7 +551,7 @@ public class WorldRendererListener {
         Vec3d localUp = direction.crossProduct(horizontal).normalize();
 
         float outerRadius = 0.375f;
-        float innerRadius = 0.2f;
+        float innerRadius = 0.175f;
         // Potential use for a ratio for the radii
         //innerRadius = outerRadius * 0.5f;
 
@@ -560,9 +567,13 @@ public class WorldRendererListener {
             }
         }
         // Bit shifts the BeamType.enum to a float
-        float red = ((color >> 16) & 0xFF) / 255.0f;
-        float green = ((color >> 8) & 0xFF) / 255.0f;
-        float blue = (color & 0xFF) / 255.0f;
+        float r = ((color >> 16) & 0xFF) / 255.0f;
+        float g = ((color >> 8) & 0xFF) / 255.0f;
+        float b = (color & 0xFF) / 255.0f;
+        float whiteShift = 0.95f;
+        float red = r;
+        float green = g;
+        float blue = b;
 
         float innerAlpha = 0.6f;
         float innerAlphaEnd = 0.0f;
@@ -576,6 +587,10 @@ public class WorldRendererListener {
             // Normalization for redundancy and set the offset perpendicular vector lengths to the inner radius length
             horizontal = horizontal.normalize().multiply(innerRadius);
             localUp = localUp.normalize().multiply(innerRadius);
+
+            red += (1.0f - r) * whiteShift;
+            green += (1.0f - g) * whiteShift;
+            blue += (1.0f - b) * whiteShift;
 
             // === Right face ===
             bufferbuilder.vertex(
@@ -740,6 +755,9 @@ public class WorldRendererListener {
             horizontal = horizontal.normalize().multiply(outerRadius);
             localUp = localUp.normalize().multiply(outerRadius);
             startPos = startPos.add(direction.normalize().multiply(outerRadius - innerRadius));
+            red = r;
+            green = g;
+            blue = b;
 
             // === Right face ===
             bufferbuilder.vertex(
