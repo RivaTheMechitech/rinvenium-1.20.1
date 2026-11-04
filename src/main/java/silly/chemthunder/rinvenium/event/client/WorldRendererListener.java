@@ -13,6 +13,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -103,6 +104,11 @@ public class WorldRendererListener {
             SyncedRenderContainer syncedRenderContainer = (SyncedRenderContainer) playerEntity;
 
             if (playerEntity != null && syncedRenderContainer.shouldRenderAPMDSCBeam()) {
+                if (!playerEntity.getMainHandStack().isOf(RinveniumItems.APMDSC) || playerEntity.getActiveHand() != Hand.MAIN_HAND || !playerEntity.isUsingItem()) {
+                    syncedRenderContainer.setShouldRenderAPMDSCBeam(false);
+                    return;
+                }
+
                 float tickDelta = context.tickDelta();
                 Vec3d lerpedPos = playerEntity.getLerpedPos(tickDelta);
                 Vec3d lerpedEyePos = lerpedPos.add(0, playerEntity.getEyeHeight(playerEntity.getPose()), 0);

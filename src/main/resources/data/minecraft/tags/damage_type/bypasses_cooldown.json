@@ -4,6 +4,7 @@
     "rinvenium:bap",
     "rinvenium:electricity",
     "rinvenium:electricity_with_cooldown",
-    "rinvenium:boop"
+    "rinvenium:boop",
+    "rinvenium:ionized"
   ]
 }

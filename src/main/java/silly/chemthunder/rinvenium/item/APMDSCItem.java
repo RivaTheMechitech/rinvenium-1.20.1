@@ -25,6 +25,7 @@ import silly.chemthunder.rinvenium.cca.entity.APMDSCComponent;
 import silly.chemthunder.rinvenium.cca.item.APMDSCItemComponent;
 import silly.chemthunder.rinvenium.index.RinveniumEnchantments;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
+import silly.chemthunder.rinvenium.index.RinveniumStatusEffects;
 import silly.chemthunder.rinvenium.util.inject.SyncedRenderContainer;
 
 import java.util.List;
@@ -121,6 +122,12 @@ public class APMDSCItem extends Item {
         PlayerEntity player = (PlayerEntity) user;
         APMDSCComponent entityComponent = APMDSCComponent.get(player);
         APMDSCItemComponent itemComponent = RinveniumComponents.APMDSC_ITEM.get(stack);
+        if (user.getActiveHand() == Hand.OFF_HAND) {
+            user.stopUsingItem();
+            entityComponent.setBool(false);
+            ((PlayerEntity) user).getItemCooldownManager().set(this, SHOOT_COOLDOWN);
+            ((SyncedRenderContainer) player).setShouldRenderAPMDSCBeam(false);
+        }
 
         // Shoot time
         if (entityComponent.getInt() >= calculateMaxShootTimeForEnchant(stack)) {
@@ -144,7 +151,7 @@ public class APMDSCItem extends Item {
             List<LivingEntity> targets = world.getEntitiesByClass(LivingEntity.class, box, living -> living.isAlive() && living.canHit() && !living.isSpectator());
             targets.remove(player);
             for (LivingEntity target : targets) {
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 20, 1)); //todo change to custom effects
+                target.addStatusEffect(new StatusEffectInstance(this.getStatusEffectForEnchant(stack), 10, 0));
             }
         }
 
@@ -180,6 +187,7 @@ public class APMDSCItem extends Item {
             }
             ((SyncedRenderContainer) player).setShouldRenderAPMDSCBeam(false);
         }
+        ((SyncedRenderContainer) player).setShouldRenderAPMDSCBeam(false);
         entityComponent.setBool(false);
     }
 
@@ -234,7 +242,16 @@ public class APMDSCItem extends Item {
     }
 
     public StatusEffect getStatusEffectForEnchant(ItemStack stack) {
-        return null;
+        boolean highPower = EnchantmentHelper.getLevel(RinveniumEnchantments.HIGH_POWER_OUTPUT, stack) > 0;
+        boolean lowPower = EnchantmentHelper.getLevel(RinveniumEnchantments.LOW_POWER_OUTPUT, stack) > 0;
+
+        if (lowPower) {
+            return RinveniumStatusEffects.MELTED;
+        }
+        if (highPower) {
+            return RinveniumStatusEffects.PLASMAFIED;
+        }
+        return RinveniumStatusEffects.IONIZED;
     }
 
     @Override

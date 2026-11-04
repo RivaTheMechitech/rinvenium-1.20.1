@@ -51,6 +51,15 @@ public interface RinveniumDamageSources {
         return entity.getDamageSources().create(ORCHID);
     }
 
+    RegistryKey<DamageType> IONIZED = of("ionized");
+    static DamageSource ionized(LivingEntity entity) {
+        return entity.getDamageSources().create(IONIZED);
+    }
+    static DamageSource ionized(LivingEntity entity, LivingEntity attacker) {
+        return entity.getDamageSources().create(IONIZED, attacker);
+    }
+
+
     private static RegistryKey<DamageType> of(String name) {
         return RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Rinvenium.id(name));
     }
