@@ -3,9 +3,10 @@
 	"credit": "Made by Hstar747",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "block/Hail",
-		"particle": "block/Hail"
+		"0": "rinvenium:item/hail",
+		"particle": "rinvenium:item/hail"
 	},
+	"gui_light": "front",
 	"elements": [
 		{
 			"from": [3, 0, 11],
