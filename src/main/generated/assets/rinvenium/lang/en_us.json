@@ -1,4 +1,7 @@
 {
+  "block.rinvenium.aurio_block": "Block of Aurio",
+  "block.rinvenium.envinia_block": "Block of Envinia",
+  "block.rinvenium.envixius_block": "Block of Envixius",
   "death.attack.boop": "%s was peppered a thousand times",
   "death.attack.boop.item": "%1$s was peppered a thousand times by %2$s using %3$s",
   "death.attack.boop.player": "%s was peppered a thousand times by %s",
