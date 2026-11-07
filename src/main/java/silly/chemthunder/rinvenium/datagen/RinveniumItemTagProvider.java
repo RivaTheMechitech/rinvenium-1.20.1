@@ -13,6 +13,7 @@ import silly.chemthunder.rinvenium.index.RinveniumItems;
 import java.util.concurrent.CompletableFuture;
 
 public class RinveniumItemTagProvider extends FabricTagProvider.ItemTagProvider {
+    public static TagKey<Item> CUSTOM_ITEM_BAR = TagKey.of(RegistryKeys.ITEM, Rinvenium.id("custom_item_bar"));
     public static TagKey<Item> BIG_ITEM_RENDERING = TagKey.of(RegistryKeys.ITEM, Rinvenium.id("big_item_renderer"));
     public static TagKey<Item> ENVIXIA_CORE_INGREDIENTS = TagKey.of(RegistryKeys.ITEM, Rinvenium.id("envixia_core_ingredients"));
     public static TagKey<Item> LOCKED_RECIPES = TagKey.of(RegistryKeys.ITEM, Rinvenium.id("locked_recipes"));
@@ -25,6 +26,8 @@ public class RinveniumItemTagProvider extends FabricTagProvider.ItemTagProvider 
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
+        this.getOrCreateTagBuilder(CUSTOM_ITEM_BAR)
+                .add(RinveniumItems.ENVINIUM_GLAIVE);
         this.getOrCreateTagBuilder(BIG_ITEM_RENDERING)
                 .add(
                         RinveniumItems.ENVINIUM_GLAIVE

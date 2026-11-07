@@ -43,6 +43,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import silly.chemthunder.rinvenium.cca.entity.EnvixiaFormComponent;
+import silly.chemthunder.rinvenium.cca.entity.GlaiveDashingComponent;
 import silly.chemthunder.rinvenium.cca.entity.GlaiveParryComponent;
 import silly.chemthunder.rinvenium.cca.entity.riva.GlaiveHealComponent;
 import silly.chemthunder.rinvenium.datagen.RinveniumItemTagProvider;
@@ -253,6 +254,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements SyncedRe
                             return base;
                         }
                         if (angle < -0.35) {
+                            if (EnchantmentHelper.getLevel(RinveniumEnchantments.RUSH, player.getMainHandStack()) > 0) {
+                                GlaiveDashingComponent dashingComponent = GlaiveDashingComponent.get(player);
+                                dashingComponent.addValueToInt(Math.round(base * 0.33f));
+                                return base * 0.66f;
+                            }
                             EnviniumGlaiveItem.parried = true;
                             var13 = this.getEntityWorld();
                             if (var13 instanceof ServerWorld) {

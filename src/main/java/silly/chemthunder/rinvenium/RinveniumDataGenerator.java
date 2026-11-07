@@ -13,5 +13,6 @@ public class RinveniumDataGenerator implements DataGeneratorEntrypoint {
                 pack.addProvider(RinveniumRecipeProvider::new);
                 pack.addProvider(RinveniumModelProvider::new);
                 pack.addProvider(RinveniumLanguageProvider::new);
+                pack.addProvider(RinveniumBlockLootTableProvider::new);
 	}
 }

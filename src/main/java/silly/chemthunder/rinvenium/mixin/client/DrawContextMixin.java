@@ -1,5 +1,7 @@
 package silly.chemthunder.rinvenium.mixin.client;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -14,9 +16,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import silly.chemthunder.rinvenium.cca.entity.EnvixiaFormComponent;
-import silly.chemthunder.rinvenium.cca.entity.HailOfTheGodComponent;
 import silly.chemthunder.rinvenium.cca.entity.GlaiveDashingComponent;
 import silly.chemthunder.rinvenium.cca.entity.GlaiveParryComponent;
+import silly.chemthunder.rinvenium.cca.entity.HailOfTheGodComponent;
+import silly.chemthunder.rinvenium.datagen.RinveniumItemTagProvider;
 import silly.chemthunder.rinvenium.index.RinveniumEnchantments;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
 
@@ -24,6 +27,15 @@ import silly.chemthunder.rinvenium.index.RinveniumItems;
 public abstract class DrawContextMixin {
     @Shadow @Final private MinecraftClient client;
     @Shadow public abstract void fill(RenderLayer layer, int x1, int y1, int x2, int y2, int color);
+
+    @WrapWithCondition(method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(Lnet/minecraft/client/render/RenderLayer;IIIII)V", ordinal = 0))
+    private boolean rinvenium$cancelDefaultItemBarRendering1(DrawContext instance, RenderLayer layer, int x1, int y1, int x2, int y2, int color, @Local(argsOnly = true) ItemStack stack) {
+        return !stack.isIn(RinveniumItemTagProvider.CUSTOM_ITEM_BAR);
+    }
+    @WrapWithCondition(method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(Lnet/minecraft/client/render/RenderLayer;IIIII)V", ordinal = 1))
+    private boolean rinvenium$cancelDefaultItemBarRendering2(DrawContext instance, RenderLayer layer, int x1, int y1, int x2, int y2, int color, @Local(argsOnly = true) ItemStack stack) {
+        return !stack.isIn(RinveniumItemTagProvider.CUSTOM_ITEM_BAR);
+    }
 
     @Inject(
         method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V",
@@ -43,10 +55,18 @@ public abstract class DrawContextMixin {
                 GlaiveDashingComponent glaiveDashingComponent = GlaiveDashingComponent.get(this.client.player);
 
                 if (EnchantmentHelper.getLevel(RinveniumEnchantments.RUSH, stack) > 0) {
-                    int m = (int) (glaiveDashingComponent.getChargePercent() * 13);
+                    int m = (int) (glaiveDashingComponent.getNotchPercent() * 4);
 
-                    this.fill(RenderLayer.getGuiOverlay(), k2, l2, k2 + 13, l2 + 2, -16777216);
-                    this.fill(RenderLayer.getGuiOverlay(), k2, l2, k2 + m, l2 + 1, 0x9cfdff | 0xFF000000);
+                    k2 = k2 - 1;
+                    for (int i = 0; i < 3; i++) {
+                        this.fill(RenderLayer.getGuiOverlay(), k2 + (5 * i), l2, k2 + 4 + (5 * i), l2 + 2, -16777216);
+
+                    }
+                    for (int i = 0; i < glaiveDashingComponent.notchesAvailable(); i++) {
+                        this.fill(RenderLayer.getGuiOverlay(), k2 + (5 * i), l2, k2 + 4 + (5 * i), l2 + 1, 0x9cfdff | 0xFF000000);
+                    }
+                    int notchesAlreadyFilled = MathHelper.clamp(glaiveDashingComponent.notchesAvailable(), 0, 2);
+                    this.fill(RenderLayer.getGuiOverlay(), k2 + (5 * notchesAlreadyFilled), l2, k2 + m + (5 * notchesAlreadyFilled), l2 + 1, 0x9cfdff | 0xFF000000);
                 } else {
                     int i = (int) Math.ceil(glaiveParryComponent.getDoubleIntValue2() > 0 ? glaiveParryComponent.getDamageWindowPercentage() * 13 : glaiveParryComponent.getParryWindowPercentage() * 13);
                     int j = glaiveParryComponent.getDoubleIntValue2() > 0 ? 0x7a1c8c : 0xfdc211;

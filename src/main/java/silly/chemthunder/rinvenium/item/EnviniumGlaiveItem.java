@@ -53,12 +53,18 @@ public class EnviniumGlaiveItem extends SwordItem {
             return TypedActionResult.fail(stack);
         } else {
             user.setCurrentHand(hand);
-            if (hasRush && !user.isSneaking()) {
-                if (glaiveDashingComponent.getInt() >= 55) {
+            if (hasRush && user.isSneaking()) {
+                if (glaiveDashingComponent.notchesAvailable() > 0) {
                     rush(user, stack);
                     return TypedActionResult.consume(stack);
                 } else {
-                    return TypedActionResult.fail(stack);
+                    if (glaiveParryComponent.getDoubleBoolValue1()) {
+                        user.setCurrentHand(hand);
+                        glaiveParryComponent.setDoubleBoolValue2(true);
+                        return TypedActionResult.consume(stack);
+                    } else {
+                        return TypedActionResult.fail(stack);
+                    }
                 }
             } else {
                 if (user.getItemCooldownManager().isCoolingDown(this)) {
@@ -111,24 +117,41 @@ public class EnviniumGlaiveItem extends SwordItem {
         h *= n / m;
         k *= n / m;
         l *= n / m;
-        user.addVelocity(h, k, l);
-        user.useRiptide(20);
-        GlaiveDashingComponent dashingComponent = GlaiveDashingComponent.KEY.get(user);
 
-        dashingComponent.dashTicks = 20;
-        dashingComponent.sync();
+        GlaiveDashingComponent dashingComponent = GlaiveDashingComponent.get(user);
 
-        if (!user.isCreative()) {
-                /*if (!glaive.getFinalRush() && glaive.getCharge() == 1) {
-                    glaive.setFinalRush(true);
+        if (user.isFallFlying()) {
+            if (dashingComponent.notchesAvailable() == 3) {
+                user.setVelocity(h, k, l);
+                user.velocityDirty = true;
+                user.useRiptide(20);
+                dashingComponent.dashTicks = 20;
+                dashingComponent.sync();
+
+                if (!user.isCreative()) {
+                    dashingComponent.addValueToInt(-GlaiveDashingComponent.MAX_DAMAGE);
+                    user.getItemCooldownManager().set(this, 5);
                 }
-                glaive.setCharge(glaive.getCharge() - 1);*/
-            dashingComponent.addValueToInt(-55);
-            user.getItemCooldownManager().set(this, 5);
+                if (!user.getWorld().isClient) {
+                    user.getWorld().playSound(null, user.getBlockPos(), RinveniumSoundEvents.GLAIVE_DASH, SoundCategory.PLAYERS, 0.8f, 1.0f + user.getEntityWorld().random.nextFloat() * 0.2f);
+                }
+            }
+        } else {
+            user.setVelocity(user.getVelocity().multiply(0.5).add(h, k, l));
+            user.velocityDirty = true;
+            user.useRiptide(20);
+            dashingComponent.dashTicks = 20;
+            dashingComponent.sync();
+
+            if (!user.isCreative()) {
+                dashingComponent.addValueToInt(-GlaiveDashingComponent.DAMAGE_PER_NOTCH);
+                user.getItemCooldownManager().set(this, 5);
+            }
+            if (!user.getWorld().isClient) {
+                user.getWorld().playSound(null, user.getBlockPos(), RinveniumSoundEvents.GLAIVE_DASH, SoundCategory.PLAYERS, 0.8f, 1.0f + user.getEntityWorld().random.nextFloat() * 0.2f);
+            }
         }
-        if (!user.getWorld().isClient) {
-            user.getWorld().playSound(null, user.getBlockPos(), RinveniumSoundEvents.GLAIVE_DASH, SoundCategory.PLAYERS, 0.8f, 1.0f + user.getEntityWorld().random.nextFloat() * 0.2f);
-        }
+
     }
 
     public Text getName(ItemStack stack) {

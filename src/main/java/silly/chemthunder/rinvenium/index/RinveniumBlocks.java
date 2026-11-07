@@ -14,7 +14,12 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import silly.chemthunder.rinvenium.Rinvenium;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RinveniumBlocks {
+    public static Map<Identifier, Block> BLOCKS = new HashMap<>();
+
     public static final Block AURIO_BLOCK = registerBlock("aurio_block",
             new Block(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).sounds(BlockSoundGroup.NETHERITE)));
 
@@ -26,6 +31,7 @@ public class RinveniumBlocks {
 
 
     private static Block registerBlock(String name, Block block) {
+        BLOCKS.put(Rinvenium.id(name), block);
         registerBlockItem(name, block);
         return Registry.register(Registries.BLOCK, new Identifier(Rinvenium.MOD_ID, name), block);
     }

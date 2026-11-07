@@ -16,11 +16,13 @@ import silly.chemthunder.rinvenium.cca.primitive.IntComponent;
 public class GlaiveDashingComponent implements IntComponent, AutoSyncedComponent, CommonTickingComponent {
     public static final ComponentKey<GlaiveDashingComponent> KEY = ComponentRegistry.getOrCreate(Rinvenium.id("dash"), GlaiveDashingComponent.class);
 
-    public static final String DASH_COOLDOWN_KEY = "DashCooldown";
+    public static final String DAMAGE_STORED_KEY = "DamageStored";
 
-    public static final int MAX_COOLDOWN = 200;
+    public static final int MAX_DAMAGE = 99;
+    public static final int DAMAGE_PER_NOTCH = 33;
+    private int passiveChargeTickDelta = 0;
     public int dashTicks = 0;
-    public int dashCooldown = 0;
+    public int damageStored = 0;
 
     private final PlayerEntity player;
 
@@ -37,16 +39,26 @@ public class GlaiveDashingComponent implements IntComponent, AutoSyncedComponent
     }
 
     public void tick() {
-        if (this.dashCooldown < MAX_COOLDOWN) {
-            EnvixiaFormComponent envixiaFormComponent = EnvixiaFormComponent.get(this.player);
-            if (envixiaFormComponent.getTripleBoolValue1()) {
-                this.addValueToInt(2);
-            } else {
+        if (this.passiveChargeTickDelta >= 20) {
+            this.passiveChargeTickDelta = 0;
+        } else {
+            this.passiveChargeTickDelta++;
+        }
+        if (this.damageStored > MAX_DAMAGE) {
+            this.setInt(MAX_DAMAGE);
+        }
+        if (this.damageStored < 0) {
+            this.setInt(0);
+        }
+
+        if (passiveChargeTickDelta % 40 == 0) {
+            if (this.damageStored < MAX_DAMAGE) {
                 this.incrementInt();
             }
-        } else if (this.dashCooldown > MAX_COOLDOWN) {
-            this.setInt(MAX_COOLDOWN);
         }
+
+        EnvixiaFormComponent envixiaFormComponent = EnvixiaFormComponent.get(this.player);
+
         if (dashTicks > 0) {
             dashTicks--;
             spawnParticles(player, player.getWorld());
@@ -88,46 +100,59 @@ public class GlaiveDashingComponent implements IntComponent, AutoSyncedComponent
 
     @Override
     public int getInt() {
-        return this.dashCooldown;
+        return this.damageStored;
     }
 
     @Override
     public void setInt(int value) {
-        this.dashCooldown = value;
+        this.damageStored = value;
         this.sync();
     }
 
     @Override
     public void addValueToInt(int count) {
-        this.dashCooldown += count;
+        this.damageStored += count;
         this.sync();
     }
 
     @Override
     public void incrementInt() {
-        this.dashCooldown++;
+        this.damageStored++;
         this.sync();
     }
 
     @Override
     public void decrementInt() {
-        this.dashCooldown--;
+        this.damageStored--;
         this.sync();
     }
 
     public float getChargePercent() {
-        return (float) this.dashCooldown / MAX_COOLDOWN;
+        return (float) this.damageStored / MAX_DAMAGE;
+    }
+
+    public float getNotchPercent() {
+        return switch (this.notchesAvailable()) {
+            case 1 -> (float) (this.damageStored - DAMAGE_PER_NOTCH) / DAMAGE_PER_NOTCH;
+            case 2 -> (float) (this.damageStored - DAMAGE_PER_NOTCH * 2) / DAMAGE_PER_NOTCH;
+            case 3 -> 1.0f;
+            default -> (float) this.damageStored / DAMAGE_PER_NOTCH;
+        };
+    }
+
+    public int notchesAvailable() {
+        return Math.floorDiv(this.damageStored, DAMAGE_PER_NOTCH);
     }
 
     @Override
     public void readFromNbt(NbtCompound nbtCompound) {
         this.dashTicks = nbtCompound.getInt("dashTicks");
-        this.dashCooldown = nbtCompound.getInt(DASH_COOLDOWN_KEY);
+        this.damageStored = nbtCompound.getInt(DAMAGE_STORED_KEY);
     }
 
     @Override
     public void writeToNbt(NbtCompound nbtCompound) {
         nbtCompound.putInt("dashTicks", dashTicks);
-        nbtCompound.putInt(DASH_COOLDOWN_KEY, this.dashCooldown);
+        nbtCompound.putInt(DAMAGE_STORED_KEY, this.damageStored);
     }
 }

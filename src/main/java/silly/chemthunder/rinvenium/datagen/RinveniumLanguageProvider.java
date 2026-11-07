@@ -3,10 +3,7 @@ package silly.chemthunder.rinvenium.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.sound.SoundEvent;
-import silly.chemthunder.rinvenium.index.RinveniumEnchantments;
-import silly.chemthunder.rinvenium.index.RinveniumItems;
-import silly.chemthunder.rinvenium.index.RinveniumSoundEvents;
-import silly.chemthunder.rinvenium.index.RinveniumStatusEffects;
+import silly.chemthunder.rinvenium.index.*;
 
 public class RinveniumLanguageProvider extends FabricLanguageProvider {
     public RinveniumLanguageProvider(FabricDataOutput dataOutput) {
