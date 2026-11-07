@@ -5,10 +5,12 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.data.server.recipe.CookingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
+import silly.chemthunder.rinvenium.index.RinveniumBlocks;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
 
 import java.util.function.Consumer;
@@ -143,5 +145,43 @@ public class RinveniumRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
                 .offerTo(recipeExporter, new Identifier(getRecipeName(RinveniumItems.BATTERY)));
 
+        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, RinveniumBlocks.AURIO_BLOCK, 1)
+                .pattern("XXX")
+                .pattern("XXX")
+                .pattern("XXX")
+                .input('X', RinveniumItems.AURIO_INGOT)
+                .criterion(hasItem(RinveniumItems.AURIO_INGOT), conditionsFromItem(RinveniumItems.AURIO_INGOT))
+                .offerTo(recipeExporter, new Identifier(getRecipeName(RinveniumBlocks.AURIO_BLOCK)));
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, RinveniumBlocks.ENVINIA_BLOCK, 1)
+                .pattern("XXX")
+                .pattern("XXX")
+                .pattern("XXX")
+                .input('X', RinveniumItems.ENVINIA_INGOT)
+                .criterion(hasItem(RinveniumItems.ENVINIA_INGOT), conditionsFromItem(RinveniumItems.ENVINIA_INGOT))
+                .offerTo(recipeExporter, new Identifier(getRecipeName(RinveniumBlocks.ENVINIA_BLOCK)));
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, RinveniumBlocks.ENVIXIUS_BLOCK, 1)
+                .pattern("XXX")
+                .pattern("XXX")
+                .pattern("XXX")
+                .input('X', RinveniumItems.ENVIXIUS_INGOT)
+                .criterion(hasItem(RinveniumItems.ENVIXIUS_INGOT), conditionsFromItem(RinveniumItems.ENVIXIUS_INGOT))
+                .offerTo(recipeExporter, new Identifier(getRecipeName(RinveniumBlocks.ENVIXIUS_BLOCK)));
+
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, RinveniumItems.AURIO_INGOT, 9)
+                .input(RinveniumBlocks.AURIO_BLOCK)
+                .criterion(hasItem(RinveniumBlocks.AURIO_BLOCK), conditionsFromItem(RinveniumBlocks.AURIO_BLOCK))
+                .offerTo(recipeExporter, new Identifier(getRecipeName(RinveniumItems.AURIO_INGOT)));
+
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, RinveniumItems.ENVINIA_INGOT, 9)
+                .input(RinveniumBlocks.ENVINIA_BLOCK)
+                .criterion(hasItem(RinveniumBlocks.ENVINIA_BLOCK), conditionsFromItem(RinveniumBlocks.ENVINIA_BLOCK))
+                .offerTo(recipeExporter, new Identifier(getRecipeName(RinveniumItems.ENVINIA_INGOT)));
+
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, RinveniumItems.ENVIXIUS_INGOT, 9)
+                .input(RinveniumBlocks.ENVIXIUS_BLOCK)
+                .criterion(hasItem(RinveniumBlocks.ENVIXIUS_BLOCK), conditionsFromItem(RinveniumBlocks.ENVIXIUS_BLOCK))
+                .offerTo(recipeExporter, new Identifier(getRecipeName(RinveniumItems.ENVIXIUS_INGOT)));
     }
 }
