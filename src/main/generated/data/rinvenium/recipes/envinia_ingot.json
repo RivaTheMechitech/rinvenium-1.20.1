@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "rinvenium:envinia_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "rinvenium:envinia_ingot"
+  }
+}
