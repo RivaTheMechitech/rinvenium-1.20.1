@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "rinvenium:envixius_block",
+    "rinvenium:envinia_block",
+    "rinvenium:aurio_block"
+  ]
+}
