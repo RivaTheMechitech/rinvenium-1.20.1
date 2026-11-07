@@ -62,6 +62,10 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(RinveniumItems.ENVIXIA_LEGGINGS, "Envixia Leggings");
         translationBuilder.add(RinveniumItems.ENVIXIA_BOOTS, "Envixia Boots");
 
+        translationBuilder.add(RinveniumBlocks.ENVINIA_BLOCK, "Block of Envinia");
+        translationBuilder.add(RinveniumBlocks.ENVIXIUS_BLOCK, "Block of Envixius");
+        translationBuilder.add(RinveniumBlocks.AURIO_BLOCK, "Block of Aurio");
+
         //region Glaivee
         translationBuilder.add(RinveniumEnchantments.RUSH, "Rush");
         translationBuilder.add("enchantment.rinvenium.rush.desc", "The Envinium Glaive will charge over time, \nallowing the user to rush forward at great speeds on right-click.");
