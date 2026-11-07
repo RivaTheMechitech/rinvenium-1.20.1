@@ -35,6 +35,9 @@ public class RinveniumItemGroups {
                         entries.add(SUPERHEATED_ENVIXIUS_PLATE);
                         entries.add(BATTERY);
                         entries.add(ION_CELL);
+                        entries.add(RinveniumBlocks.AURIO_BLOCK);
+                        entries.add(RinveniumBlocks.ENVINIA_BLOCK);
+                        entries.add(RinveniumBlocks.ENVIXIUS_BLOCK);
                     }).build());
     public static void registerItemGroups() {
 
