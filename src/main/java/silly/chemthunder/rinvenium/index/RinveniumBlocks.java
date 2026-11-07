@@ -17,8 +17,10 @@ import silly.chemthunder.rinvenium.Rinvenium;
 public class RinveniumBlocks {
     public static final Block AURIO_BLOCK = registerBlock("aurio_block",
             new Block(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).sounds(BlockSoundGroup.NETHERITE)));
+
     public static final Block ENVINIA_BLOCK = registerBlock("envinia_block",
             new Block(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).sounds(BlockSoundGroup.NETHERITE)));
+
     public static final Block ENVIXIUS_BLOCK = registerBlock("envixius_block",
             new Block(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).sounds(BlockSoundGroup.NETHERITE)));
 

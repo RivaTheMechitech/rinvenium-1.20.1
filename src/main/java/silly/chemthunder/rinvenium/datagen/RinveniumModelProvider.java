@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.item.Items;
+import silly.chemthunder.rinvenium.index.RinveniumBlocks;
 
 import static net.minecraft.data.client.Models.GENERATED;
 import static net.minecraft.data.client.Models.HANDHELD;
@@ -30,7 +31,17 @@ public class RinveniumModelProvider extends FabricModelProvider {
         super(output);
     }
 
-    public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {}
+    public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
+        BlockStateModelGenerator.BlockTexturePool aurioPool = blockStateModelGenerator.registerCubeAllModelTexturePool(RinveniumBlocks.AURIO_BLOCK);
+
+
+        BlockStateModelGenerator.BlockTexturePool envixiusPool = blockStateModelGenerator.registerCubeAllModelTexturePool(RinveniumBlocks.ENVIXIUS_BLOCK);
+        //envixiusPool.stairs();
+
+        BlockStateModelGenerator.BlockTexturePool enviniaPool = blockStateModelGenerator.registerCubeAllModelTexturePool(RinveniumBlocks.ENVINIA_BLOCK);
+
+
+    }
 
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
         itemModelGenerator.register(DEBUGGER, Items.STICK, HANDHELD);
