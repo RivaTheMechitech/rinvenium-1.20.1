@@ -3,7 +3,7 @@
 	"credit": "Made by Hstar747",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "hail",
+		"1": "rinvenium:item/hail",
 		"particle": "rinvenium:item/hail"
 	},
 	"elements": [
