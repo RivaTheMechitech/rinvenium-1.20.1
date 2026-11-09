@@ -257,6 +257,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements SyncedRe
                             if (EnchantmentHelper.getLevel(RinveniumEnchantments.RUSH, player.getMainHandStack()) > 0) {
                                 GlaiveDashingComponent dashingComponent = GlaiveDashingComponent.get(player);
                                 dashingComponent.addValueToInt(Math.round(base * 0.33f));
+                                var13 = this.getEntityWorld();
+                                if (var13 instanceof ServerWorld) {
+                                    serverWorld = (ServerWorld) var13;
+                                    serverWorld.playSoundFromEntity(null, this, RinveniumSoundEvents.GLAIVE_PARRY, SoundCategory.PLAYERS, 1.0f, 1.0f + this.getEntityWorld().random.nextFloat() * 0.2f);
+                                    serverWorld.playSoundFromEntity(null, this, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 1.0f, 1.0f + this.getEntityWorld().random.nextFloat() * 0.2f);
+                                }
                                 return base * 0.66f;
                             }
                             EnviniumGlaiveItem.parried = true;
