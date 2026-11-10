@@ -1,0 +1,14 @@
+{
+  "type": "create_new_age:energising",
+  "ingredients": [
+    {
+      "item": "rinvenium:battery"
+    }
+  ],
+  "energy": 10000,
+  "results": [
+    {
+      "item": "rinvenium:ion_cell"
+    }
+  ]
+}
