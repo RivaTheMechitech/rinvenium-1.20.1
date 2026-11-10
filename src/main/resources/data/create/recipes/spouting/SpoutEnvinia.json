@@ -1,0 +1,13 @@
+{
+  "type": "create:spouting",
+  "ingredients": [
+    { "item": "rinvenium:superheated_envinia_ingot" }
+  ],
+  "fluid": {
+    "fluid": "minecraft:water",
+    "amount": 100
+  },
+  "results": [
+    { "item": "rinvenium:envinia_ingot" }
+  ]
+}
