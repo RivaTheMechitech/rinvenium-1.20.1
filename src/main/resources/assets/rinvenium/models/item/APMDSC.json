@@ -3,8 +3,8 @@
 	"credit": "Made by Hstar747",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "block/APMDSC",
-		"particle": "block/APMDSC"
+		"0": "rinvenium:item/APMDSC",
+		"particle": "rinvenium:item/APMDSC"
 	},
 	"elements": [
 		{
