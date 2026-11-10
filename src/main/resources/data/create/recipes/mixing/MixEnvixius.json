@@ -1,0 +1,11 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    { "item": "rinvenium:envinia_ingot" },
+    { "item": "rinvenium:aurio_ingot" }
+  ],
+  "results": [
+    { "item": "rinvenium:superheated_envixius_ingot" }
+  ],
+  "heatRequirement": "superheated"
+}

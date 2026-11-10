@@ -1,0 +1,11 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    { "item": "minecraft:gold_ingot" },
+    { "item": "minecraft:iron_ingot" }
+  ],
+  "results": [
+    { "item": "rinvenium:superheated_aurio_ingot" }
+  ],
+  "heatRequirement": "superheated"
+}

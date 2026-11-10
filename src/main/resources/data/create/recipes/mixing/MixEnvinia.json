@@ -1,0 +1,11 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    { "item": "minecraft:iron_ingot" },
+    { "item": "minecraft:netherite_scrap" }
+  ],
+  "results": [
+    { "item": "rinvenium:superheated_envinia_ingot" }
+  ],
+  "heatRequirement": "superheated"
+}
