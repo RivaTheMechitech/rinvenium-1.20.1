@@ -172,7 +172,7 @@ public class APMDSCItem extends Item {
             }
         }
     }
-
+    public final float balls = (float) 1 / 2;
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         PlayerEntity player = (PlayerEntity) user;
