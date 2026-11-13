@@ -16,6 +16,9 @@ import silly.chemthunder.rinvenium.particle.*;
 import java.util.function.Function;
 
 public class RinveniumParticles {
+    public static final DefaultParticleType APMSDC = register("apmsdc_normal", true);
+    public static final DefaultParticleType APMSDC_LOW = register("apmsdc_low_power", true);
+    public static final DefaultParticleType APMSDC_HIGH = register("apmsdc_high_power", true);
     public static final DefaultParticleType HAIL_OF_THE_GODS_TRAIL = register("hail_of_the_gods_trail", true);
     public static final DefaultParticleType HAIL_OF_THE_GODS_SMOKE = register("hail_of_the_gods_smoke", true);
     public static final ParticleType<SmokeTrailParticleEffect> SMOKE_TRAIL = registerComplex("smoke_trail", true, SmokeTrailParticleEffect.PARAMETER_FACTORY, particleType -> SmokeTrailParticleEffect.CODEC);
@@ -36,6 +39,9 @@ public class RinveniumParticles {
 
     @Environment(EnvType.CLIENT)
     public static void clientInit() {
+        ParticleFactoryRegistry.getInstance().register(APMSDC, APMSDCParticle.FactoryNormal::new);
+        ParticleFactoryRegistry.getInstance().register(APMSDC_LOW, APMSDCParticle.FactoryLowPower::new);
+        ParticleFactoryRegistry.getInstance().register(APMSDC_HIGH, APMSDCParticle.FactoryHighPower::new);
         ParticleFactoryRegistry.getInstance().register(HAIL_OF_THE_GODS_TRAIL, HailOfTheGodsTrailParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(HAIL_OF_THE_GODS_SMOKE, HailOfTheGodsTrailParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(SMOKE_TRAIL, SmokeTrailParticle.Default.Factory::new);

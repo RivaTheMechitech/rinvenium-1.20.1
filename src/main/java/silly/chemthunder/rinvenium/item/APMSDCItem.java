@@ -2,6 +2,7 @@ package silly.chemthunder.rinvenium.item;
 
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -21,6 +23,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import silly.chemthunder.rinvenium.cca.RinveniumComponents;
@@ -28,6 +31,7 @@ import silly.chemthunder.rinvenium.cca.entity.APMSDCComponent;
 import silly.chemthunder.rinvenium.cca.item.APMSDCItemComponent;
 import silly.chemthunder.rinvenium.index.RinveniumEnchantments;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
+import silly.chemthunder.rinvenium.index.RinveniumParticles;
 import silly.chemthunder.rinvenium.index.RinveniumStatusEffects;
 import silly.chemthunder.rinvenium.util.RinveniumUtil;
 import silly.chemthunder.rinvenium.util.inject.SyncedRenderContainer;
@@ -118,6 +122,24 @@ public class APMSDCItem extends Item {
             }
         }
 
+        // Wind up particles
+        if (EnchantmentHelper.getLevel(RinveniumEnchantments.STARSTRUCK, stack) < 0) {
+            if (entityComponent.getInt() < calculateWindUpTimeForEnchant(stack)) {
+                Vec3d pos = user.getEyePos().add(0, -0.3, 0).add(user.getRotationVector().normalize().multiply(1.2));
+                Random random = world.random;
+                for (int i = 0; i < 40; i++) {
+                    int k = random.nextInt(2) * 2 - 1;
+                    double d = pos.getX();
+                    double e = pos.getY() + random.nextDouble();
+                    double f = pos.getZ();
+                    double g = random.nextFloat() * 2.0F * k;
+                    double h = (random.nextFloat() - 0.5) * 0.5;
+                    double j = random.nextFloat() * 2.0F * k;
+                    world.addParticle(getParticle(stack), d, e, f, g, h, j);
+                }
+            }
+        }
+
         return TypedActionResult.fail(stack);
     }
 
@@ -141,7 +163,7 @@ public class APMSDCItem extends Item {
         }
 
         // Damaging entities
-        Vec3d startPos = player.getEyePos().add(player.getRotationVector().normalize().multiply(0.5));
+        Vec3d startPos = player.getEyePos().add(0.0, -0.1, 0.0).add(player.getRotationVector().normalize().multiply(0.5));
         HitResult hitResult = player.raycast(6.0, 0.0f, false);
         Vec3d endPos;
         if (hitResult.getType() == HitResult.Type.BLOCK) {
@@ -159,11 +181,6 @@ public class APMSDCItem extends Item {
             }
         }
 
-        // Wind up particles
-        if (entityComponent.getInt() < calculateWindUpTimeForEnchant(stack)) {
-            world.addParticle(ParticleTypes.PORTAL, player.getX(), player.getY(), player.getZ(), 0.0D, 0.0D, 0.0D);
-        }
-
         // Shoot beam
         if (entityComponent.getInt() == calculateWindUpTimeForEnchant(stack)) {
             if (!((SyncedRenderContainer) player).shouldRenderAPMSDCBeam()) {
@@ -171,6 +188,20 @@ public class APMSDCItem extends Item {
             }
         }
     }
+
+    private ParticleEffect getParticle(ItemStack stack) {
+        boolean highPower = EnchantmentHelper.getLevel(RinveniumEnchantments.HIGH_POWER_OUTPUT, stack) > 0;
+        boolean lowPower = EnchantmentHelper.getLevel(RinveniumEnchantments.LOW_POWER_OUTPUT, stack) > 0;
+
+        if (lowPower) {
+            return RinveniumParticles.APMSDC_LOW;
+        }
+        if (highPower) {
+            return RinveniumParticles.APMSDC_HIGH;
+        }
+        return RinveniumParticles.APMSDC;
+    }
+
     public final float balls = (float) 1 / 2;
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
@@ -269,16 +300,31 @@ public class APMSDCItem extends Item {
     }
     @Override
     public int getItemBarColor(ItemStack stack) {
-        if (EnchantmentHelper.getLevel(RinveniumEnchantments.HIGH_POWER_OUTPUT, stack) > 0) {
-            return HIGH_POWER.getColor();
+        APMSDCItemComponent itemComponent = RinveniumComponents.APMSDC_ITEM.get(stack);
+        if (!itemComponent.isCharging()) {
+            if (EnchantmentHelper.getLevel(RinveniumEnchantments.HIGH_POWER_OUTPUT, stack) > 0) {
+                return HIGH_POWER.getColor();
+            }
+            if (EnchantmentHelper.getLevel(RinveniumEnchantments.LOW_POWER_OUTPUT, stack) > 0) {
+                return LOW_POWER.getColor();
+            }
+            if (EnchantmentHelper.getLevel(RinveniumEnchantments.STARSTRUCK, stack) > 0) {
+                return STARSTRUCK.getColor();
+            }
+            return DEFAULT.getColor();
+        } else {
+            // Dull color variant so indicate charging mode
+            if (EnchantmentHelper.getLevel(RinveniumEnchantments.HIGH_POWER_OUTPUT, stack) > 0) {
+                return 0xD080FF;
+            }
+            if (EnchantmentHelper.getLevel(RinveniumEnchantments.LOW_POWER_OUTPUT, stack) > 0) {
+                return 0xF9B575;
+            }
+            if (EnchantmentHelper.getLevel(RinveniumEnchantments.STARSTRUCK, stack) > 0) {
+                return 0xE7D370;
+            }
+            return 0x88D8CA;
         }
-        if (EnchantmentHelper.getLevel(RinveniumEnchantments.LOW_POWER_OUTPUT, stack) > 0) {
-            return LOW_POWER.getColor();
-        }
-        if (EnchantmentHelper.getLevel(RinveniumEnchantments.STARSTRUCK, stack) > 0) {
-            return STARSTRUCK.getColor();
-        }
-        return DEFAULT.getColor();
     }
 
     @Override
