@@ -1,8 +1,5 @@
 package silly.chemthunder.rinvenium.item;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -10,22 +7,14 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import silly.chemthunder.rinvenium.index.RinveniumPackets;
-import silly.chemthunder.rinvenium.render.manager.client.APMDSCBeamManager;
 import silly.chemthunder.rinvenium.util.RinveniumUtil;
 import silly.chemthunder.rinvenium.util.inject.SyncedRenderContainer;
-import silly.chemthunder.rinvenium.util.inject.client.RenderContainer;
 
 import java.util.List;
-import java.util.UUID;
 
 public class DebuggerItem extends Item {
     public DebuggerItem(Settings settings) {
@@ -39,11 +28,9 @@ public class DebuggerItem extends Item {
         if (!player.isSneaking()) {
             player.setCurrentHand(hand);
             if (world.isClient) { // Client Side Standing
-                MinecraftClient client = MinecraftClient.getInstance();
-                APMDSCBeamManager manager = ((RenderContainer) player).getAPMDSCBeamManager();
 
             } else { // Server Side Standing
-                /** APMDSC Beam */
+                /** APMSDC Beam */
 
                 if (player.getServer() != null) {
                     MinecraftServer server = player.getServer();
@@ -130,9 +117,9 @@ public class DebuggerItem extends Item {
             }
         } else {
             if (world.isClient) { // Client Side Sneak
-                RinveniumUtil.sendDebugMessage(player, false, "c render: " + ((SyncedRenderContainer) player).shouldRenderAPMDSCBeam());
+                RinveniumUtil.sendDebugMessage(player, false, "c render: " + ((SyncedRenderContainer) player).shouldRenderAPMSDCBeam());
             } else { // Server Side Sneak
-                RinveniumUtil.sendDebugMessage(player, false, "s render: " + ((SyncedRenderContainer) player).shouldRenderAPMDSCBeam());
+                RinveniumUtil.sendDebugMessage(player, false, "s render: " + ((SyncedRenderContainer) player).shouldRenderAPMSDCBeam());
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 20, 10));
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.SATURATION, 20, 20));
 
@@ -180,8 +167,8 @@ public class DebuggerItem extends Item {
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         if (user instanceof PlayerEntity player) {
-            if (!((SyncedRenderContainer) player).shouldRenderAPMDSCBeam()) {
-                ((SyncedRenderContainer) player).setShouldRenderAPMDSCBeam(true);
+            if (!((SyncedRenderContainer) player).shouldRenderAPMSDCBeam()) {
+                ((SyncedRenderContainer) player).setShouldRenderAPMSDCBeam(true);
             }
             if (!world.isClient) {
 
@@ -196,10 +183,10 @@ public class DebuggerItem extends Item {
         if (user instanceof PlayerEntity player) {
             if (!world.isClient) { //Server
 
-                ((SyncedRenderContainer) player).setShouldRenderAPMDSCBeam(false);
+                ((SyncedRenderContainer) player).setShouldRenderAPMSDCBeam(false);
 
             } else { //Client
-                ((SyncedRenderContainer) player).setShouldRenderAPMDSCBeam(false);
+                ((SyncedRenderContainer) player).setShouldRenderAPMSDCBeam(false);
             }
         }
     }

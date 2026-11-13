@@ -46,8 +46,8 @@
       "rinvenium:envixia_form",
       "rinvenium:glaive_heal",
       "rinvenium:death_sequence",
-      "rinvenium:apmdsc_entity",
-      "rinvenium:apmdsc_item"
+      "rinvenium:apmsdc_entity",
+      "rinvenium:apmsdc_item"
     ]
   },
   "accessWidener": "rinvenium.accesswidener",

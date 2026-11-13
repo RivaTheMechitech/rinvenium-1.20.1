@@ -1,7 +1,7 @@
-// 1.20.1	2026-11-07T23:34:27.4756947	Rinvenium/Tags for minecraft:item
+// 1.20.1	2026-11-13T17:11:20.7194346	Rinvenium/Tags for minecraft:item
+bd3b2d6e24cb3ab2bf3066fa10d6efdd1f01cac4 data\rinvenium\tags\items\envixia_core_ingredients.json
+314df20a6d417b3661f79b9b603fd072f314b555 data\rinvenium\tags\items\triggers_reskin_screen.json
 c5a2f589ebdc31a2b2a79dff1d27a7d37f10ed49 data\rinvenium\tags\items\locked_recipes.json
 314df20a6d417b3661f79b9b603fd072f314b555 data\rinvenium\tags\items\custom_item_bar.json
 314df20a6d417b3661f79b9b603fd072f314b555 data\rinvenium\tags\items\big_item_renderer.json
-bd3b2d6e24cb3ab2bf3066fa10d6efdd1f01cac4 data\rinvenium\tags\items\envixia_core_ingredients.json
-314df20a6d417b3661f79b9b603fd072f314b555 data\rinvenium\tags\items\triggers_reskin_screen.json
 7e7e45fc15728b009dca907e02e8c60256c4a601 data\rinvenium\tags\items\envixia_munchies.json

@@ -10,9 +10,7 @@ import silly.chemthunder.rinvenium.cca.primitive.BoolComponent;
 import silly.chemthunder.rinvenium.cca.primitive.IntComponent;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
 
-import java.sql.Time;
-
-public class APMDSCComponent implements IntComponent, BoolComponent, AutoSyncedComponent, CommonTickingComponent {
+public class APMSDCComponent implements IntComponent, BoolComponent, AutoSyncedComponent, CommonTickingComponent {
     public static final String USE_TIME_KEY = "UseTime";
     public static final String IS_USING_KEY = "IsUsing";
     public static final int MAX_USE_TIME = 20; // Max use time before being set on fire
@@ -21,15 +19,15 @@ public class APMDSCComponent implements IntComponent, BoolComponent, AutoSyncedC
     private boolean isUsing = false;
     private final PlayerEntity player;
 
-    public APMDSCComponent(PlayerEntity player) {
+    public APMSDCComponent(PlayerEntity player) {
         this.player = player;
     }
 
-    public static APMDSCComponent get(@NotNull PlayerEntity player) {
-        return RinveniumComponents.APMDSC_ENTITY.get(player);
+    public static APMSDCComponent get(@NotNull PlayerEntity player) {
+        return RinveniumComponents.APMSDC_ENTITY.get(player);
     }
     public void sync() {
-        RinveniumComponents.APMDSC_ENTITY.sync(this.player);
+        RinveniumComponents.APMSDC_ENTITY.sync(this.player);
     }
 
     @Override
@@ -63,7 +61,7 @@ public class APMDSCComponent implements IntComponent, BoolComponent, AutoSyncedC
 
     @Override
     public boolean getBool() {
-        if (!this.player.getWorld().isClient && !this.player.getMainHandStack().isOf(RinveniumItems.APMDSC) || this.player.getItemCooldownManager().isCoolingDown(RinveniumItems.APMDSC)) {
+        if (!this.player.getWorld().isClient && !this.player.getMainHandStack().isOf(RinveniumItems.APMSDC) || this.player.getItemCooldownManager().isCoolingDown(RinveniumItems.APMSDC)) {
             return false;
         }
         return this.isUsing;

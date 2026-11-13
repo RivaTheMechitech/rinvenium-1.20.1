@@ -6,7 +6,7 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.UUID;
 
-public class APMDSCItemComponent extends ItemComponent {
+public class APMSDCItemComponent extends ItemComponent {
     private static final String ION_CELL_COUNT = "ion_cell_count";
     private static final String IS_CHARGING = "is_charging";
     private static final String STARSTRUCK_COUNT = "starstruck_count";
@@ -17,7 +17,7 @@ public class APMDSCItemComponent extends ItemComponent {
     public static final int MAX_STARSTRUCK_COUNT = 2; // 3 shots per ion cell as the count starts from index of 0
     public static final int MAX_LOW_POWER_COUNT = 1; // 2 shots per ion cell as the count starts from index of 0
 
-    public APMDSCItemComponent(ItemStack stack) {
+    public APMSDCItemComponent(ItemStack stack) {
         super(stack);
     }
 

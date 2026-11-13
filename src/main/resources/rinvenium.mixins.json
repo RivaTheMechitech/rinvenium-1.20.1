@@ -19,6 +19,7 @@
   },
   "client": [
     "client.BackgroundRendererMixin",
+    "client.BipedEntityModelMixin",
     "client.ClientPlayerEntityMixin",
     "client.ClientWorldMixin",
     "client.DrawContextMixin",

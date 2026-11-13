@@ -7,7 +7,16 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.OtherClientPlayerEntity;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.OutlineVertexConsumerProvider;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -29,9 +38,8 @@ import silly.chemthunder.rinvenium.index.RinveniumItems;
 import silly.chemthunder.rinvenium.render.FakePlayerRender;
 import silly.chemthunder.rinvenium.render.ImpactFrame;
 import silly.chemthunder.rinvenium.render.SlashRender;
-import silly.chemthunder.rinvenium.render.manager.client.APMDSCBeamManager;
-import silly.chemthunder.rinvenium.render.manager.client.ImpactFrameManager;
 import silly.chemthunder.rinvenium.render.manager.client.FakePlayerRendererManager;
+import silly.chemthunder.rinvenium.render.manager.client.ImpactFrameManager;
 import silly.chemthunder.rinvenium.render.manager.client.SlashRendererManager;
 import silly.chemthunder.rinvenium.util.RinveniumTextureUtils;
 import silly.chemthunder.rinvenium.util.inject.SyncedRenderContainer;
@@ -40,9 +48,9 @@ import silly.chemthunder.rinvenium.util.inject.client.RenderContainer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static silly.chemthunder.rinvenium.item.APMDSCItem.BeamType.DEFAULT;
-import static silly.chemthunder.rinvenium.item.APMDSCItem.BeamType.HIGH_POWER;
-import static silly.chemthunder.rinvenium.item.APMDSCItem.BeamType.LOW_POWER;
+import static silly.chemthunder.rinvenium.item.APMSDCItem.BeamType.DEFAULT;
+import static silly.chemthunder.rinvenium.item.APMSDCItem.BeamType.HIGH_POWER;
+import static silly.chemthunder.rinvenium.item.APMSDCItem.BeamType.LOW_POWER;
 
 public class WorldRendererListener {
     public static int time = 0;
@@ -75,21 +83,19 @@ public class WorldRendererListener {
                         }
                     });
 
-                    APMDSCBeamManager apmdscBeamManager = renderContainer.getAPMDSCBeamManager();
-                    apmdscBeamManager.tick();
-                    renderAPMDSCBeams(context, client, world, camera);
+                    renderAPMSDCBeams(context, client, world, camera);
                 }
             }
         });
     }
 
-    /** Renders the APMDSC beam. This method includes an option for debug lines
+    /** Renders the APMSDC beam. This method includes an option for debug lines
      * that are vectors used to construct, and corresponding to the beam's geometry.
      * <br>
      * <br>
      * To enable the debug lines, edit the {@code boolean shouldRenderDebugLines = false} to {@code true}.*/
 
-    private static void renderAPMDSCBeams(WorldRenderContext context, MinecraftClient client, ClientWorld world, Camera camera) {
+    private static void renderAPMSDCBeams(WorldRenderContext context, MinecraftClient client, ClientWorld world, Camera camera) {
         boolean shouldRenderDebugLines = false;
 
         Tessellator tessellator = Tessellator.getInstance();
@@ -103,9 +109,9 @@ public class WorldRendererListener {
         for (AbstractClientPlayerEntity playerEntity : world.getPlayers()) {
             SyncedRenderContainer syncedRenderContainer = (SyncedRenderContainer) playerEntity;
 
-            if (playerEntity != null && syncedRenderContainer.shouldRenderAPMDSCBeam()) {
-                if (!playerEntity.getMainHandStack().isOf(RinveniumItems.APMDSC) || playerEntity.getActiveHand() != Hand.MAIN_HAND || !playerEntity.isUsingItem()) {
-                    syncedRenderContainer.setShouldRenderAPMDSCBeam(false);
+            if (playerEntity != null && syncedRenderContainer.shouldRenderAPMSDCBeam()) {
+                if (!playerEntity.getMainHandStack().isOf(RinveniumItems.APMSDC) || playerEntity.getActiveHand() != Hand.MAIN_HAND || !playerEntity.isUsingItem()) {
+                    syncedRenderContainer.setShouldRenderAPMSDCBeam(false);
                     return;
                 }
 
@@ -113,7 +119,7 @@ public class WorldRendererListener {
                 Vec3d lerpedPos = playerEntity.getLerpedPos(tickDelta);
                 Vec3d lerpedEyePos = lerpedPos.add(0, playerEntity.getEyeHeight(playerEntity.getPose()), 0);
 
-                Vec3d startPos = lerpedEyePos.add(new Vec3d(0, -0.2, 0)).add(playerEntity.getRotationVec(tickDelta).normalize().multiply(1.2f));
+                Vec3d startPos = lerpedEyePos.add(new Vec3d(0, -0.1, 0)).add(playerEntity.getRotationVec(tickDelta).normalize().multiply(1.7f));
                 HitResult hitResult = playerEntity.raycast(6.0, tickDelta, false);
                 Vec3d endPos = hitResult.getPos();
                 if (hitResult.getType() == HitResult.Type.BLOCK) {
@@ -130,7 +136,7 @@ public class WorldRendererListener {
 
                 ItemStack stack = playerEntity.getStackInHand(playerEntity.getActiveHand());
                 float spr = 3.0f; // seconds per rotation
-                if (stack.isOf(RinveniumItems.APMDSC)) {
+                if (stack.isOf(RinveniumItems.APMSDC)) {
                     if (EnchantmentHelper.getLevel(RinveniumEnchantments.HIGH_POWER_OUTPUT, stack) > 0) {
                         spr = 1.5f;
                     }
@@ -158,7 +164,7 @@ public class WorldRendererListener {
                         bufferbuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
                     }
 
-                    buildAPMDSCBeamVertices(playerEntity, bufferbuilder, transformation, context, camX, camY, camZ, shouldRenderDebugLines);
+                    buildAPMSDCBeamVertices(playerEntity, bufferbuilder, transformation, context, camX, camY, camZ, shouldRenderDebugLines);
 
 
                     matrices.pop();
@@ -514,11 +520,11 @@ public class WorldRendererListener {
     }
 
 
-    private static void buildAPMDSCBeamVertices(AbstractClientPlayerEntity shooter, BufferBuilder bufferbuilder, Matrix4f transformation, WorldRenderContext context, double camX, double camY, double camZ, boolean shouldRenderDebugLines) {
+    private static void buildAPMSDCBeamVertices(AbstractClientPlayerEntity shooter, BufferBuilder bufferbuilder, Matrix4f transformation, WorldRenderContext context, double camX, double camY, double camZ, boolean shouldRenderDebugLines) {
         float tickDelta = context.tickDelta();
         Vec3d lerpedPos = shooter.getLerpedPos(tickDelta);
         Vec3d lerpedEyePos = lerpedPos.add(0, shooter.getEyeHeight(shooter.getPose()), 0);
-        Vec3d startPos = lerpedEyePos.add(new Vec3d(0, -0.2, 0)).add(shooter.getRotationVec(tickDelta).normalize().multiply(1.2f));
+        Vec3d startPos = lerpedEyePos.add(new Vec3d(0, -0.1, 0)).add(shooter.getRotationVec(tickDelta).normalize().multiply(1.7f));
         HitResult hitResult = shooter.raycast(6.0, tickDelta, false);
         Vec3d endPos = hitResult.getPos();
         if (hitResult.getType() == HitResult.Type.BLOCK) {
@@ -564,7 +570,7 @@ public class WorldRendererListener {
         // Handles color based on enchant. Defaults to the cyan
         ItemStack stack = shooter.getStackInHand(shooter.getActiveHand());
         int color = DEFAULT.getColor();
-        if (stack.isOf(RinveniumItems.APMDSC)) {
+        if (stack.isOf(RinveniumItems.APMSDC)) {
             if (EnchantmentHelper.getLevel(RinveniumEnchantments.HIGH_POWER_OUTPUT, stack) > 0) {
                 color = HIGH_POWER.getColor();
             }

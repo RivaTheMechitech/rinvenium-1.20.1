@@ -8,5 +8,4 @@ public interface RenderContainer {
     ImpactFrameManager getImpactFrameManager();
     SlashRendererManager getSlashRendererManager();
     FakePlayerRendererManager getFakePlayerRendererManager();
-    APMDSCBeamManager getAPMDSCBeamManager();
 }

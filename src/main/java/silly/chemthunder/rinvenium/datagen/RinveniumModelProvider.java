@@ -9,7 +9,6 @@ import silly.chemthunder.rinvenium.index.RinveniumBlocks;
 
 import static net.minecraft.data.client.Models.GENERATED;
 import static net.minecraft.data.client.Models.HANDHELD;
-import static silly.chemthunder.rinvenium.index.RinveniumItems.APMDSC;
 import static silly.chemthunder.rinvenium.index.RinveniumItems.AURIO_INGOT;
 import static silly.chemthunder.rinvenium.index.RinveniumItems.BATTERY;
 import static silly.chemthunder.rinvenium.index.RinveniumItems.DEBUGGER;
@@ -45,8 +44,6 @@ public class RinveniumModelProvider extends FabricModelProvider {
 
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
         itemModelGenerator.register(DEBUGGER, Items.STICK, HANDHELD);
-
-        itemModelGenerator.register(APMDSC, Items.PRISMARINE_SHARD, GENERATED);
 
         itemModelGenerator.register(AURIO_INGOT, GENERATED);
         itemModelGenerator.register(ENVINIA_INGOT, GENERATED);

@@ -18,10 +18,8 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ElytraItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -50,14 +48,13 @@ import silly.chemthunder.rinvenium.datagen.RinveniumItemTagProvider;
 import silly.chemthunder.rinvenium.index.*;
 import silly.chemthunder.rinvenium.item.EnviniumGlaiveItem;
 import silly.chemthunder.rinvenium.item.EnvixiaArmorItem;
-import silly.chemthunder.rinvenium.util.RinveniumUtil;
 import silly.chemthunder.rinvenium.util.inject.HungerDecrement;
 import silly.chemthunder.rinvenium.util.inject.SyncedRenderContainer;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements SyncedRenderContainer {
     @Unique
-    private static final TrackedData<Boolean> SHOULD_RENDER_APMDSC_BEAM = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> SHOULD_RENDER_APMSDC_BEAM = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 
     @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
@@ -73,13 +70,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements SyncedRe
     }
 
     @Override
-    public boolean shouldRenderAPMDSCBeam() {
-        return this.getDataTracker().get(SHOULD_RENDER_APMDSC_BEAM);
+    public boolean shouldRenderAPMSDCBeam() {
+        return this.getDataTracker().get(SHOULD_RENDER_APMSDC_BEAM);
     }
 
     @Override
-    public void setShouldRenderAPMDSCBeam(boolean shouldRenderAPMDSCBeam) {
-        this.getDataTracker().set(SHOULD_RENDER_APMDSC_BEAM, shouldRenderAPMDSCBeam);
+    public void setShouldRenderAPMSDCBeam(boolean shouldRenderAPMSDCBeam) {
+        this.getDataTracker().set(SHOULD_RENDER_APMSDC_BEAM, shouldRenderAPMSDCBeam);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
@@ -88,7 +85,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements SyncedRe
     }
     @Inject(method = "initDataTracker", at = @At("TAIL"))
     public void initDataTracker(CallbackInfo ci) {
-        this.dataTracker.startTracking(SHOULD_RENDER_APMDSC_BEAM, false);
+        this.dataTracker.startTracking(SHOULD_RENDER_APMSDC_BEAM, false);
     }
 
     /*@Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V"))

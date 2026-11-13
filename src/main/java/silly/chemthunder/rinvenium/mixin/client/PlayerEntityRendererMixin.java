@@ -31,8 +31,8 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         if (player.getStackInHand(hand).isOf(RinveniumItems.HAIL_OF_THE_GODS)) {
             cir.setReturnValue(BipedEntityModel.ArmPose.BOW_AND_ARROW);
         }
-        if (player.getStackInHand(hand).isOf(RinveniumItems.APMDSC)) {
-            cir.setReturnValue(BipedEntityModel.ArmPose.CROSSBOW_HOLD);
+        if (player.getStackInHand(hand).isOf(RinveniumItems.APMSDC)) {
+            cir.setReturnValue(BipedEntityModel.ArmPose.BOW_AND_ARROW);
         }
     }
 

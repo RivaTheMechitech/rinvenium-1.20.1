@@ -12,10 +12,10 @@ import silly.chemthunder.rinvenium.Rinvenium;
 import silly.chemthunder.rinvenium.cca.entity.*;
 import silly.chemthunder.rinvenium.cca.entity.riva.AscensionPlayerComponent;
 import silly.chemthunder.rinvenium.cca.entity.riva.GlaiveHealComponent;
-import silly.chemthunder.rinvenium.cca.item.APMDSCItemComponent;
+import silly.chemthunder.rinvenium.cca.item.APMSDCItemComponent;
 import silly.chemthunder.rinvenium.cca.item.EnviniumGlaiveItemComponent;
 import silly.chemthunder.rinvenium.cca.item.GlaiveTextureItemComponent;
-import silly.chemthunder.rinvenium.item.APMDSCItem;
+import silly.chemthunder.rinvenium.item.APMSDCItem;
 import silly.chemthunder.rinvenium.item.EnviniumGlaiveItem;
 
 public class RinveniumComponents implements ItemComponentInitializer, EntityComponentInitializer {
@@ -24,15 +24,15 @@ public class RinveniumComponents implements ItemComponentInitializer, EntityComp
     public static final ComponentKey<EnvixiaFormComponent> ENVIXIA_FORM = ComponentRegistry.getOrCreate(Rinvenium.id("envixia_form"), EnvixiaFormComponent.class);
     public static final ComponentKey<GlaiveHealComponent> GLAIVE_HEAL = ComponentRegistry.getOrCreate(Rinvenium.id("glaive_heal"), GlaiveHealComponent.class);
     public static final ComponentKey<DeathSequenceComponent> DEATH_SEQUENCE = ComponentRegistry.getOrCreate(Rinvenium.id("death_sequence"), DeathSequenceComponent.class);
-    public static final ComponentKey<APMDSCComponent> APMDSC_ENTITY = ComponentRegistry.getOrCreate(Rinvenium.id("apmdsc_entity"), APMDSCComponent.class);
+    public static final ComponentKey<APMSDCComponent> APMSDC_ENTITY = ComponentRegistry.getOrCreate(Rinvenium.id("apmsdc_entity"), APMSDCComponent.class);
 
     public static final ComponentKey<GlaiveTextureItemComponent> GLAIVE_TEXTURE = ComponentRegistry.getOrCreate(Rinvenium.id("glaive_texture"), GlaiveTextureItemComponent.class);
-    public static final ComponentKey<APMDSCItemComponent> APMDSC_ITEM = ComponentRegistry.getOrCreate(Rinvenium.id("apmdsc_item"), APMDSCItemComponent.class);
+    public static final ComponentKey<APMSDCItemComponent> APMSDC_ITEM = ComponentRegistry.getOrCreate(Rinvenium.id("apmsdc_item"), APMSDCItemComponent.class);
 
     public void registerItemComponentFactories(ItemComponentFactoryRegistry registry) {
         registry.register(item -> item instanceof EnviniumGlaiveItem, EnviniumGlaiveItemComponent.KEY, EnviniumGlaiveItemComponent::new);
         registry.register(item -> item instanceof EnviniumGlaiveItem, GLAIVE_TEXTURE, GlaiveTextureItemComponent::new);
-        registry.register(item -> item instanceof APMDSCItem, APMDSC_ITEM, APMDSCItemComponent::new);
+        registry.register(item -> item instanceof APMSDCItem, APMSDC_ITEM, APMSDCItemComponent::new);
     }
 
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
@@ -43,6 +43,6 @@ public class RinveniumComponents implements ItemComponentInitializer, EntityComp
         registry.beginRegistration(PlayerEntity.class, ENVIXIA_FORM).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(EnvixiaFormComponent::new);
         registry.beginRegistration(PlayerEntity.class, GLAIVE_HEAL).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(GlaiveHealComponent::new);
         registry.beginRegistration(PlayerEntity.class, DEATH_SEQUENCE).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(DeathSequenceComponent::new);
-        registry.beginRegistration(PlayerEntity.class, APMDSC_ENTITY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(APMDSCComponent::new);
+        registry.beginRegistration(PlayerEntity.class, APMSDC_ENTITY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(APMSDCComponent::new);
     }
 }

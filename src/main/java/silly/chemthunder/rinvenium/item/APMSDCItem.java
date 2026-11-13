@@ -5,7 +5,6 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.item.Item;
@@ -25,8 +24,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import silly.chemthunder.rinvenium.cca.RinveniumComponents;
-import silly.chemthunder.rinvenium.cca.entity.APMDSCComponent;
-import silly.chemthunder.rinvenium.cca.item.APMDSCItemComponent;
+import silly.chemthunder.rinvenium.cca.entity.APMSDCComponent;
+import silly.chemthunder.rinvenium.cca.item.APMSDCItemComponent;
 import silly.chemthunder.rinvenium.index.RinveniumEnchantments;
 import silly.chemthunder.rinvenium.index.RinveniumItems;
 import silly.chemthunder.rinvenium.index.RinveniumStatusEffects;
@@ -35,14 +34,14 @@ import silly.chemthunder.rinvenium.util.inject.SyncedRenderContainer;
 
 import java.util.List;
 
-import static silly.chemthunder.rinvenium.cca.item.APMDSCItemComponent.*;
-import static silly.chemthunder.rinvenium.item.APMDSCItem.BeamType.*;
+import static silly.chemthunder.rinvenium.cca.item.APMSDCItemComponent.*;
+import static silly.chemthunder.rinvenium.item.APMSDCItem.BeamType.*;
 
-public class APMDSCItem extends Item {
+public class APMSDCItem extends Item {
     public static final int RELOAD_ICD = 10;
     public static final int SHOOT_COOLDOWN = 60;
 
-    public APMDSCItem(Settings settings) {
+    public APMSDCItem(Settings settings) {
         super(settings);
     }
 
@@ -57,8 +56,8 @@ public class APMDSCItem extends Item {
         // Cancels all if this item is in offhand
         if (hand == Hand.OFF_HAND) return TypedActionResult.fail(stack);
 
-        APMDSCComponent entityComponent = APMDSCComponent.get(user);
-        APMDSCItemComponent itemComponent = RinveniumComponents.APMDSC_ITEM.get(stack);
+        APMSDCComponent entityComponent = APMSDCComponent.get(user);
+        APMSDCItemComponent itemComponent = RinveniumComponents.APMSDC_ITEM.get(stack);
 
         boolean hasStarstruck = EnchantmentHelper.getLevel(RinveniumEnchantments.STARSTRUCK, stack) > 0;
 
@@ -125,13 +124,13 @@ public class APMDSCItem extends Item {
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         PlayerEntity player = (PlayerEntity) user;
-        APMDSCComponent entityComponent = APMDSCComponent.get(player);
-        APMDSCItemComponent itemComponent = RinveniumComponents.APMDSC_ITEM.get(stack);
+        APMSDCComponent entityComponent = APMSDCComponent.get(player);
+        APMSDCItemComponent itemComponent = RinveniumComponents.APMSDC_ITEM.get(stack);
         if (user.getActiveHand() == Hand.OFF_HAND) {
             user.stopUsingItem();
             entityComponent.setBool(false);
             ((PlayerEntity) user).getItemCooldownManager().set(this, SHOOT_COOLDOWN);
-            ((SyncedRenderContainer) player).setShouldRenderAPMDSCBeam(false);
+            ((SyncedRenderContainer) player).setShouldRenderAPMSDCBeam(false);
         }
 
         // Shoot time
@@ -167,8 +166,8 @@ public class APMDSCItem extends Item {
 
         // Shoot beam
         if (entityComponent.getInt() == calculateWindUpTimeForEnchant(stack)) {
-            if (!((SyncedRenderContainer) player).shouldRenderAPMDSCBeam()) {
-                ((SyncedRenderContainer) player).setShouldRenderAPMDSCBeam(true);
+            if (!((SyncedRenderContainer) player).shouldRenderAPMSDCBeam()) {
+                ((SyncedRenderContainer) player).setShouldRenderAPMSDCBeam(true);
             }
         }
     }
@@ -176,8 +175,8 @@ public class APMDSCItem extends Item {
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         PlayerEntity player = (PlayerEntity) user;
-        APMDSCComponent entityComponent = APMDSCComponent.get(player);
-        APMDSCItemComponent itemComponent = RinveniumComponents.APMDSC_ITEM.get(stack);
+        APMSDCComponent entityComponent = APMSDCComponent.get(player);
+        APMSDCItemComponent itemComponent = RinveniumComponents.APMSDC_ITEM.get(stack);
         boolean lowPower = EnchantmentHelper.getLevel(RinveniumEnchantments.LOW_POWER_OUTPUT, stack) > 0;
 
         if (entityComponent.getInt() > calculateWindUpTimeForEnchant(stack)) {
@@ -190,9 +189,9 @@ public class APMDSCItem extends Item {
                     itemComponent.addLowPowerCount(1);
                 }
             }
-            ((SyncedRenderContainer) player).setShouldRenderAPMDSCBeam(false);
+            ((SyncedRenderContainer) player).setShouldRenderAPMSDCBeam(false);
         }
-        ((SyncedRenderContainer) player).setShouldRenderAPMDSCBeam(false);
+        ((SyncedRenderContainer) player).setShouldRenderAPMSDCBeam(false);
         entityComponent.setBool(false);
     }
 
@@ -229,7 +228,7 @@ public class APMDSCItem extends Item {
     public int calculateIonCellDecrementForEnchant(ItemStack stack) {
         boolean highPower = EnchantmentHelper.getLevel(RinveniumEnchantments.HIGH_POWER_OUTPUT, stack) > 0;
         boolean lowPower = EnchantmentHelper.getLevel(RinveniumEnchantments.LOW_POWER_OUTPUT, stack) > 0;
-        APMDSCItemComponent itemComponent = RinveniumComponents.APMDSC_ITEM.get(stack);
+        APMSDCItemComponent itemComponent = RinveniumComponents.APMSDC_ITEM.get(stack);
 
         if (lowPower) {
             if (itemComponent.getLowPowerCount() >= MAX_LOW_POWER_COUNT) {
@@ -284,7 +283,7 @@ public class APMDSCItem extends Item {
 
     @Override
     public int getItemBarStep(ItemStack stack) {
-        APMDSCItemComponent itemComponent = RinveniumComponents.APMDSC_ITEM.get(stack);
+        APMSDCItemComponent itemComponent = RinveniumComponents.APMSDC_ITEM.get(stack);
         return MathHelper.ceil((double) (itemComponent.getIonCellCount() * 13 / 10));
     }
 
@@ -292,8 +291,8 @@ public class APMDSCItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         RinveniumUtil.addExpandableTooltip(
                 EnchantmentHelper.getLevel(RinveniumEnchantments.STARSTRUCK, stack) > 0
-                        ? Text.translatable("item.rinvenium.apmdsc_starstruck.desc").formatted(Formatting.GRAY)
-                        : Text.translatable("item.rinvenium.apmdsc.desc").formatted(Formatting.GRAY),
+                        ? Text.translatable("item.rinvenium.apmsdc_starstruck.desc").formatted(Formatting.GRAY)
+                        : Text.translatable("item.rinvenium.apmsdc.desc").formatted(Formatting.GRAY),
                 Text.translatable("item.rinvenium.expand_toolip"),
                 tooltip,
                 true

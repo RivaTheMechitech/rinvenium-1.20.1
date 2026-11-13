@@ -15,7 +15,7 @@ public class StarstruckEnchantment extends Enchantment {
 
     @Override
     public boolean isAcceptableItem(ItemStack stack) {
-        return stack.isOf(RinveniumItems.APMDSC) || stack.isOf(Items.BOOK);
+        return stack.isOf(RinveniumItems.APMSDC) || stack.isOf(Items.BOOK);
     }
 
     @Override

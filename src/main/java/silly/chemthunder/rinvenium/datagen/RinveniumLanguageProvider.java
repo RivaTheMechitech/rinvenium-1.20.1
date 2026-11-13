@@ -21,8 +21,9 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(RinveniumItems.HAIL_OF_THE_GODS, "Hail of the Gods");
         translationBuilder.add("item.rinvenium.hail_of_the_gods.desc", "A minigun that goes brrrrtttt. \\n \\n Starts with high spread, that slowly becomes more accurate. Be careful though, this weapon is prone to overheating. \\n After overheating, it enters a shotgun mode. If you let it heat up even more, things may go boom...");
         translationBuilder.add(RinveniumItems.DAEDALUS_STORMSHOT, "Daedalus Stormshot");
-        translationBuilder.add("item.rinvenium.apmdsc.desc", "Anti-Particle Microwave Distance: Short Cannon \\n \\n Charges up for a short period of time before firing a piercing beam of energy. \\n §6Ion Cells§r are used recharge it by sneak + right-click. The cannon must be fully depleted before it can be recharged, and must be fully recharged before being used again.");
-        translationBuilder.add("item.rinvenium.apmdsc_starstruck.desc", "Anti-Particle Microwave Distance: Short Cannon \\n \\n Fires star shaped pulses that explode on impact. \\n §6Ion Cells§r are used recharge it by sneak + right-click. The cannon must be fully depleted before it can be recharged, and must be fully recharged before being used again.");
+        translationBuilder.add(RinveniumItems.APMSDC, "APMSDC");
+        translationBuilder.add("item.rinvenium.apmsdc.desc", "Anti-Particle Microwave Short Distance Cannon \\n \\n Charges up for a short period of time before firing a piercing beam of energy. \\n §6Ion Cells§r are used recharge it by sneak + right-click. The cannon must be fully depleted before it can be recharged, and must be fully recharged before being used again.");
+        translationBuilder.add("item.rinvenium.apmsdc_starstruck.desc", "Anti-Particle Microwave Short Distance Cannon \\n \\n Fires star shaped pulses that explode on impact. \\n §6Ion Cells§r are used recharge it by sneak + right-click. The cannon must be fully depleted before it can be recharged, and must be fully recharged before being used again.");
 
         translationBuilder.add(RinveniumItems.AURIO_INGOT, "Aurio Ingot");
         translationBuilder.add("item.rinvenium.aurio_ingot.desc", "Obtained by [R-Click] a Superheated Aurio Ingot on a water cauldron or source block.");
