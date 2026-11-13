@@ -1,4 +1,4 @@
-// 1.20.1	2026-11-13T17:11:20.7224343	Rinvenium/Recipes
+// 1.20.1	2026-11-13T17:12:59.9431802	Rinvenium/Recipes
 afe564f35453d8757847b32ea08f84f27e93a169 data\rinvenium\recipes\superheated_aurio_ingot.json
 fd98c93455397268afe95f5b87b8d88e74a2cccc data\rinvenium\advancements\recipes\misc\superheated_envixius_ingot.json
 a2cabe2fc98d08c6b20628b4880fa4ea2e67444d data\rinvenium\recipes\envinia_block.json
@@ -25,8 +25,8 @@ eace1d7e827da9b5be621abd3fd6f1651d98987c data\rinvenium\advancements\recipes\com
 d77e70c1bc87253ad5b79fb56e32ce199edfd06a data\rinvenium\recipes\envinium_glaive.json
 93f233fdc34e4c54cf7e1fb6439168978c3803b6 data\rinvenium\advancements\recipes\combat\hail_of_the_gods.json
 0b0e1f5bd4498d059b4c4e65b5d6df367df330e4 data\rinvenium\recipes\superheated_envinia_ingot.json
-beac4fe4da60405d63cf6b85075716059105eb12 data\rinvenium\recipes\envixia_leggings.json
 ab12055ebb1525aa03f8690e7ab3be04d5626e1a data\rinvenium\advancements\recipes\combat\envixia_boots.json
+beac4fe4da60405d63cf6b85075716059105eb12 data\rinvenium\recipes\envixia_leggings.json
 3ec9c128b5e84dc003d52d2cff8e3030fd65060e data\rinvenium\advancements\recipes\misc\superheated_envinia_ingot.json
 9dfa4373e7d914f52c5b67e726c6d7f7b35ac75c data\rinvenium\recipes\aurio_block.json
 51532c54de85bbbfcdf32adf02084a1b62c69342 data\rinvenium\advancements\recipes\building_blocks\aurio_ingot.json

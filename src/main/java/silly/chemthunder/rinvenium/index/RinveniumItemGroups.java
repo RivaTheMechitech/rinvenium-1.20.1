@@ -24,7 +24,7 @@ public class RinveniumItemGroups {
                         entries.add(ENVIXIA_LEGGINGS);
                         entries.add(ENVIXIA_BOOTS);
                         //entries.add(CORE_CHARGE_GRENADE);
-                        //entries.add(APMSDC);
+                        entries.add(APMSDC);
                         entries.add(AURIO_INGOT);
                         entries.add(SUPERHEATED_AURIO_INGOT);
                         entries.add(ENVINIA_INGOT);

@@ -17,6 +17,7 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add("item.rinvenium.expand_toolip", "§7Hold§r §6[Shift]§r §7for more information.");
         translationBuilder.add("item.rinvenium.expand_toolip.debug", "Testing expandable tooltips. \\n And Testing with custom paragraphs. \\n \\n And multi lines");
 
+        // Items
         translationBuilder.add(RinveniumItems.ENVINIUM_GLAIVE, "Envinium Glaive");
         translationBuilder.add(RinveniumItems.HAIL_OF_THE_GODS, "Hail of the Gods");
         translationBuilder.add("item.rinvenium.hail_of_the_gods.desc", "A minigun that goes brrrrtttt. \\n \\n Starts with high spread, that slowly becomes more accurate. Be careful though, this weapon is prone to overheating. \\n After overheating, it enters a shotgun mode. If you let it heat up even more, things may go boom...");
@@ -60,11 +61,12 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(RinveniumItems.ENVIXIA_LEGGINGS, "Envixia Leggings");
         translationBuilder.add(RinveniumItems.ENVIXIA_BOOTS, "Envixia Boots");
 
+        // Blocks
         translationBuilder.add(RinveniumBlocks.ENVINIA_BLOCK, "Block of Envinia");
         translationBuilder.add(RinveniumBlocks.ENVIXIUS_BLOCK, "Block of Envixius");
         translationBuilder.add(RinveniumBlocks.AURIO_BLOCK, "Block of Aurio");
 
-        //region Glaivee
+        // Enchantments
         translationBuilder.add(RinveniumEnchantments.RUSH, "Rush");
         translationBuilder.add("enchantment.rinvenium.rush.desc", "The Envinium Glaive will charge over time, \nallowing the user to rush forward at great speeds on right-click.");
 
@@ -75,8 +77,8 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(RinveniumEnchantments.LOW_POWER_OUTPUT, "Low Power Output");
         translationBuilder.add(RinveniumEnchantments.HIGH_POWER_OUTPUT, "High Power Output");
         translationBuilder.add(RinveniumEnchantments.STARSTRUCK, "Starstruck");
-        //endregion
 
+        // Damage Types
         translationBuilder.add("death.attack.niki", "fuck you");
         translationBuilder.add("death.attack.niki.player", "fuck you");
         translationBuilder.add("death.attack.niki.item", "fuck you");
@@ -94,6 +96,7 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add("death.attack.boop.player", "%s was peppered a thousand times by %s");
         translationBuilder.add("death.attack.boop.item", "%1$s was peppered a thousand times by %2$s using %3$s");
 
+        // Status Effects
         translationBuilder.add(RinveniumStatusEffects.SPARKED, "Sparked");
         translationBuilder.add("effect.rinvenium.sparked.desc", "Deals low damage rapidly and can chain to nearby players if they are wet.");
 
@@ -103,6 +106,7 @@ public class RinveniumLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(RinveniumStatusEffects.SWISS_CHEESE, "Swiss Cheese");
         translationBuilder.add("effect.rinvenium.swiss_cheese.desc", "Applies a visually impairing overlay of holes.");
 
+        // Sounds
         translationBuilder.add(getSoundTranslationKey(RinveniumSoundEvents.GLAIVE_DASH), "Glaive rushes");
         translationBuilder.add(getSoundTranslationKey(RinveniumSoundEvents.GLAIVE_DASH_IMPACT), "Glaive rush hits");
         translationBuilder.add(getSoundTranslationKey(RinveniumSoundEvents.GLAIVE_PARRY), "Glaive parries");
