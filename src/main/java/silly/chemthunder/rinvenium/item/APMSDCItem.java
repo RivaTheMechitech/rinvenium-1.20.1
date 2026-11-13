@@ -335,6 +335,7 @@ public class APMSDCItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        APMSDCItemComponent itemComponent = RinveniumComponents.APMSDC_ITEM.get(stack);
         RinveniumUtil.addExpandableTooltip(
                 EnchantmentHelper.getLevel(RinveniumEnchantments.STARSTRUCK, stack) > 0
                         ? Text.translatable("item.rinvenium.apmsdc_starstruck.desc").formatted(Formatting.GRAY)
@@ -344,6 +345,12 @@ public class APMSDCItem extends Item {
                 true
         );
         tooltip.add(Text.empty());
+
+        tooltip.add(Text.literal("Status: ").formatted(Formatting.GRAY));
+        tooltip.add(itemComponent.isCharging()
+                ? Text.literal(itemComponent.getIonCellCount() + "/10")
+                : Text.literal("Ready")
+        );
         super.appendTooltip(stack, world, tooltip, context);
     }
 
