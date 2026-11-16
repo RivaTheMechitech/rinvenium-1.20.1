@@ -6,6 +6,7 @@ import net.minecraft.util.Identifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import riva.rinvenium.items.RinveniumItems;
 
 public class Rinvenium implements ModInitializer {
 	public static final String MOD_ID = "rinvenium";
@@ -22,6 +23,8 @@ public class Rinvenium implements ModInitializer {
 		// Proceed with mild caution.
 
 		LOGGER.info("Hello Fabric world!");
+
+		RinveniumItems.initialise();
 	}
 
 	public static Identifier id(String path) {
