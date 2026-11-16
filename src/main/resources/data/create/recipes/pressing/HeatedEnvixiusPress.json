@@ -1,9 +1,0 @@
-{
-  "type": "create:pressing",
-  "ingredients": [
-    { "item": "rinvenium:superheated_envixius_ingot" }
-  ],
-  "results": [
-    { "item": "rinvenium:superheated_envixius_plate" }
-  ]
-}
