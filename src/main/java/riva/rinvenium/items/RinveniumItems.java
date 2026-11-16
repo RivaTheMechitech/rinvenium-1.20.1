@@ -10,7 +10,7 @@ import riva.rinvenium.Rinvenium;
 import riva.rinvenium.items.tool_materials.EnviniumToolMaterial;
 
 public class RinveniumItems {
-    public static EnviniumGlaiveItem ENVINIUM_GLAIVE = (EnviniumGlaiveItem) register("envinium_glaive", new EnviniumGlaiveItem(EnviniumToolMaterial.ENVINIUM, 8, 1.6f, new FabricItemSettings().maxCount(1).rarity(Rarity.RARE)));
+    public static EnviniumGlaiveItem ENVINIUM_GLAIVE = (EnviniumGlaiveItem) register("envinium_glaive", new EnviniumGlaiveItem(EnviniumToolMaterial.ENVINIUM, 3, -2.4f, new FabricItemSettings().maxCount(1).rarity(Rarity.RARE)));
 
     private static Item register(String name, Item item) {
         return Registry.register(Registries.ITEM, Identifier.of(Rinvenium.MOD_ID, name), item);
